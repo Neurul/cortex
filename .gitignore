@@ -1,0 +1,6 @@
+**/bin
+**/obj
+**/*.lock.json
+**/.vs
+/*.7z
+/src/packages
