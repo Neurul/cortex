@@ -8,6 +8,8 @@
     <AssemblyName>org.neurul.Cortex.Port.Adapter.In.Http.Test</AssemblyName>
 
     <RootNamespace>org.neurul.Cortex.Port.Adapter.In.Http.Test</RootNamespace>
+
+    <Copyright>Copyright 2018 (c) Neurul Software Foundation. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>org.neurul.Cortex.Domain.Model</AssemblyName>
     <RootNamespace>org.neurul.Cortex.Domain.Model</RootNamespace>
+    <Copyright>Copyright 2018 (c) Neurul Software Foundation. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

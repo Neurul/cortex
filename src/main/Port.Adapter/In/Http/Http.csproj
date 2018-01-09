@@ -5,8 +5,9 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>org.neurul.Cortex.Port.Adapter.In.Http</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Web</PackageId>
+    <PackageId>org.neurul.Cortex.Port.Adapter.In.Http</PackageId>
     <RootNamespace>org.neurul.Cortex.Port.Adapter.In.Http</RootNamespace>
+    <Copyright>Copyright 2018 (c) Neurul Software Foundation. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

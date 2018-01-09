@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>org.neurul.Cortex.Port.Adapter.Out.Http</AssemblyName>
     <RootNamespace>org.neurul.Cortex.Port.Adapter.Out.Http</RootNamespace>
+    <Copyright>Copyright 2018 (c) Neurul Software Foundation. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
