@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "\"http://localhost:5000\"  \"http://localhost:59199\""
+    }
+  }
+}

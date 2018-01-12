@@ -8,6 +8,9 @@ using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite;
 using org.neurul.Common.Events;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using Nancy.Bootstrapper;
+using System.Linq;
 
 namespace org.neurul.Cortex.Port.Adapter.Out.Http
 {
@@ -32,6 +35,14 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Http
 
             container.Resolve<INavigableEventStore>().Initialize();
             container.Register<IEventInfoApplicationService, EventInfoApplicationService>();
+        }
+
+        protected override IEnumerable<ModuleRegistration> Modules
+        {
+            get
+            {
+                return GetType().Assembly.GetTypes().Where(type => type.BaseType == typeof(NancyModule)).Select(type => new ModuleRegistration(type));
+            }
         }
     }
 }

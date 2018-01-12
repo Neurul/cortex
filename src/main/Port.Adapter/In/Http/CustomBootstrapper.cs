@@ -13,6 +13,9 @@ using org.neurul.Common.Http;
 using System;
 using System.IO;
 using org.neurul.Common.Events;
+using System.Linq;
+using System.Collections.Generic;
+using Nancy.Bootstrapper;
 
 namespace org.neurul.Cortex.Port.Adapter.In.Http
 {
@@ -79,6 +82,17 @@ namespace org.neurul.Cortex.Port.Adapter.In.Http
             container.Register<IServiceProvider, TinyIoCServiceLocator>(ticl);
             var registrar = new RouteRegistrar(ticl);
             registrar.Register(typeof(NeuronCommandHandlers));
+        }
+
+        /// <summary>
+        /// Register only NancyModules found in this assembly
+        /// </summary>
+        protected override IEnumerable<ModuleRegistration> Modules
+        {
+            get
+            {
+                return GetType().Assembly.GetTypes().Where(type => type.BaseType == typeof(NancyModule)).Select(type => new ModuleRegistration(type));
+            }
         }
     }
 }
