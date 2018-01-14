@@ -1,9 +1,11 @@
-﻿using Nancy.Bootstrapper;
+﻿using Microsoft.Extensions.Configuration;
+using Nancy.Bootstrapper;
 using Nancy.Hosting.Self;
 using org.neurul.Common;
 using org.neurul.Common.Domain.Model;
 using org.neurul.Common.Http.Cli;
 using System;
+using System.IO;
 
 namespace org.neurul.Cortex.Port.Adapter.Admin.Cli
 {
@@ -13,12 +15,27 @@ namespace org.neurul.Cortex.Port.Adapter.Admin.Cli
         {
             try
             {
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddEnvironmentVariables();
+
+                IConfigurationRoot configuration = builder.Build();
+
+                var settings = new Settings();
+                configuration.Bind(settings);
+
+                AssertionConcern.AssertPathValid(settings.DatabasePath, nameof(settings.DatabasePath));
+
                 MultiHostProgram.Start(
                     new DefaultConsoleWrapper(),
                     "Neurul Cortex",
                     args,
                     new string[] { "In", "Out" },
-                    new INancyBootstrapper[] { new In.Http.CustomBootstrapper(), new Out.Http.CustomBootstrapper() }
+                    new INancyBootstrapper[] {
+                        new In.Http.CustomBootstrapper(settings.DatabasePath),
+                        new Out.Http.CustomBootstrapper()
+                    }
                     );
             }
             catch (Exception ex)
