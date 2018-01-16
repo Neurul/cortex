@@ -24,7 +24,7 @@ namespace org.neurul.Cortex.Port.Adapter.Admin.Cli
 
                 var settings = new Settings();
                 configuration.Bind(settings);
-
+                
                 AssertionConcern.AssertPathValid(settings.DatabasePath, nameof(settings.DatabasePath));
 
                 MultiHostProgram.Start(
@@ -43,6 +43,9 @@ namespace org.neurul.Cortex.Port.Adapter.Admin.Cli
                 Console.WriteLine("The following exception occurred:");
                 Console.WriteLine();
                 Console.WriteLine(ex.Message);
+                Console.WriteLine();
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadLine();
             }
         }
     }
