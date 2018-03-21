@@ -124,7 +124,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 base.Given();
 
                 this.terminals.ToList().ForEach(
-                    t => this.linkService.Setup(e => e.IsValidTarget(t.Target)).Returns(Task.FromResult(this.TerminalValidator(t)))
+                    t => this.linkService.Setup(e => e.IsValidTarget(t.TargetId)).Returns(Task.FromResult(this.TerminalValidator(t)))
                     );
             }
 
@@ -416,7 +416,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                             new Terminal(Guid.NewGuid())
                     };
                     var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(ts));
-                    Assert.Contains(ts[0].Target.ToString(), ex.Message);
+                    Assert.Contains(ts[0].TargetId.ToString(), ex.Message);
                 }
             }
         }
@@ -521,14 +521,14 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_retain_other_terminals()
                 {
-                    Assert.Contains(this.sut.Axon, t => t.Target == this.terminalIds[0]);
-                    Assert.Contains(this.sut.Axon, t => t.Target == this.terminalIds[2]);
+                    Assert.Contains(this.sut.Axon, t => t.TargetId == this.terminalIds[0]);
+                    Assert.Contains(this.sut.Axon, t => t.TargetId == this.terminalIds[2]);
                 }
 
                 [Fact]
                 public void Should_remove_specified_terminal()
                 {
-                    Assert.DoesNotContain(this.sut.Axon, t => t.Target == this.terminalIds[1]);
+                    Assert.DoesNotContain(this.sut.Axon, t => t.TargetId == this.terminalIds[1]);
                 }
             }
         }

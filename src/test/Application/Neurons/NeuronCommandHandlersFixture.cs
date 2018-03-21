@@ -104,7 +104,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             public void Should_contain_correct_terminal_data()
             {
                 var n = this.Session.Get<Neuron>(this.guid);
-                Assert.Equal(this.targetGuid, n.Result.Axon.Last().Target);
+                Assert.Equal(this.targetGuid, n.Result.Axon.Last().TargetId);
             }
 
             [Fact]
@@ -124,7 +124,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             public void Should_have_correct_data()
             {
                 Assert.Equal(DataValue, ((NeuronCreated)this.PublishedEvents.First()).Data);
-                Assert.Equal(this.targetGuid, ((TerminalsAdded)this.PublishedEvents.Skip(1).First()).Terminals.First().Target);
+                Assert.Equal(this.targetGuid, ((TerminalsAdded)this.PublishedEvents.Skip(1).First()).Terminals.First().TargetId);
             }
         }
 
@@ -297,7 +297,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 [Fact]
                 public void Should_have_correct_data()
                 {
-                    Assert.Equal(this.targetGuid, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.First().Target);
+                    Assert.Equal(this.targetGuid, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.First().TargetId);
                 }
             }
         }
@@ -350,8 +350,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 public void Should_have_correct_data()
                 {
                     Assert.Equal(2, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.Count());
-                    Assert.Equal(this.targetGuid2, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.First().Target);
-                    Assert.Equal(this.targetGuid3, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.Skip(1).First().Target);
+                    Assert.Equal(this.targetGuid2, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.First().TargetId);
+                    Assert.Equal(this.targetGuid3, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.Skip(1).First().TargetId);
                 }
             }
         }
@@ -451,7 +451,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 [Fact]
                 public void Should_have_correct_data()
                 {
-                    Assert.Equal(this.targetGuid, ((TerminalsRemoved)this.PublishedEvents.First()).Terminals.First().Target);
+                    Assert.Equal(this.targetGuid, ((TerminalsRemoved)this.PublishedEvents.First()).Terminals.First().TargetId);
                 }
             }
         }
@@ -508,7 +508,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 public void Should_have_correct_data()
                 {
                     Assert.Single(((TerminalsRemoved)this.PublishedEvents.First()).Terminals);
-                    Assert.Equal(this.targetGuid2, ((TerminalsRemoved)this.PublishedEvents.Last()).Terminals.First().Target);
+                    Assert.Equal(this.targetGuid2, ((TerminalsRemoved)this.PublishedEvents.Last()).Terminals.First().TargetId);
                 }
             }
         }

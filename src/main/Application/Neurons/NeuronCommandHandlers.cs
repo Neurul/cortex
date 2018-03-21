@@ -32,7 +32,7 @@ namespace org.neurul.Cortex.Application.Neurons
             await this.session.Commit(token);
         }
 
-        public async Task Handle(CreateNeuronWithTerminals message, CancellationToken token)
+        public async Task Handle(CreateNeuronWithTerminals message, CancellationToken token = default(CancellationToken))
         {
             var neuron = new Neuron(message.Id, message.Data);
             await neuron.AddTerminals(this.linkService, message.Terminals);
@@ -40,7 +40,7 @@ namespace org.neurul.Cortex.Application.Neurons
             await this.session.Commit(token);
         }
 
-        public async Task Handle(ChangeNeuronData message, CancellationToken token)
+        public async Task Handle(ChangeNeuronData message, CancellationToken token = default(CancellationToken))
         {
             var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
             neuron.ChangeData(message.NewData);

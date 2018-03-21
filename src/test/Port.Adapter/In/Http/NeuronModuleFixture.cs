@@ -482,7 +482,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Http.Test.NeuronModuleFixture.given
                 [Fact]
                 public void Should_send_correct_terminal_id()
                 {
-                    Assert.Equal(When_header_has_expected_version.TerminalId, ((RemoveTerminalsFromNeuron)this.commandSent).Terminals.ToArray()[0].Target.ToString());
+                    Assert.Equal(When_header_has_expected_version.TerminalId, ((RemoveTerminalsFromNeuron)this.commandSent).Terminals.ToArray()[0].TargetId.ToString());
                 }
 
                 [Fact]

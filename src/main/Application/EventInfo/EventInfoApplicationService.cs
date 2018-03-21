@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-// Modifications copyright(C) 2017 ei8.works/Elmer Bool
+// Modifications copyright(C) 2017 ei8/Elmer Bool
 
 using org.neurul.Common.Domain.Model;
 using org.neurul.Common.Events;

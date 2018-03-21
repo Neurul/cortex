@@ -47,10 +47,10 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
                 throw new ArgumentException("Specified 'terminals' is empty.", nameof(terminals));
             this.AssertActive();
             foreach (Terminal t in terminals)
-                if (!(await linkService.IsValidTarget(t.Target)))
-                    throw new ArgumentException($"Specified Terminal Target '{ t.Target.ToString() }' does not exist or has been deactivated.", nameof(terminals));
+                if (!(await linkService.IsValidTarget(t.TargetId)))
+                    throw new ArgumentException($"Specified Terminal Target '{ t.TargetId.ToString() }' does not exist or has been deactivated.", nameof(terminals));
             Guid target = Guid.Empty;
-            if (terminals.Any(t => { target = t.Target; return axon.Any(a => a.Target == t.Target); }))
+            if (terminals.Any(t => { target = t.TargetId; return axon.Any(a => a.TargetId == t.TargetId); }))
                 throw new ArgumentException($"Specified Terminal Target '{ target.ToString() }' already exists.", nameof(terminals));
 
             base.ApplyChange(new TerminalsAdded(this.Id, terminals));
@@ -112,7 +112,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
                 throw new ArgumentException("Specified Terminal list cannot be empty.", nameof(terminals));
             Terminal nft = Terminal.Empty;
             if (terminals.Any(t => { nft = t; return !this.axon.Contains(t); }))
-                throw new ArgumentException($"Specified Terminal '{nft.Target.ToString()}' was not found.", nameof(terminals));
+                throw new ArgumentException($"Specified Terminal '{nft.TargetId.ToString()}' was not found.", nameof(terminals));
 
             base.ApplyChange(new TerminalsRemoved(this.Id, terminals));
         }
