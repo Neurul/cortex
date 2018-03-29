@@ -16,8 +16,13 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Http
 {
     public class CustomBootstrapper : DefaultNancyBootstrapper
     {
-        private static readonly string DatabasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Events.db");
-        
+        private string databasePath;
+
+        public CustomBootstrapper(string databasePath)
+        {
+            this.databasePath = databasePath;
+        }
+
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
@@ -27,7 +32,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Http
             container.Register<IEventSerializer, EventSerializer>();
             container.Register<INavigableEventStore, EventStore>(
                 new EventStore(
-                    CustomBootstrapper.DatabasePath,
+                    this.databasePath,
                     container.Resolve<IEventSerializer>(),
                     container.Resolve<IEventPublisher>()
                 )

@@ -34,7 +34,7 @@ namespace org.neurul.Cortex.Port.Adapter.Admin.Cli
                     new string[] { "In", "Out" },
                     new INancyBootstrapper[] {
                         new In.Http.CustomBootstrapper(settings.DatabasePath),
-                        new Out.Http.CustomBootstrapper()
+                        new Out.Http.CustomBootstrapper(settings.DatabasePath)
                     }
                     );
             }
