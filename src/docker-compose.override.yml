@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  in.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabasePath=C:\db\Events.db
+    volumes:
+      - C:\db:C:\db
+    ports:
+      - "5000:80"
+  out.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabasePath=C:\db\Events.db
+    volumes:
+      - C:\db:C:\db
+    ports:
+      - "59199:80"
+networks:
+  default:
+    external:
+      name: nat
