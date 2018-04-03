@@ -13,11 +13,10 @@
       "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "DatabasePath": "C:\\Users\\me353\\Documents\\Events.db"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Http": {
+    "Out.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",
