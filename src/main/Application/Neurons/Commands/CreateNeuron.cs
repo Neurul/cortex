@@ -13,14 +13,17 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
         }
 
         [JsonConstructor]
-        public CreateNeuron(Guid id, string data)
+        public CreateNeuron(string avatarId, Guid id, string data)
         {
-            this.Id = id;
+            this.AvatarId = avatarId;
+            this.Id = id;            
             this.Data = data;
         }
 
-        public Guid Id { get; private set; }
+        public string AvatarId { get; private set; }
 
+        public Guid Id { get; private set; }
+        
         public string Data { get; private set; }
         
         public int ExpectedVersion { get; set; }

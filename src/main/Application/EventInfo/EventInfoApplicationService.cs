@@ -31,15 +31,20 @@ namespace org.neurul.Cortex.Application.EventInfo
 
         readonly INavigableEventStore eventStore;
 
-        public async Task<EventInfoLog> GetCurrentEventInfoLog()
+        public async Task<EventInfoLog> GetCurrentEventInfoLog(string storeId)
         {
+            // TODO: check if user has permission to access store
+            await this.eventStore.Initialize(storeId);
             return await new EventInfoLogFactory(this.eventStore).CreateCurrentEventInfoLog();
         }
 
-        public async Task<EventInfoLog> GetEventInfoLog(string eventInfoLogId)
+        public async Task<EventInfoLog> GetEventInfoLog(string storeId, string eventInfoLogId)
         {
             if (!EventInfoLogId.TryParse(eventInfoLogId, out EventInfoLogId logId))
                 throw new FormatException($"Specified {nameof(eventInfoLogId)} value of '{eventInfoLogId}' was not in the expected format.");
+
+            // TODO: check if user has permission to access store
+            await this.eventStore.Initialize(storeId);
 
             return await new EventInfoLogFactory(this.eventStore).CreateEventInfoLog(logId);
         }

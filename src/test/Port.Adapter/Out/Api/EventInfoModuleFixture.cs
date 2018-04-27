@@ -54,12 +54,12 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
     {
         public abstract class GettingCurrentLogContext : Context
         {
-            protected override string Path => "/cortex/events";
+            protected override string Path => "/samplebody/cortex/events";
 
             protected override void SetupMock(Mock<IEventInfoApplicationService> mock)
             {
-                mock.Setup(e => e.GetCurrentEventInfoLog())
-                    .Callback(() => this.invoked = true)
+                mock.Setup(e => e.GetCurrentEventInfoLog(It.IsAny<string>()))
+                    .Callback<string>(s => this.invoked = true)
                     .Returns(Task.FromResult(this.EventInfoLogResult));
             }
         }
@@ -117,7 +117,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                     Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
-                Assert.Equal("http:///cortex/events/0,0", link);
+                Assert.Equal("http:///samplebody/cortex/events/0,0", link);
             }
         }
 
@@ -187,7 +187,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -209,7 +209,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]
@@ -231,7 +231,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
                 }
 
                 [Fact]
@@ -253,7 +253,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
                 }
             }
 
@@ -299,7 +299,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -321,7 +321,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]
@@ -343,7 +343,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
                 }
 
                 [Fact]
@@ -425,7 +425,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -447,7 +447,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]
@@ -469,7 +469,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
                 }
 
                 [Fact]
@@ -526,7 +526,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -548,7 +548,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]
@@ -584,12 +584,12 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
 
             protected string gettingLogId;
 
-            protected override string Path => "/cortex/events/" + this.UriLogId;
+            protected override string Path => "/samplebody/cortex/events/" + this.UriLogId;
 
             protected override void SetupMock(Mock<IEventInfoApplicationService> mock)
             {
-                mock.Setup(e => e.GetEventInfoLog(It.IsAny<string>()))
-                    .Callback<string>(e => { this.invoked = true; this.gettingLogId = e; })
+                mock.Setup(e => e.GetEventInfoLog(It.IsAny<string>(), It.IsAny<string>()))
+                    .Callback<string, string>((s, e)  => { this.invoked = true; this.gettingLogId = e; })
                     .Returns(Task.FromResult(this.EventInfoLogResult));
             }
         }
@@ -644,7 +644,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                     Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
-                Assert.Equal("http:///cortex/events/1,5", link);
+                Assert.Equal("http:///samplebody/cortex/events/1,5", link);
             }
 
             [Fact]
@@ -733,7 +733,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -755,7 +755,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]
@@ -777,7 +777,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
                 }
 
                 [Fact]
@@ -799,7 +799,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
                 }
             }
 
@@ -853,7 +853,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -875,7 +875,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]
@@ -897,7 +897,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
                 }
 
                 [Fact]
@@ -987,7 +987,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -1009,7 +1009,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]
@@ -1031,7 +1031,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
                 }
 
                 [Fact]
@@ -1096,7 +1096,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
                 }
 
                 [Fact]
@@ -1118,7 +1118,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
                 }
 
                 [Fact]

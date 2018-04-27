@@ -10,29 +10,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using SQLite;
 
 namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.EventStoreFixture.given
 {
     public class When_constructing
     { 
-        public class When_invalid_database_path_is_specified : TestContext<EventStore>
-        {
-            [Fact]
-            public void Should_throw_io_exception()
-            {
-                var ep = new Mock<IEventPublisher>().Object;
-                var esa = new Mock<IEventSerializer>().Object;
-                Assert.Throws<IOException>(() => new EventStore(string.Empty, esa, ep));
-            }
-        }
-
         public class When_null_adapter_is_specified : TestContext<EventStore>
         {
             [Fact]
             public void Should_throw_argument_null_exception()
             {
                 var ep = new Mock<IEventPublisher>().Object;
-                Assert.Throws<ArgumentNullException>("serializer", () => new EventStore(Path.GetTempFileName(), null, ep));
+                Assert.Throws<ArgumentNullException>("serializer", () => new EventStore(null, ep));
             }
         }
 
@@ -42,7 +32,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             public void Should_throw_argument_null_exception()
             {
                 var esa = new Mock<IEventSerializer>().Object;
-                Assert.Throws<ArgumentNullException>("publisher", () => new EventStore(Path.GetTempFileName(), esa, null));
+                Assert.Throws<ArgumentNullException>("publisher", () => new EventStore(esa, null));
             }
         }
     }
@@ -67,16 +57,51 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
         {
             this.serializer = new EventSerializer();
             this.publisher = new Mock<IEventPublisher>();
-            this.sut = new EventStore(Path.GetTempFileName(), serializer, publisher.Object);
-            Task.Run(() => this.sut.Initialize()).Wait();
+            this.sut = new EventStore(serializer, publisher.Object);            
         }
 
         protected virtual Action<IEvent, CancellationToken> PublishEventCallback => (e, c) => {};
     }
 
+    public class When_initializing
+    {
+        public class When_null_store_id_is_specified : ProperlyConstructedContext
+        {
+            [Fact]
+            public async void Should_throw_null_exception()
+            {
+                await Assert.ThrowsAsync<ArgumentNullException>(() => this.sut.Initialize(null));
+            }
+        }
+
+        public class When_empty_store_id_is_specified : ProperlyConstructedContext
+        {
+            [Fact]
+            public async void Should_throw_argument_exception()
+            {
+                await Assert.ThrowsAsync<ArgumentException>(() => this.sut.Initialize(string.Empty));
+            }
+        }
+    }
+
+    public abstract class InitializedContext : ProperlyConstructedContext
+    {
+        protected override void GivenInit()
+        {
+            base.GivenInit();
+            Environment.SetEnvironmentVariable("DatabasePath", ":{0}:");            
+            Task.Run(() => this.sut.Initialize("memory")).Wait();
+            //string databasePath = string.Format(Environment.GetEnvironmentVariable("DatabasePath"), "memory");
+            //using (var c = new SQLiteConnection(databasePath))
+            //{
+            //    c.DeleteAll<EventInfo>();
+            //}
+        }
+    }
+
     public class When_saving_event 
     {
-        public class When_store_is_empty : ProperlyConstructedContext
+        public class When_store_is_empty : InitializedContext
         {
             private IEnumerable<IEvent> events;
             private List<IEvent> publishedEventsList;
@@ -124,7 +149,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
         }
     }
 
-    public abstract class ContainingEventsContext : ProperlyConstructedContext
+    public abstract class ContainingEventsContext : InitializedContext, IDisposable
     {
         protected List<EventInfo> eventInfoList;
         protected IEventSerializer eventSerializer;
@@ -155,6 +180,11 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                     new NeuronCreated(Guid.NewGuid(), string.Empty)
                 }
             )).Wait();
+        }
+
+        public void Dispose()
+        {
+            this.sut.Dispose();
         }
     }
 

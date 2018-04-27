@@ -69,7 +69,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
             {
                 base.When();
 
-                Task.Run(async () => this.log = await this.sut.GetCurrentEventInfoLog()).Wait();
+                Task.Run(async () => this.log = await this.sut.GetCurrentEventInfoLog("samplebody")).Wait();
             }
         }
 
@@ -388,7 +388,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
             {
                 base.When();
 
-                Task.Run(async () => this.log = await this.sut.GetEventInfoLog(this.EventInfoLogId)).Wait();
+                Task.Run(async () => this.log = await this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId)).Wait();
             }
 
             protected abstract string EventInfoLogId { get; }
@@ -405,7 +405,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
             [Fact]
             public async Task Should_throw_format_exception()
             {
-                await Assert.ThrowsAsync<FormatException>(() => this.sut.GetEventInfoLog(this.EventInfoLogId));
+                await Assert.ThrowsAsync<FormatException>(() => this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId));
             }
         }
 
@@ -789,7 +789,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
                     [Fact]
                     public async Task Should_throw_argument_exception()
                     {
-                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog(this.EventInfoLogId));
+                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId));
                     }
                 }
 
@@ -804,7 +804,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
                     [Fact]
                     public async Task Should_throw_argument_exception()
                     {
-                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog(this.EventInfoLogId));
+                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId));
                     }
                 }
 
@@ -819,7 +819,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
                     [Fact]
                     public async Task Should_throw_argument_exception()
                     {
-                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog(this.EventInfoLogId));
+                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId));
                     }
                 }
 
@@ -834,7 +834,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
                     [Fact]
                     public async Task Should_throw_argument_exception()
                     {
-                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog(this.EventInfoLogId));
+                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId));
                     }
                 }
 
@@ -849,7 +849,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
                     [Fact]
                     public async Task Should_throw_argument_exception()
                     {
-                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog(this.EventInfoLogId));
+                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId));
                     }
                 }
 
@@ -864,7 +864,7 @@ namespace org.neurul.Cortex.Application.Test.EventInfo.EventInfoApplicationServi
                     [Fact]
                     public async Task Should_throw_argument_exception()
                     {
-                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog(this.EventInfoLogId));
+                        await Assert.ThrowsAsync<ArgumentException>("eventInfoLogId", () => this.sut.GetEventInfoLog("samplebody", this.EventInfoLogId));
                     }
                 }
             }

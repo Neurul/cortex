@@ -11,16 +11,16 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api
 {
     public class EventInfoModule : NancyModule
     {
-        public EventInfoModule(IEventInfoApplicationService eventService) : base("/cortex")
+        public EventInfoModule(IEventInfoApplicationService eventService) : base("/{avatarId}/cortex/events")
         {
-            this.Get("/events", async (parameters) => this.ProcessLog(
-                await eventService.GetCurrentEventInfoLog(), 
+            this.Get("/", async (parameters) => this.ProcessLog(
+                await eventService.GetCurrentEventInfoLog(parameters.avatarId), 
                 this.Request.Url.ToString()
                 )
                 );
 
-            this.Get("/events/{logid}", async (parameters) => this.ProcessLog(
-                await eventService.GetEventInfoLog(parameters.logid),
+            this.Get("/{logid}", async (parameters) => this.ProcessLog(
+                await eventService.GetEventInfoLog(parameters.avatarId, parameters.logid),
                 this.Request.Url.ToString().Substring(
                     0, 
                     this.Request.Url.ToString().Length - parameters.logid.ToString().Length - 1

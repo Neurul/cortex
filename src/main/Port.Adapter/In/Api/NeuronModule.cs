@@ -18,9 +18,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
 {
     public class NeuronModule : NancyModule
     {
-        public NeuronModule(ICommandSender commandSender) : base("/cortex")
+        public NeuronModule(ICommandSender commandSender) : base("/{avatarId}/cortex/neurons")
         {
-            this.Put("/neurons/{neuronId}", async (parameters) =>
+            this.Put("/{neuronId}", async (parameters) =>
             {
                 return await NeuronModule.ProcessCommandResponse(
                         commandSender,
@@ -35,17 +35,18 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                                     ts.Add(new Terminal(Guid.Parse(bodyAsObject.Terminals[i].Target.ToString())));
 
                             var neuronId = Guid.Parse(parameters.neuronId);
+                            var avatarId = parameters.avatarId;
                             string data = bodyAsObject.Data.ToString();
                             return ts.Count > 0 ?
-                                (ICommand)new CreateNeuronWithTerminals(neuronId, data, ts) :
-                                new CreateNeuron(neuronId, data);
+                                (ICommand)new CreateNeuronWithTerminals(avatarId, neuronId, data, ts) :
+                                new CreateNeuron(avatarId, neuronId, data);
                         },
                         "Data"
                     );
             }
             );
 
-            this.Post("/neurons/{neuronId}/terminals", async (parameters) =>
+            this.Post("/{neuronId}/terminals", async (parameters) =>
             {
                 return await NeuronModule.ProcessCommandResponse(
                         commandSender,
@@ -55,28 +56,28 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             var ts = new List<Terminal>();
                             for (int i = 0; i < bodyAsObject.Terminals.Count; i++)
                                 ts.Add(new Terminal(Guid.Parse(bodyAsObject.Terminals[i].Target.ToString())));
-                            return new AddTerminalsToNeuron(Guid.Parse(parameters.neuronId), ts, expectedVersion);
+                            return new AddTerminalsToNeuron(parameters.avatarId, Guid.Parse(parameters.neuronId), ts, expectedVersion);
                         },
                         "Terminals"
                     );
             }
             );
 
-            this.Patch("/neurons/{neuronId}", async (parameters) =>
+            this.Patch("/{neuronId}", async (parameters) =>
             {
                 return await NeuronModule.ProcessCommandResponse(
                         commandSender,
                         this.Request,
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
-                            return new ChangeNeuronData(Guid.Parse(parameters.neuronId), bodyAsObject.Data.ToString(), expectedVersion);
+                            return new ChangeNeuronData(parameters.avatarId, Guid.Parse(parameters.neuronId), bodyAsObject.Data.ToString(), expectedVersion);
                         },
                         "Data"
                     );
             }
             );
 
-            this.Delete("/neurons/{neuronId}/terminals/{terminalId}", async (parameters) =>
+            this.Delete("/{neuronId}/terminals/{terminalId}", async (parameters) =>
             {
                 return await NeuronModule.ProcessCommandResponse(
                         commandSender,
@@ -84,6 +85,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         (bodyAsObject, bodyAsDictionary, expectedVersion) => 
                         {
                             return new RemoveTerminalsFromNeuron(
+                                parameters.avatarId,
                                 Guid.Parse(parameters.neuronId),
                                 new Terminal[] { new Terminal(Guid.Parse(parameters.terminalId)) },
                                 expectedVersion
@@ -93,7 +95,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             }
             );
 
-            this.Delete("/neurons/{neuronId}", async (parameters) =>
+            this.Delete("/{neuronId}", async (parameters) =>
             {
                 return await NeuronModule.ProcessCommandResponse(
                         commandSender,
@@ -101,6 +103,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
                             return new DeactivateNeuron(
+                                parameters.avatarId,
                                 Guid.Parse(parameters.neuronId), 
                                 expectedVersion
                                 );

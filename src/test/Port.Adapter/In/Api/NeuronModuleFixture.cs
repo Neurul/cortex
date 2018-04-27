@@ -61,7 +61,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
     {
         public abstract class PutRequestContext : Context
         {
-            protected override string Path => "/cortex/neurons/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
+            protected override string Path => "samplebody/cortex/neurons/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
 
             protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Put;
         }
@@ -175,7 +175,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
     {
         public abstract class PostRequestContext : Context
         {
-            protected override string Path => "/cortex/neurons/1a2157a8-615c-4a83-be49-fde69f4ff470/terminals";
+            protected override string Path => "/samplebody/cortex/neurons/1a2157a8-615c-4a83-be49-fde69f4ff470/terminals";
 
             protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Post;
         }
@@ -312,7 +312,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
     {
         public abstract class PatchRequestContext : Context
         {
-            protected override string Path => "/cortex/neurons/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
+            protected override string Path => "/samplebody/cortex/neurons/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
 
             protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Patch;
         }
@@ -459,7 +459,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
             {
                 protected const string TerminalId = "123457a8-615c-4a83-be49-fde69f4ff456";
 
-                protected override string Path => "/cortex/neurons/" + Context.NeuronId + "/terminals/" + DeleteTerminalContext.TerminalId;
+                protected override string Path => "/samplebody/cortex/neurons/" + Context.NeuronId + "/terminals/" + DeleteTerminalContext.TerminalId;
             }
 
             public class When_header_has_expected_version : DeleteTerminalContext
@@ -516,7 +516,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
         {
             public abstract class DeactivateNeuronContext : DeleteRequestContext
             {
-                protected override string Path => "/cortex/neurons/" + Context.NeuronId;
+                protected override string Path => "/samplebody/cortex/neurons/" + Context.NeuronId;
             }
 
             public class When_header_has_expected_version : DeactivateNeuronContext

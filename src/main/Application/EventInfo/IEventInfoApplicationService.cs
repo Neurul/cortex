@@ -5,8 +5,8 @@ namespace org.neurul.Cortex.Application.EventInfo
 {
     public interface IEventInfoApplicationService
     {
-        Task<EventInfoLog> GetCurrentEventInfoLog();
+        Task<EventInfoLog> GetCurrentEventInfoLog(string storeId);
 
-        Task<EventInfoLog> GetEventInfoLog(string eventInfoLogId);
+        Task<EventInfoLog> GetEventInfoLog(string storeId, string eventInfoLogId);
     }
 }

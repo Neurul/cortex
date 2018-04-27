@@ -9,15 +9,18 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
     {
         public readonly IEnumerable<Terminal> Terminals;
 
-        public RemoveTerminalsFromNeuron(Guid id, IEnumerable<Terminal> terminals, int originalVersion)
+        public RemoveTerminalsFromNeuron(string avatarId, Guid id, IEnumerable<Terminal> terminals, int originalVersion)
         {
+            this.AvatarId = avatarId;
             this.Id = id;
             this.Terminals = terminals;
             this.ExpectedVersion = originalVersion;
         }
 
-        public Guid Id { get; private set; }
+        public string AvatarId { get; private set; }
 
+        public Guid Id { get; private set; }
+                
         public int ExpectedVersion { get; set; }
     }
 }

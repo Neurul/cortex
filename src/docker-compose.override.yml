@@ -4,7 +4,7 @@ services:
   in.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - DatabasePath=C:\db\Events.db
+      - 'DatabasePath=C:\db\{0}.db'
     volumes:
       - C:\db:C:\db
     ports:
@@ -12,7 +12,7 @@ services:
   out.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - DatabasePath=C:\db\Events.db
+      - 'DatabasePath=C:\db\{0}.db'
     volumes:
       - C:\db:C:\db
     ports:

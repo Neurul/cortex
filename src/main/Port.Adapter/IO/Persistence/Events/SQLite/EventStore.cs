@@ -11,31 +11,29 @@ using org.neurul.Common.Domain.Model;
 
 namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
 {
-    public class EventStore : INavigableEventStore
+    public class EventStore : INavigableEventStore, IDisposable
     {
         private SQLiteAsyncConnection connection;
         private IEventSerializer serializer;
         private IEventPublisher publisher;
 
-        public EventStore(string databasePath, IEventSerializer serializer, IEventPublisher publisher)
+        public EventStore(IEventSerializer serializer, IEventPublisher publisher)
         {
-            AssertionConcern.AssertPathValid(databasePath, nameof(databasePath));
             AssertionConcern.AssertArgumentNotNull(serializer, nameof(serializer));
             AssertionConcern.AssertArgumentNotNull(publisher, nameof(publisher));
 
-            this.connection = new SQLiteAsyncConnection(databasePath);
             this.serializer = serializer;
             this.publisher = publisher;
-        }
-
-        public async Task Close()
-        {
-            await this.connection.CloseAsync();
         }
 
         public async Task<long> CountEventInfo()
         {
             return await this.connection.Table<EventInfo>().CountAsync();
+        }
+
+        public void Dispose()
+        {
+            this.connection?.CloseAsync().Wait();
         }
 
         public async Task<IEnumerable<IEvent>> Get(Guid aggregateId, int fromVersion, CancellationToken cancellationToken = default(CancellationToken))
@@ -81,9 +79,12 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
             return @event;
         }
 
-        public async Task Initialize()
+        public async Task Initialize(string storeId)
         {
-            await this.connection.CreateTableAsync<EventInfo>();
+            AssertionConcern.AssertArgumentNotNull(storeId, nameof(storeId));
+            AssertionConcern.AssertArgumentNotEmpty(storeId, $"'{nameof(storeId)}' cannot be empty.", nameof(storeId));
+
+            this.connection = await this.CreateConnection(storeId);
         }
 
         public async Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))
@@ -97,12 +98,22 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
             if (lastEvent != null && lastEvent.Version != firstEvent.Version - 1)
                 throw new InvalidOperationException("Unexpected version of specified event.");
 
-            await this.connection.RunInTransactionAsync(
-                new Action<SQLiteConnection>(
-                    c => c.InsertAll(eventData))
-                );
+            await this.connection.RunInTransactionAsync(c => c.InsertAll(eventData));
+            
+            events.ToList().ForEach(e => this.publisher.Publish(e, cancellationToken));            
+        }
 
-            events.ToList().ForEach(e => this.publisher.Publish(e, cancellationToken));
+        private async Task<SQLiteAsyncConnection> CreateConnection(string storeId)
+        {
+            SQLiteAsyncConnection result = null;
+            string databasePath = string.Format(Environment.GetEnvironmentVariable("DatabasePath"), storeId);
+
+            if (!databasePath.Contains(":memory:"))
+                AssertionConcern.AssertPathValid(databasePath, nameof(databasePath));
+
+            result = new SQLiteAsyncConnection(databasePath);
+            await result.CreateTableAsync<EventInfo>();
+            return result;
         }
     }
 }

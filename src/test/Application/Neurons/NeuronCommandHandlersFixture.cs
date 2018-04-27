@@ -2,6 +2,7 @@
 using CQRSlite.Domain.Exception;
 using CQRSlite.Events;
 using Moq;
+using org.neurul.Common.Events;
 using org.neurul.Cortex.Application.Neurons;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Domain.Model.Neurons;
@@ -18,13 +19,15 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public class When_data_is_specified : Specification<Neuron, NeuronCommandHandlers, CreateNeuron>
         {
             private const string DataValue = "Hello World";
+            private const string AvatarIdValue = "samplebody";
             private Guid guid;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
                 var lsm = new Mock<ILinkService>();
+                var nes = new Mock<INavigableEventStore>();
                 lsm.Setup(e => e.IsValidTarget(this.guid)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(this.Session, lsm.Object);
+                return new NeuronCommandHandlers(nes.Object, this.Session, lsm.Object);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -35,7 +38,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override CreateNeuron When()
             {
-                return new CreateNeuron(this.guid, DataValue);
+                return new CreateNeuron(AvatarIdValue, this.guid, DataValue);
             }
 
             [Fact]
@@ -63,14 +66,16 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public abstract class CreateNeuronWithTerminalsContext : ConditionalWhenSpecification<Neuron, NeuronCommandHandlers, CreateNeuronWithTerminals>
         {
             protected const string DataValue = "Hello World";
+            private const string AvatarIdValue = "samplebody";
             protected Guid guid;
             protected Guid targetGuid;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
                 var lsm = new Mock<ILinkService>();
+                var nes = new Mock<INavigableEventStore>();
                 lsm.Setup(e => e.IsValidTarget(this.targetGuid)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(this.Session, lsm.Object);
+                return new NeuronCommandHandlers(nes.Object, this.Session, lsm.Object);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -87,7 +92,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override CreateNeuronWithTerminals When()
             {
-                return new CreateNeuronWithTerminals(this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid) });
+                return new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid) });
             }
         }
 
@@ -150,11 +155,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public abstract class ChangeNeuronDataContext : Specification<Neuron, NeuronCommandHandlers, ChangeNeuronData>
         {
             protected const string OrigDataValue = "Hello World";
+            private const string AvatarIdValue = "samplebody";
             protected Guid guid;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                return new NeuronCommandHandlers(this.Session, new Mock<ILinkService>().Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, new Mock<ILinkService>().Object);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -168,7 +174,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override ChangeNeuronData When()
             {
-                return new ChangeNeuronData(this.guid, NewDataValue, 1);
+                return new ChangeNeuronData(AvatarIdValue, this.guid, NewDataValue, 1);
             }
 
             protected virtual string NewDataValue
@@ -215,6 +221,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public abstract class AddTerminalsToNeuronContext : Specification<Neuron, NeuronCommandHandlers, AddTerminalsToNeuron>
         {
             protected const string DataValue = "Hello World";
+            private const string AvatarIdValue = "samplebody";
             protected Guid guid;
             protected Guid targetGuid;
 
@@ -223,7 +230,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var lsm = new Mock<ILinkService>();
                 foreach (Guid g in this.Targets)
                     lsm.Setup(e => e.IsValidTarget(g)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(this.Session, lsm.Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, lsm.Object);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -239,7 +246,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var ts = new List<Terminal>();
                 foreach (Guid g in this.Targets)
                     ts.Add(new Terminal(g));
-                return new AddTerminalsToNeuron(this.guid, ts.ToArray(), this.GivenEventsCount);
+                return new AddTerminalsToNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.GivenEventsCount);
             }
 
             protected virtual int GivenEventsCount
@@ -362,6 +369,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public abstract class RemoveTerminalsFromNeuronContext : Specification<Neuron, NeuronCommandHandlers, RemoveTerminalsFromNeuron>
         {
             protected const string DataValue = "Hello World";
+            private const string AvatarIdValue = "samplebody";
             protected Guid guid;
             protected Guid targetGuid;
 
@@ -370,7 +378,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var lsm = new Mock<ILinkService>();
                 foreach (Guid g in this.CommandTargets)
                     lsm.Setup(e => e.IsValidTarget(g)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(this.Session, lsm.Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, lsm.Object);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -386,7 +394,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var ts = new List<Terminal>();
                 foreach (Guid g in this.CommandTargets)
                     ts.Add(new Terminal(g));
-                return new RemoveTerminalsFromNeuron(this.guid, ts.ToArray(), this.GivenEventsCount);
+                return new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.GivenEventsCount);
             }
 
             protected virtual int GivenEventsCount
@@ -519,11 +527,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public abstract class DeactivateNeuronContext : ConditionalWhenSpecification<Neuron, NeuronCommandHandlers, DeactivateNeuron>
         {
             protected const string OrigDataValue = "Hello World";
+            private const string AvatarIdValue = "samplebody";
             protected Guid guid;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                return new NeuronCommandHandlers(this.Session, new Mock<ILinkService>().Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, new Mock<ILinkService>().Object);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -537,7 +546,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override DeactivateNeuron When()
             {
-                return new DeactivateNeuron(this.guid, this.Given().Last().Version);
+                return new DeactivateNeuron(AvatarIdValue, this.guid, this.Given().Last().Version);
             }
         }
 

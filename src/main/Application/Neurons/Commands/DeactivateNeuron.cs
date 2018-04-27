@@ -7,14 +7,18 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class DeactivateNeuron : ICommand
     {
-        public DeactivateNeuron(Guid id, int originalVersion)
+        public DeactivateNeuron(string avatarId, Guid id, int originalVersion)
         {
+            this.AvatarId = avatarId;
             this.Id = id;
+            
             this.ExpectedVersion = originalVersion;
         }
 
-        public Guid Id { get; private set; }
+        public string AvatarId { get; private set; }
 
+        public Guid Id { get; private set; }
+        
         public int ExpectedVersion { get; set; }
     }
 }
