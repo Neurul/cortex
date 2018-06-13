@@ -32,7 +32,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
         [Fact]
         public void Should_have_empty_terminals()
         {
-            Assert.Empty(this.sut.Axon);
+            Assert.Empty(this.sut.Terminals);
         }
 
         [Fact]
@@ -47,13 +47,11 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
         public abstract class InitializeAddingTerminalContext : Context
         {
             protected Terminal[] terminals;
-            protected Mock<ILinkService> linkService;
 
             protected override void Given()
             {
                 base.Given();
 
-                this.linkService = new Mock<ILinkService>();
                 this.terminals = this.GenerateTerminals();
             }
 
@@ -70,21 +68,12 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
 
         public class When_validating_parameters
         {
-            public class When_null_link_service_is_specified : InitializeAddingTerminalContext
-            {
-                [Fact]
-                public async Task Should_throw_argument_null_exception()
-                {
-                    await Assert.ThrowsAsync<ArgumentNullException>("linkService", () => this.sut.AddTerminals(null, this.terminals));
-                }
-            }
-
             public class When_null_terminal_is_specified : InitializeAddingTerminalContext 
             {
                 [Fact]
                 public async Task Should_throw_argument_null_exception()
                 {
-                    await Assert.ThrowsAsync<ArgumentNullException>("terminals", () => this.sut.AddTerminals(this.linkService.Object, null));
+                    await Assert.ThrowsAsync<ArgumentNullException>("terminals", () => this.sut.AddTerminals(null));
                 }
             }
 
@@ -94,7 +83,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 public async Task Should_throw_argument_exception()
                 {
                     // Assert
-                    await Assert.ThrowsAsync<ArgumentException>("terminals", () => this.sut.AddTerminals(this.linkService.Object, new Terminal[0]));
+                    await Assert.ThrowsAsync<ArgumentException>("terminals", () => this.sut.AddTerminals(new Terminal[0]));
                 }
             }
 
@@ -112,27 +101,18 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public async Task Should_throw_invalid_operation_exception()
                 {
-                    await Assert.ThrowsAsync<InvalidOperationException>(() => this.sut.AddTerminals(this.linkService.Object, this.terminals));
+                    await Assert.ThrowsAsync<InvalidOperationException>(() => this.sut.AddTerminals(this.terminals));
                 }
             }
         }
 
         public abstract class AddingTerminalContext : InitializeAddingTerminalContext
         {
-            protected override void Given()
-            {
-                base.Given();
-
-                this.terminals.ToList().ForEach(
-                    t => this.linkService.Setup(e => e.IsValidTarget(t.TargetId)).Returns(Task.FromResult(this.TerminalValidator(t)))
-                    );
-            }
-
             protected override void When()
             {
                 base.When();
 
-                Task.Run(async () => await this.sut.AddTerminals(this.linkService.Object, this.TerminalsForAdding)).Wait();
+                Task.Run(async () => await this.sut.AddTerminals(this.TerminalsForAdding)).Wait();
             }
 
             protected virtual Func<Terminal, bool> TerminalValidator => t => true;
@@ -140,14 +120,14 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             protected virtual Terminal[] TerminalsForAdding => new Terminal[] { this.terminals[0] };            
         }
 
-        public class When_axon_is_empty
+        public class When_terminals_are_empty
         {
             public class When_specified_target_exists : AddingTerminalContext
             {
                 [Fact]
                 public void Should_add_terminal()
                 {
-                    Assert.Single(this.sut.Axon);
+                    Assert.Single(this.sut.Terminals);
                 }
 
                 [Fact]
@@ -167,27 +147,14 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 public void Should_add_two_terminals()
                 {
                     // Assert
-                    Assert.Equal(2, this.sut.Axon.Count);
+                    Assert.Equal(2, this.sut.Terminals.Count);
                 }
             }            
-
-            public class When_specified_target_does_not_exist : AddingTerminalContext
-            {
-                protected override bool InvokeWhenOnConstruct => false;
-
-                protected override Func<Terminal, bool> TerminalValidator => t => false;
-
-                [Fact]
-                public async Task Should_throw_argument_exception()
-                {
-                    await Assert.ThrowsAsync<ArgumentException>("terminals", () => this.sut.AddTerminals(this.linkService.Object, this.terminals));
-                }
-            }
         }
 
-        public class When_axon_has_one_terminal
+        public class When_terminals_have_one_terminal
         {
-            public abstract class AddingToAxonWithOneTerminalContext : AddingTerminalContext
+            public abstract class AddingToTerminalsWithOneTerminalContext : AddingTerminalContext
             {
                 protected override int GenerateTerminalsCount => 1;
 
@@ -195,11 +162,11 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 {
                     base.Given();
 
-                    Task.Run(async () => await this.sut.AddTerminals(this.linkService.Object, this.terminals[0])).Wait();
+                    Task.Run(async () => await this.sut.AddTerminals(this.terminals[0])).Wait();
                 }
             }
 
-            public class When_specified_target_exists : AddingToAxonWithOneTerminalContext
+            public class When_specified_target_exists : AddingToTerminalsWithOneTerminalContext
             {
                 protected override int GenerateTerminalsCount => base.GenerateTerminalsCount + 1;
 
@@ -208,13 +175,13 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_add_terminal()
                 {
-                    Assert.Equal(2, this.sut.Axon.Count);
+                    Assert.Equal(2, this.sut.Terminals.Count);
                 }
 
                 [Fact]
-                public void Should_add_terminal_as_last_added_terminal_in_axon()
+                public void Should_add_terminal_as_last_added_terminal_in_terminals()
                 {
-                    Assert.Equal(this.terminals[1], this.sut.Axon.Last());
+                    Assert.Equal(this.terminals[1], this.sut.Terminals.Last());
                 }
 
                 [Fact]
@@ -237,9 +204,9 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             }
         }
 
-        public class When_axon_has_two_terminals
+        public class When_terminals_have_two_terminals
         {
-            public abstract class AddingToAxonWithTwoTerminalsContext : AddingTerminalContext
+            public abstract class AddingToTerminalsWithTwoTerminalsContext : AddingTerminalContext
             {
                 protected override int GenerateTerminalsCount => 2;
 
@@ -247,11 +214,11 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 {
                     base.Given();
 
-                    Task.Run(async () => await this.sut.AddTerminals(this.linkService.Object, this.terminals[0], this.terminals[1])).Wait();
+                    Task.Run(async () => await this.sut.AddTerminals(this.terminals[0], this.terminals[1])).Wait();
                 }
             }
 
-            public class When_adding_duplicate_of_first_axon_terminal : AddingToAxonWithTwoTerminalsContext
+            public class When_adding_duplicate_of_first_terminals_terminal : AddingToTerminalsWithTwoTerminalsContext
             {
                 protected override bool InvokeWhenOnConstruct => false;
 
@@ -268,7 +235,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 public async Task Should_throw_an_argument_exception()
                 {
                     // Assert
-                    await Assert.ThrowsAsync<ArgumentException>(() => this.sut.AddTerminals(this.linkService.Object, this.terminals[2]));
+                    await Assert.ThrowsAsync<ArgumentException>(() => this.sut.AddTerminals(this.terminals[2]));
                 }
             }            
         }        
@@ -376,13 +343,11 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
         public abstract class RemovingTerminalContext : Context
         {
             protected Guid[] terminalIds;
-            protected Mock<ILinkService> linkService;
 
             protected override void Given()
             {
                 base.Given();
 
-                this.linkService = new Mock<ILinkService>();
                 this.terminalIds = this.GetTerminals();
             }
 
@@ -392,9 +357,9 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             }
         }
 
-        public class When_axon_is_empty
+        public class When_terminals_are_empty
         {
-            public class When_specifying_terminal_not_in_axon : RemovingTerminalContext
+            public class When_specifying_terminal_not_in_terminals : RemovingTerminalContext
             {
                 [Fact]
                 public void Should_throw_argument_exception()
@@ -404,7 +369,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_specifying_terminals_not_in_axon : RemovingTerminalContext
+            public class When_specifying_terminals_not_in_terminals : RemovingTerminalContext
             {
                 [Fact]
                 public void Should_throw_argument_exception()
@@ -421,7 +386,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             }
         }
 
-        public abstract class SingleTerminalInAxonContext : RemovingTerminalContext
+        public abstract class SingleTerminalInTerminalsContext : RemovingTerminalContext
         {
             protected override void Given()
             {
@@ -429,15 +394,14 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
 
                 foreach (Guid g in this.terminalIds)
                 {
-                    this.linkService.Setup(e => e.IsValidTarget(g)).Returns(Task.FromResult(true));
-                    Task.Run(() => this.sut.AddTerminals(this.linkService.Object, new Terminal(g))).Wait();
+                    Task.Run(() => this.sut.AddTerminals(new Terminal(g))).Wait();
                 }
             }
         }
 
-        public class When_single_terminal_in_axon
+        public class When_single_terminal_in_terminals
         {
-            public class When_specifying_single_terminal : SingleTerminalInAxonContext
+            public class When_specifying_single_terminal : SingleTerminalInTerminalsContext
             {
                 protected override void When()
                 {
@@ -447,7 +411,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_remove_terminal()
                 {
-                    Assert.Empty(this.sut.Axon);
+                    Assert.Empty(this.sut.Terminals);
                 }
 
                 [Fact]
@@ -457,7 +421,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_specifying_terminal_not_in_axon : SingleTerminalInAxonContext
+            public class When_specifying_terminal_not_in_terminals : SingleTerminalInTerminalsContext
             {
                 [Fact]
                 public void Should_throw_argument_exception()
@@ -467,7 +431,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             }
         }
 
-        public abstract class MultipleTerminalsInAxonContext : SingleTerminalInAxonContext
+        public abstract class MultipleTerminalsInTerminalsContext : SingleTerminalInTerminalsContext
         {
             protected override Guid[] GetTerminals()
             {
@@ -475,9 +439,9 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             }
         }
 
-        public class When_multiple_terminals_in_axon
+        public class When_multiple_terminals_in_terminals
         {
-            public class When_specifying_all_terminals_in_axon : MultipleTerminalsInAxonContext
+            public class When_specifying_all_terminals_in_terminals : MultipleTerminalsInTerminalsContext
             {
                 protected override void When()
                 {
@@ -490,7 +454,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_remove_terminals()
                 {
-                    Assert.Empty(this.sut.Axon);
+                    Assert.Empty(this.sut.Terminals);
                 }
 
                 [Fact]
@@ -500,7 +464,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_specifying_single_terminal_in_axon : MultipleTerminalsInAxonContext
+            public class When_specifying_single_terminal_in_terminals : MultipleTerminalsInTerminalsContext
             {
                 private int initCount;
 
@@ -513,22 +477,22 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
 
                 [Fact]
-                public void Should_reduce_axon_count_by_one()
+                public void Should_reduce_terminals_count_by_one()
                 {
-                    Assert.Equal(initCount - 1, this.sut.Axon.Count);
+                    Assert.Equal(initCount - 1, this.sut.Terminals.Count);
                 }
 
                 [Fact]
                 public void Should_retain_other_terminals()
                 {
-                    Assert.Contains(this.sut.Axon, t => t.TargetId == this.terminalIds[0]);
-                    Assert.Contains(this.sut.Axon, t => t.TargetId == this.terminalIds[2]);
+                    Assert.Contains(this.sut.Terminals, t => t.TargetId == this.terminalIds[0]);
+                    Assert.Contains(this.sut.Terminals, t => t.TargetId == this.terminalIds[2]);
                 }
 
                 [Fact]
                 public void Should_remove_specified_terminal()
                 {
-                    Assert.DoesNotContain(this.sut.Axon, t => t.TargetId == this.terminalIds[1]);
+                    Assert.DoesNotContain(this.sut.Terminals, t => t.TargetId == this.terminalIds[1]);
                 }
             }
         }

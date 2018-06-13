@@ -24,10 +24,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                var lsm = new Mock<ILinkService>();
                 var nes = new Mock<INavigableEventStore>();
-                lsm.Setup(e => e.IsValidTarget(this.guid)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(nes.Object, this.Session, lsm.Object);
+                return new NeuronCommandHandlers(nes.Object, this.Session);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -72,10 +70,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                var lsm = new Mock<ILinkService>();
                 var nes = new Mock<INavigableEventStore>();
-                lsm.Setup(e => e.IsValidTarget(this.targetGuid)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(nes.Object, this.Session, lsm.Object);
+                return new NeuronCommandHandlers(nes.Object, this.Session);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -102,14 +98,14 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             public void Should_contain_one_terminal()
             {
                 var n = this.Session.Get<Neuron>(this.guid);
-                Assert.Single(n.Result.Axon);
+                Assert.Single(n.Result.Terminals);
             }
 
             [Fact]
             public void Should_contain_correct_terminal_data()
             {
                 var n = this.Session.Get<Neuron>(this.guid);
-                Assert.Equal(this.targetGuid, n.Result.Axon.Last().TargetId);
+                Assert.Equal(this.targetGuid, n.Result.Terminals.Last().TargetId);
             }
 
             [Fact]
@@ -160,7 +156,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, new Mock<ILinkService>().Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -227,10 +223,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                var lsm = new Mock<ILinkService>();
-                foreach (Guid g in this.Targets)
-                    lsm.Setup(e => e.IsValidTarget(g)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, lsm.Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -274,7 +267,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_axon_is_empty
+        public class When_terminals_are_empty
         {
             public class When_one_terminal_is_specified : AddTerminalsToNeuronContext
             {
@@ -286,7 +279,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 public void Should_contain_one_terminal()
                 {
                     var n = this.Session.Get<Neuron>(this.guid);
-                    Assert.Single(n.Result.Axon);
+                    Assert.Single(n.Result.Terminals);
                 }
 
                 [Fact]
@@ -309,7 +302,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_axon_has_one_terminal
+        public class When_terminals_have_one_terminal
         {
             public class When_two_terminals_are_specified : AddTerminalsToNeuronContext
             {
@@ -338,7 +331,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 public void Should_contain_three_terminals()
                 {
                     var n = this.Session.Get<Neuron>(this.guid);
-                    Assert.Equal(3, n.Result.Axon.Count);
+                    Assert.Equal(3, n.Result.Terminals.Count);
                 }
 
                 [Fact]
@@ -375,10 +368,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                var lsm = new Mock<ILinkService>();
-                foreach (Guid g in this.CommandTargets)
-                    lsm.Setup(e => e.IsValidTarget(g)).Returns(Task.FromResult(true));
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, lsm.Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
             }
 
             protected override IEnumerable<IEvent> Given()
@@ -422,7 +412,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_axon_has_one_terminal
+        public class When_terminals_have_one_terminal
         {
             public class When_one_terminal_is_specified : RemoveTerminalsFromNeuronContext
             {
@@ -438,10 +428,10 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 }
 
                 [Fact]
-                public void Should_have_empty_axon()
+                public void Should_have_empty_terminals()
                 {
                     var n = this.Session.Get<Neuron>(this.guid);
-                    Assert.Empty(n.Result.Axon);
+                    Assert.Empty(n.Result.Terminals);
                 }
 
                 [Fact]
@@ -464,7 +454,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_axon_has_three_terminals
+        public class When_terminals_have_three_terminals
         {
             public class When_one_terminal_is_specified : RemoveTerminalsFromNeuronContext
             {
@@ -497,7 +487,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 public void Should_contain_two_terminals()
                 {
                     var n = this.Session.Get<Neuron>(this.guid);
-                    Assert.Equal(2, n.Result.Axon.Count);
+                    Assert.Equal(2, n.Result.Terminals.Count);
                 }
 
                 [Fact]
@@ -532,7 +522,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override NeuronCommandHandlers BuildHandler()
             {
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session, new Mock<ILinkService>().Object);
+                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
             }
 
             protected override IEnumerable<IEvent> Given()

@@ -22,7 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\main\Port.Adapter\In\Api\In.Api.csproj" />
+    <ProjectReference Include="..\..\..\..\main\Port.Adapter\In\Api\In.Api.csproj">
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

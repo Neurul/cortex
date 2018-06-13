@@ -31,7 +31,6 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             container.Register<IEventSerializer, EventSerializer>();
 
             container.Register<INavigableEventStore, EventStore>();
-            container.Register<ILinkService, LinkService>();
             container.Register<NeuronCommandHandlers>();
 
             var ticl = new TinyIoCServiceLocator(container);

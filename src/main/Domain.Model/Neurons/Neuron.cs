@@ -10,7 +10,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 {
     public class Neuron : AggregateRoot
     {
-        private readonly List<Terminal> axon = new List<Terminal>();
+        private readonly List<Terminal> terminals = new List<Terminal>();
         private bool activated;
         private const string DeactivatedExceptionMessage = "Already deactivated.";
 
@@ -26,34 +26,32 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         public string Data { get; private set; }
 
-        public ReadOnlyCollection<Terminal> Axon
+        public ReadOnlyCollection<Terminal> Terminals
         {
             get
             {
-                return this.axon.AsReadOnly();
+                return this.terminals.AsReadOnly();
             }
         }
         
-        public async Task AddTerminals(ILinkService linkService, params Terminal[] terminals)
+        public Task AddTerminals(params Terminal[] terminals)
         {
-            await this.AddTerminals(linkService, (IEnumerable<Terminal>) terminals);
+            return this.AddTerminals((IEnumerable<Terminal>) terminals);
         }
 
-        public async Task AddTerminals(ILinkService linkService, IEnumerable<Terminal> terminals)
+        public Task AddTerminals(IEnumerable<Terminal> terminals)
         {
             if (terminals == null) throw new ArgumentNullException(nameof(terminals));
-            if (linkService == null) throw new ArgumentNullException(nameof(linkService));
             if (!terminals.Any())
                 throw new ArgumentException("Specified 'terminals' is empty.", nameof(terminals));
             this.AssertActive();
-            foreach (Terminal t in terminals)
-                if (!(await linkService.IsValidTarget(t.TargetId)))
-                    throw new ArgumentException($"Specified Terminal Target '{ t.TargetId.ToString() }' does not exist or has been deactivated.", nameof(terminals));
             Guid target = Guid.Empty;
-            if (terminals.Any(t => { target = t.TargetId; return axon.Any(a => a.TargetId == t.TargetId); }))
+            if (terminals.Any(t => { target = t.TargetId; return this.terminals.Any(a => a.TargetId == t.TargetId); }))
                 throw new ArgumentException($"Specified Terminal Target '{ target.ToString() }' already exists.", nameof(terminals));
 
             base.ApplyChange(new TerminalsAdded(this.Id, terminals));
+
+            return Task.CompletedTask;
         }
 
         private void Apply(NeuronCreated e)
@@ -74,12 +72,12 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         private void Apply(TerminalsAdded e)
         {
-            this.axon.AddRange(e.Terminals);
+            this.terminals.AddRange(e.Terminals);
         }
 
         private void Apply(TerminalsRemoved e)
         {
-            e.Terminals.ToList().ForEach(t => this.axon.Remove(t));
+            e.Terminals.ToList().ForEach(t => this.terminals.Remove(t));
         }
 
         public void ChangeData(string value)
@@ -111,7 +109,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             if (!terminals.Any())
                 throw new ArgumentException("Specified Terminal list cannot be empty.", nameof(terminals));
             Terminal nft = Terminal.Empty;
-            if (terminals.Any(t => { nft = t; return !this.axon.Contains(t); }))
+            if (terminals.Any(t => { nft = t; return !this.terminals.Contains(t); }))
                 throw new ArgumentException($"Specified Terminal '{nft.TargetId.ToString()}' was not found.", nameof(terminals));
 
             base.ApplyChange(new TerminalsRemoved(this.Id, terminals));
