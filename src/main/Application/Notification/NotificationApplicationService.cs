@@ -19,11 +19,11 @@ using org.neurul.Common.Events;
 using System;
 using System.Threading.Tasks;
 
-namespace org.neurul.Cortex.Application.EventInfo
+namespace org.neurul.Cortex.Application.Notification
 {
-    public class EventInfoApplicationService : IEventInfoApplicationService
+    public class NotificationApplicationService : INotificationApplicationService
     {
-        public EventInfoApplicationService(INavigableEventStore eventStore)
+        public NotificationApplicationService(INavigableEventStore eventStore)
         {
             AssertionConcern.AssertArgumentNotNull(eventStore, nameof(eventStore));
             this.eventStore = eventStore;
@@ -31,22 +31,22 @@ namespace org.neurul.Cortex.Application.EventInfo
 
         readonly INavigableEventStore eventStore;
 
-        public async Task<EventInfoLog> GetCurrentEventInfoLog(string storeId)
+        public async Task<NotificationLog> GetCurrentNotificationLog(string storeId)
         {
             // TODO: check if user has permission to access store
             await this.eventStore.Initialize(storeId);
-            return await new EventInfoLogFactory(this.eventStore).CreateCurrentEventInfoLog();
+            return await new NotificationLogFactory(this.eventStore).CreateCurrentNotificationLog();
         }
 
-        public async Task<EventInfoLog> GetEventInfoLog(string storeId, string eventInfoLogId)
+        public async Task<NotificationLog> GetNotificationLog(string storeId, string notificationLogId)
         {
-            if (!EventInfoLogId.TryParse(eventInfoLogId, out EventInfoLogId logId))
-                throw new FormatException($"Specified {nameof(eventInfoLogId)} value of '{eventInfoLogId}' was not in the expected format.");
+            if (!NotificationLogId.TryParse(notificationLogId, out NotificationLogId logId))
+                throw new FormatException($"Specified {nameof(notificationLogId)} value of '{notificationLogId}' was not in the expected format.");
 
             // TODO: check if user has permission to access store
             await this.eventStore.Initialize(storeId);
 
-            return await new EventInfoLogFactory(this.eventStore).CreateEventInfoLog(logId);
+            return await new NotificationLogFactory(this.eventStore).CreateNotificationLog(logId);
         }
     }
 }

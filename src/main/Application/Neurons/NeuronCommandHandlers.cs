@@ -28,7 +28,7 @@ namespace org.neurul.Cortex.Application.Neurons
         public async Task Handle(CreateNeuron message, CancellationToken token = default(CancellationToken))
         {
             await this.eventStore.Initialize(message.AvatarId);
-            var neuron = new Neuron(message.Id, message.Data);
+            var neuron = new Neuron(message.Id, message.Data, message.AuthorId);
             await this.session.Add(neuron, token);
             await this.session.Commit(token);
         }
@@ -36,8 +36,8 @@ namespace org.neurul.Cortex.Application.Neurons
         public async Task Handle(CreateNeuronWithTerminals message, CancellationToken token = default(CancellationToken))
         {
             await this.eventStore.Initialize(message.AvatarId);
-            var neuron = new Neuron(message.Id, message.Data);
-            await neuron.AddTerminals(message.Terminals);
+            var neuron = new Neuron(message.Id, message.Data, message.AuthorId);
+            await neuron.AddTerminals(message.Terminals, message.AuthorId);
             await this.session.Add(neuron, token);
             await this.session.Commit(token);
         }
@@ -46,7 +46,7 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             await this.eventStore.Initialize(message.AvatarId);
             var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.ChangeData(message.NewData);
+            neuron.ChangeData(message.NewData, message.AuthorId);
             await this.session.Commit(token);
         }
 
@@ -54,7 +54,7 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             await this.eventStore.Initialize(message.AvatarId);
             var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            await neuron.AddTerminals(message.Terminals);
+            await neuron.AddTerminals(message.Terminals, message.AuthorId);
             await this.session.Commit(token);
         }
 
@@ -62,7 +62,7 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             await this.eventStore.Initialize(message.AvatarId);
             var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.RemoveTerminals(message.Terminals);
+            neuron.RemoveTerminals(message.Terminals, message.AuthorId);
             await this.session.Commit(token);
         }
 
@@ -70,7 +70,7 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             await this.eventStore.Initialize(message.AvatarId);
             var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.Deactivate();
+            neuron.Deactivate(message.AuthorId);
             await this.session.Commit(token);
         }
     }

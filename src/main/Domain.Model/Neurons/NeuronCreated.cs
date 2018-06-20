@@ -1,17 +1,17 @@
-﻿using CQRSlite.Events;
+﻿using org.neurul.Common.Events;
 using System;
-using System.Collections.Generic;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
 {
-    public class NeuronCreated : IEvent
+    public class NeuronCreated : IAuthoredEvent
     {
         public readonly string Data;
-        
-        public NeuronCreated(Guid id, string data)
+
+        public NeuronCreated(Guid id, string data, string authorId)
         {
             this.Id = id;
             this.Data = data;
+            this.AuthorId = authorId;
         }
 
         public Guid Id { get; set; }
@@ -19,5 +19,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         public int Version { get; set; }
 
         public DateTimeOffset TimeStamp { get; set; }
+
+        public string AuthorId { get; set; }
     }
 }

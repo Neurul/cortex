@@ -94,7 +94,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             //string databasePath = string.Format(Environment.GetEnvironmentVariable("DatabasePath"), "memory");
             //using (var c = new SQLiteConnection(databasePath))
             //{
-            //    c.DeleteAll<EventInfo>();
+            //    c.DeleteAll<Notification>();
             //}
         }
     }
@@ -106,15 +106,17 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             private IEnumerable<IEvent> events;
             private List<IEvent> publishedEventsList;
             private Guid guid;
+            private string authorId;
 
             protected override void GivenInit()
             {
                 base.GivenInit();
 
                 this.guid = Guid.NewGuid();
+                this.authorId = Guid.NewGuid().ToString();
 
                 this.events = new List<IEvent>() {
-                    new NeuronCreated(this.guid, string.Empty)
+                    new NeuronCreated(this.guid, string.Empty, this.authorId) { Version = 1 }
                 };
 
                 this.publishedEventsList = new List<IEvent>();
@@ -132,13 +134,15 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             [Fact]
             public async Task Should_contain_correct_typename_prefixes()
             {
-                Assert.StartsWith("org.neurul.Cortex.Domain.Model", (await this.sut.GetLastEvent(this.guid)).ToEventInfo(this.serializer).TypeName);
+                var events = await this.sut.Get(this.guid, 0);
+                Assert.StartsWith("org.neurul.Cortex.Domain.Model", ((IAuthoredEvent) events.Last()).ToNotification(this.serializer).TypeName);
             }
 
             [Fact]
             public async Task Should_contain_correct_typename()
             {
-                Assert.StartsWith("org.neurul.Cortex.Domain.Model.Neurons.NeuronCreated", (await this.sut.GetLastEvent(this.guid)).ToEventInfo(this.serializer).TypeName);
+                var events = await this.sut.Get(this.guid, 0);
+                Assert.StartsWith("org.neurul.Cortex.Domain.Model.Neurons.NeuronCreated", ((IAuthoredEvent) events.Last()).ToNotification(this.serializer).TypeName);
             }
 
             [Fact]
@@ -151,7 +155,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
 
     public abstract class ContainingEventsContext : InitializedContext, IDisposable
     {
-        protected List<EventInfo> eventInfoList;
+        protected List<Notification> notificationList;
         protected IEventSerializer eventSerializer;
         protected long sequenceId;
 
@@ -160,7 +164,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             base.GivenInit();
 
             this.sequenceId = 1;
-            this.eventInfoList = new List<EventInfo>();
+            this.notificationList = new List<Notification>();
             this.eventSerializer = new EventSerializer();
         }
 
@@ -169,15 +173,15 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             base.Given();
 
             Task.Run(async () => await this.sut.Save(new IEvent[] {
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty)
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString())
                 }
             )).Wait();
         }
@@ -198,7 +202,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             {
                 base.When();
 
-                Task.Run(async () => this.count = await this.sut.CountEventInfo()).Wait();
+                Task.Run(async () => this.count = await this.sut.CountNotifications()).Wait();
             }
 
             [Fact]
@@ -213,14 +217,14 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
     {
         public abstract class GettingRangeContext : ContainingEventsContext
         {
-            protected EventInfo[] resultEventInfo;
+            protected Notification[] resultNotification;
 
             protected override void When()
             {
                 base.When();
 
                 Task.Run(async () => 
-                    this.resultEventInfo = await this.sut.GetEventInfoRange(this.LowSequenceId, this.HighSequenceId)
+                    this.resultNotification = await this.sut.GetNotificationRange(this.LowSequenceId, this.HighSequenceId)
                 ).Wait();
             }
 
@@ -236,7 +240,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 [Fact]
                 public async Task Should_throw_argument_exception()
                 {
-                    await Assert.ThrowsAsync<ArgumentException>("lowSequenceId", async () => await this.sut.GetEventInfoRange(2, 1));
+                    await Assert.ThrowsAsync<ArgumentException>("lowSequenceId", async () => await this.sut.GetNotificationRange(2, 1));
                 }
             }
 
@@ -249,7 +253,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 [Fact]
                 public void Should_return_all_events_that_can_be_returned()
                 {
-                    Assert.Equal(4, this.resultEventInfo.Length);
+                    Assert.Equal(4, this.resultNotification.Length);
                 }
             }
 
@@ -258,7 +262,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 [Fact]
                 public async Task Should_throw_argument_out_of_range_exception()
                 {
-                    await Assert.ThrowsAsync<ArgumentOutOfRangeException>("lowSequenceId", async () => await this.sut.GetEventInfoRange(0, 9));
+                    await Assert.ThrowsAsync<ArgumentOutOfRangeException>("lowSequenceId", async () => await this.sut.GetNotificationRange(0, 9));
                 }
             }
 
@@ -267,19 +271,19 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 [Fact]
                 public async Task Should_return_correct_count_of_events()
                 {
-                    Assert.Equal(5, (await this.sut.GetEventInfoRange(4, 8)).Count());
+                    Assert.Equal(5, (await this.sut.GetNotificationRange(4, 8)).Count());
                 }
 
                 [Fact]
                 public async Task Should_return_first_event_with_correct_sequence_id()
                 {
-                    Assert.Equal(4, (await this.sut.GetEventInfoRange(4, 8)).First().SequenceId);
+                    Assert.Equal(4, (await this.sut.GetNotificationRange(4, 8)).First().SequenceId);
                 }
 
                 [Fact]
                 public async Task Should_return_last_event_with_correct_sequence_id()
                 {
-                    Assert.Equal(8, (await this.sut.GetEventInfoRange(4, 8)).Last().SequenceId);
+                    Assert.Equal(8, (await this.sut.GetNotificationRange(4, 8)).Last().SequenceId);
                 }
             }
         }
@@ -294,7 +298,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 [Fact]
                 public async Task Should_throw_argument_out_of_range_exception()
                 {
-                    await Assert.ThrowsAsync<ArgumentOutOfRangeException>("sequenceId", async () => await this.sut.GetAllEventInfoSince(0));
+                    await Assert.ThrowsAsync<ArgumentOutOfRangeException>("sequenceId", async () => await this.sut.GetAllNotificationsSince(0));
                 }
             }
 
@@ -303,7 +307,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 [Fact]
                 public async Task Should_throw_argument_out_of_range_exception()
                 {
-                    await Assert.ThrowsAsync<ArgumentOutOfRangeException>("sequenceId", async () => await this.sut.GetAllEventInfoSince(10));
+                    await Assert.ThrowsAsync<ArgumentOutOfRangeException>("sequenceId", async () => await this.sut.GetAllNotificationsSince(10));
                 }
             }
 
@@ -312,7 +316,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 [Fact]
                 public async Task Should_return_correct_count_of_events()
                 {
-                    Assert.Equal(5, (await this.sut.GetAllEventInfoSince(5)).Count());
+                    Assert.Equal(5, (await this.sut.GetAllNotificationsSince(5)).Count());
                 }
             }
         }

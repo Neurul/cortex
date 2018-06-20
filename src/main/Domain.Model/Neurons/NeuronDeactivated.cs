@@ -1,14 +1,14 @@
-﻿using CQRSlite.Events;
+﻿using org.neurul.Common.Events;
 using System;
-using System.Collections.Generic;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
 {
-    public class NeuronDeactivated : IEvent
+    public class NeuronDeactivated : IAuthoredEvent
     {
-        public NeuronDeactivated(Guid id)
+        public NeuronDeactivated(Guid id, string authorId)
         {
             this.Id = id;
+            this.AuthorId = authorId;
         }
 
         public Guid Id { get; set; }
@@ -16,5 +16,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         public int Version { get; set; }
 
         public DateTimeOffset TimeStamp { get; set; }
+
+        public string AuthorId { get; set; }
     }
 }

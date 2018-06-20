@@ -6,6 +6,7 @@ using Nancy.IO;
 using Nancy.Responses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using org.neurul.Common.Domain.Model;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
@@ -37,11 +38,13 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             var neuronId = Guid.Parse(parameters.neuronId);
                             var avatarId = parameters.avatarId;
                             string data = bodyAsObject.Data.ToString();
+                            string authorId = bodyAsObject.AuthorId.ToString();
                             return ts.Count > 0 ?
-                                (ICommand)new CreateNeuronWithTerminals(avatarId, neuronId, data, ts) :
-                                new CreateNeuron(avatarId, neuronId, data);
+                                (ICommand)new CreateNeuronWithTerminals(avatarId, neuronId, data, ts, authorId) :
+                                new CreateNeuron(avatarId, neuronId, data, authorId);
                         },
-                        "Data"
+                        "Data",
+                        "AuthorId"
                     );
             }
             );
@@ -56,9 +59,16 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             var ts = new List<Terminal>();
                             for (int i = 0; i < bodyAsObject.Terminals.Count; i++)
                                 ts.Add(new Terminal(Guid.Parse(bodyAsObject.Terminals[i].Target.ToString())));
-                            return new AddTerminalsToNeuron(parameters.avatarId, Guid.Parse(parameters.neuronId), ts, expectedVersion);
+                            return new AddTerminalsToNeuron(
+                                parameters.avatarId, 
+                                Guid.Parse(parameters.neuronId), 
+                                ts,
+                                bodyAsObject.AuthorId.ToString(), 
+                                expectedVersion
+                                );
                         },
-                        "Terminals"
+                        "Terminals",
+                        "AuthorId"
                     );
             }
             );
@@ -70,9 +80,16 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         this.Request,
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
-                            return new ChangeNeuronData(parameters.avatarId, Guid.Parse(parameters.neuronId), bodyAsObject.Data.ToString(), expectedVersion);
+                            return new ChangeNeuronData(
+                                parameters.avatarId, 
+                                Guid.Parse(parameters.neuronId), 
+                                bodyAsObject.Data.ToString(),
+                                bodyAsObject.AuthorId.ToString(), 
+                                expectedVersion
+                                );
                         },
-                        "Data"
+                        "Data",
+                        "AuthorId"
                     );
             }
             );
@@ -88,9 +105,11 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                                 parameters.avatarId,
                                 Guid.Parse(parameters.neuronId),
                                 new Terminal[] { new Terminal(Guid.Parse(parameters.terminalId)) },
+                                bodyAsObject.AuthorId.ToString(),
                                 expectedVersion
                                 );
-                        }
+                        },
+                        "AuthorId"
                     );
             }
             );
@@ -104,10 +123,12 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         {
                             return new DeactivateNeuron(
                                 parameters.avatarId,
-                                Guid.Parse(parameters.neuronId), 
+                                Guid.Parse(parameters.neuronId),
+                                bodyAsObject.AuthorId.ToString(),
                                 expectedVersion
                                 );
-                        }
+                        },
+                        "AuthorId"
                     );
             }
             );
@@ -129,25 +150,28 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             Dictionary<string, object> bodyAsDictionary = null;
 
             var jsonString = RequestStream.FromStream(request.Body).AsString();
+
+            string[] missingFieldsNames = null;
+
             if (!string.IsNullOrEmpty(jsonString))
             {
                 bodyAsObject = JsonConvert.DeserializeObject(jsonString);
                 bodyAsDictionary = JObject.Parse(jsonString).ToObject<Dictionary<string, object>>();
+                missingFieldsNames = requiredFields.Where(s => !bodyAsDictionary.ContainsKey(s)).ToArray();
             }
+            else
+                missingFieldsNames = requiredFields;
 
             var result = new Response { StatusCode = HttpStatusCode.OK };
 
             ICommand command = null;
             // validate required body fields
-            string[] missingFieldsNames = requiredFields.Where(s => !bodyAsDictionary.ContainsKey(s)).ToArray();
 
             int expectedVersion = -1;
             if (versionRequired)
             {
                 var rh = request.Headers["ETag"];
-                if (requiredFields.Contains("ExpectedVersion") && !missingFieldsNames.Contains("ExpectedVersion"))
-                    expectedVersion = int.Parse(bodyAsObject.ExpectedVersion.ToString());
-                else if (!(rh.Any() && int.TryParse(rh.First(), out expectedVersion)))
+                if (!(rh.Any() && int.TryParse(rh.First(), out expectedVersion)))
                     missingFieldsNames = missingFieldsNames.Concat(new string[] { "ExpectedVersion" }).ToArray();
             }
 

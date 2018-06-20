@@ -2,7 +2,7 @@
 using Nancy;
 using Nancy.Testing;
 using Newtonsoft.Json;
-using org.neurul.Cortex.Application.EventInfo;
+using org.neurul.Cortex.Application.Notification;
 using org.neurul.Common;
 using org.neurul.Common.Events;
 using org.neurul.Common.Test;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.given
+namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.given
 {
     public abstract class Context : TestContext<Browser>
     {
@@ -23,10 +23,10 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
         {
             base.Given();
 
-            var appService = new Mock<IEventInfoApplicationService> { DefaultValue = DefaultValue.Mock };
+            var appService = new Mock<INotificationApplicationService> { DefaultValue = DefaultValue.Mock };
             this.SetupMock(appService);
             this.sut = new Browser(with => with
-                .Module<EventInfoModule>()
+                .Module<NotificationModule>()
                 .Dependency(appService.Object), defaults => defaults.Accept("application/json")
             );
         }
@@ -37,9 +37,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
             this.response = this.sut.Get(this.Path).Result;
         }
 
-        protected abstract void SetupMock(Mock<IEventInfoApplicationService> mock);
+        protected abstract void SetupMock(Mock<INotificationApplicationService> mock);
 
-        protected abstract EventInfoLog EventInfoLogResult
+        protected abstract NotificationLog NotificationLogResult
         {
             get;
         }
@@ -54,19 +54,19 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
     {
         public abstract class GettingCurrentLogContext : Context
         {
-            protected override string Path => "/samplebody/cortex/events";
+            protected override string Path => "/samplebody/cortex/notifications";
 
-            protected override void SetupMock(Mock<IEventInfoApplicationService> mock)
+            protected override void SetupMock(Mock<INotificationApplicationService> mock)
             {
-                mock.Setup(e => e.GetCurrentEventInfoLog(It.IsAny<string>()))
+                mock.Setup(e => e.GetCurrentNotificationLog(It.IsAny<string>()))
                     .Callback<string>(s => this.invoked = true)
-                    .Returns(Task.FromResult(this.EventInfoLogResult));
+                    .Returns(Task.FromResult(this.NotificationLogResult));
             }
         }
 
         public class When_store_is_empty : GettingCurrentLogContext
         {
-            protected override EventInfoLog EventInfoLogResult => new EventInfoLog(new EventInfoLogId(0,0), null, null, null, new EventInfo[0], false);
+            protected override NotificationLog NotificationLogResult => new NotificationLog(new NotificationLogId(0,0), null, null, null, new Notification[0], false);
             
             [Fact]
             public void Should_invoke_method()
@@ -81,9 +81,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
             }
 
             [Fact]
-            public void Should_have_empty_event_info_in_response_body()
+            public void Should_have_empty_notification_in_response_body()
             {
-                var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                 Assert.Empty(eil);
             }
 
@@ -117,7 +117,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                     Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
-                Assert.Equal("http:///samplebody/cortex/events/0,0", link);
+                Assert.Equal("http:///samplebody/cortex/notifications/0,0", link);
             }
         }
 
@@ -125,29 +125,29 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
         {
             public abstract class HasNextContext : GettingCurrentLogContext
             {
-                protected override EventInfoLog EventInfoLogResult =>
-                    new EventInfoLog(
-                        new EventInfoLogId(6,10),
-                        new EventInfoLogId(1,20),
-                        new EventInfoLogId(11,15),
+                protected override NotificationLog NotificationLogResult =>
+                    new NotificationLog(
+                        new NotificationLogId(6,10),
+                        new NotificationLogId(1,20),
+                        new NotificationLogId(11,15),
                         this.PreviousId,
-                        new EventInfo[]
+                        new Notification[]
                         {
-                        new EventInfo() { Id = "6" },
-                        new EventInfo() { Id = "7" },
-                        new EventInfo() { Id = "8" },
-                        new EventInfo() { Id = "9" },
-                        new EventInfo() { Id = "10" },
+                        new Notification() { Id = "6" },
+                        new Notification() { Id = "7" },
+                        new Notification() { Id = "8" },
+                        new Notification() { Id = "9" },
+                        new Notification() { Id = "10" },
                         },
                         true
                         );
 
-                protected abstract EventInfoLogId PreviousId { get; }
+                protected abstract NotificationLogId PreviousId { get; }
             }
 
             public class When_log_has_previous : HasNextContext
             {
-                protected override EventInfoLogId PreviousId => new EventInfoLogId(1,5);
+                protected override NotificationLogId PreviousId => new NotificationLogId(1,5);
 
                 [Fact]
                 public void Should_invoke_method()
@@ -162,9 +162,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -187,7 +187,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -209,7 +209,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]
@@ -231,7 +231,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
                 }
 
                 [Fact]
@@ -253,13 +253,13 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
                 }
             }
 
             public class When_log_has_no_previous : HasNextContext
             {
-                protected override EventInfoLogId PreviousId => null;
+                protected override NotificationLogId PreviousId => null;
 
                 [Fact]
                 public void Should_invoke_method()
@@ -274,9 +274,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -299,7 +299,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -321,7 +321,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]
@@ -343,7 +343,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
                 }
 
                 [Fact]
@@ -363,29 +363,29 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
         {
             public abstract class HasNoNextContext : GettingCurrentLogContext
             {
-                protected override EventInfoLog EventInfoLogResult =>
-                    new EventInfoLog(
-                        new EventInfoLogId(6, 10), 
-                        new EventInfoLogId(1, 20),
+                protected override NotificationLog NotificationLogResult =>
+                    new NotificationLog(
+                        new NotificationLogId(6, 10), 
+                        new NotificationLogId(1, 20),
                         null,
                         this.PreviousId,
-                        new EventInfo[]
+                        new Notification[]
                         {
-                        new EventInfo() { Id = "6" },
-                        new EventInfo() { Id = "7" },
-                        new EventInfo() { Id = "8" },
-                        new EventInfo() { Id = "9" },
-                        new EventInfo() { Id = "10" },
+                        new Notification() { Id = "6" },
+                        new Notification() { Id = "7" },
+                        new Notification() { Id = "8" },
+                        new Notification() { Id = "9" },
+                        new Notification() { Id = "10" },
                         },
                         true
                         );
 
-                protected abstract EventInfoLogId PreviousId { get; }
+                protected abstract NotificationLogId PreviousId { get; }
             }
 
             public class When_log_has_previous : HasNoNextContext
             {
-                protected override EventInfoLogId PreviousId => new EventInfoLogId(1,5);
+                protected override NotificationLogId PreviousId => new NotificationLogId(1,5);
 
                 [Fact]
                 public void Should_invoke_method()
@@ -400,9 +400,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -425,7 +425,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -447,7 +447,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]
@@ -469,7 +469,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
                 }
 
                 [Fact]
@@ -486,7 +486,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
 
             public class When_log_has_no_previous : HasNoNextContext
             {
-                protected override EventInfoLogId PreviousId => null;
+                protected override NotificationLogId PreviousId => null;
 
                 [Fact]
                 public void Should_invoke_method()
@@ -501,9 +501,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -526,7 +526,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -548,7 +548,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]
@@ -584,19 +584,19 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
 
             protected string gettingLogId;
 
-            protected override string Path => "/samplebody/cortex/events/" + this.UriLogId;
+            protected override string Path => "/samplebody/cortex/notifications/" + this.UriLogId;
 
-            protected override void SetupMock(Mock<IEventInfoApplicationService> mock)
+            protected override void SetupMock(Mock<INotificationApplicationService> mock)
             {
-                mock.Setup(e => e.GetEventInfoLog(It.IsAny<string>(), It.IsAny<string>()))
+                mock.Setup(e => e.GetNotificationLog(It.IsAny<string>(), It.IsAny<string>()))
                     .Callback<string, string>((s, e)  => { this.invoked = true; this.gettingLogId = e; })
-                    .Returns(Task.FromResult(this.EventInfoLogResult));
+                    .Returns(Task.FromResult(this.NotificationLogResult));
             }
         }
 
         public class When_store_is_empty : GettingLogContext
         {
-            protected override EventInfoLog EventInfoLogResult => new EventInfoLog(new EventInfoLogId(1,5), null, null, null, new EventInfo[0], false);
+            protected override NotificationLog NotificationLogResult => new NotificationLog(new NotificationLogId(1,5), null, null, null, new Notification[0], false);
 
             public override string UriLogId => "1,5";
 
@@ -619,9 +619,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
             }
 
             [Fact]
-            public void Should_have_empty_event_info_in_response_body()
+            public void Should_have_empty_notification_in_response_body()
             {
-                var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                 Assert.Empty(eil);
             }
 
@@ -644,7 +644,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                     Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
-                Assert.Equal("http:///samplebody/cortex/events/1,5", link);
+                Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
             }
 
             [Fact]
@@ -663,29 +663,29 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
         {
             public abstract class HasNextContext : GettingLogContext
             {
-                protected override EventInfoLog EventInfoLogResult =>
-                    new EventInfoLog(
-                        new EventInfoLogId(6,10),
-                        new EventInfoLogId(1,20),
-                        new EventInfoLogId(11,15),
+                protected override NotificationLog NotificationLogResult =>
+                    new NotificationLog(
+                        new NotificationLogId(6,10),
+                        new NotificationLogId(1,20),
+                        new NotificationLogId(11,15),
                         this.PreviousId,
-                        new EventInfo[]
+                        new Notification[]
                         {
-                        new EventInfo() { Id = "6" },
-                        new EventInfo() { Id = "7" },
-                        new EventInfo() { Id = "8" },
-                        new EventInfo() { Id = "9" },
-                        new EventInfo() { Id = "10" },
+                        new Notification() { Id = "6" },
+                        new Notification() { Id = "7" },
+                        new Notification() { Id = "8" },
+                        new Notification() { Id = "9" },
+                        new Notification() { Id = "10" },
                         },
                         true
                         );
 
-                protected abstract EventInfoLogId PreviousId { get; }
+                protected abstract NotificationLogId PreviousId { get; }
             }
 
             public class When_log_has_previous : HasNextContext
             {
-                protected override EventInfoLogId PreviousId => new EventInfoLogId(1,5);
+                protected override NotificationLogId PreviousId => new NotificationLogId(1,5);
 
                 public override string UriLogId => "6,10";
 
@@ -708,9 +708,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -733,7 +733,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -755,7 +755,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]
@@ -777,7 +777,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
                 }
 
                 [Fact]
@@ -799,13 +799,13 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
                 }
             }
 
             public class When_log_has_no_previous : HasNextContext
             {
-                protected override EventInfoLogId PreviousId => null;
+                protected override NotificationLogId PreviousId => null;
 
                 public override string UriLogId => "6,10";
 
@@ -828,9 +828,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -853,7 +853,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -875,7 +875,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]
@@ -897,7 +897,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/11,15", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
                 }
 
                 [Fact]
@@ -917,29 +917,29 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
         {
             public abstract class HasNoNextContext : GettingLogContext
             {
-                protected override EventInfoLog EventInfoLogResult =>
-                    new EventInfoLog(
-                        new EventInfoLogId(6,10),
-                        new EventInfoLogId(1,20),
+                protected override NotificationLog NotificationLogResult =>
+                    new NotificationLog(
+                        new NotificationLogId(6,10),
+                        new NotificationLogId(1,20),
                         null,
                         this.PreviousId,
-                        new EventInfo[]
+                        new Notification[]
                         {
-                        new EventInfo() { Id = "6" },
-                        new EventInfo() { Id = "7" },
-                        new EventInfo() { Id = "8" },
-                        new EventInfo() { Id = "9" },
-                        new EventInfo() { Id = "10" },
+                        new Notification() { Id = "6" },
+                        new Notification() { Id = "7" },
+                        new Notification() { Id = "8" },
+                        new Notification() { Id = "9" },
+                        new Notification() { Id = "10" },
                         },
                         true
                         );
 
-                protected abstract EventInfoLogId PreviousId { get; }
+                protected abstract NotificationLogId PreviousId { get; }
             }
 
             public class When_log_has_previous : HasNoNextContext
             {
-                protected override EventInfoLogId PreviousId => new EventInfoLogId(1,5);
+                protected override NotificationLogId PreviousId => new NotificationLogId(1,5);
 
                 public override string UriLogId => "6,10";
 
@@ -962,9 +962,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -987,7 +987,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -1009,7 +1009,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]
@@ -1031,7 +1031,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,5", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
                 }
 
                 [Fact]
@@ -1048,7 +1048,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
 
             public class When_log_has_no_previous : HasNoNextContext
             {
-                protected override EventInfoLogId PreviousId => null;
+                protected override NotificationLogId PreviousId => null;
 
                 public override string UriLogId => "6,10";
 
@@ -1071,9 +1071,9 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                 }
 
                 [Fact]
-                public void Should_have_correct_event_info_count_in_response_body()
+                public void Should_have_correct_notification_count_in_response_body()
                 {
-                    var eil = JsonConvert.DeserializeObject<EventInfo[]>(this.response.Body.AsString());
+                    var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
@@ -1096,7 +1096,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/6,10", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
                 }
 
                 [Fact]
@@ -1118,7 +1118,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.EventInfoModuleFixture.giv
                         Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
-                    Assert.Equal("http:///samplebody/cortex/events/1,20", link);
+                    Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
                 }
 
                 [Fact]

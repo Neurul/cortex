@@ -26,9 +26,9 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
             this.publisher = publisher;
         }
 
-        public async Task<long> CountEventInfo()
+        public async Task<long> CountNotifications()
         {
-            return await this.connection.Table<EventInfo>().CountAsync();
+            return await this.connection.Table<Notification>().CountAsync();
         }
 
         public void Dispose()
@@ -41,42 +41,28 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
             string id = aggregateId.ToString();
             // When called from CacheRepository.Get<T>, fromVersion is obtained from the AggregateRoot.Version (CQRSlite) value.
             // CacheRepository is trying to obtain only "newer" events and thus the "> fromVersion".
-            var query = this.connection.Table<EventInfo>().Where(e => e.Id == id && e.Version > fromVersion);
+            var query = this.connection.Table<Notification>().Where(e => e.Id == id && e.Version > fromVersion);
             var list = await query.ToListAsync();
 
             return list.Select(ev => ev.ToDomainEvent(this.serializer)).ToArray();
         }
 
-        public async Task<EventInfo[]> GetAllEventInfoSince(long sequenceId)
+        public async Task<Notification[]> GetAllNotificationsSince(long sequenceId)
         {
-            var max = await this.CountEventInfo();
+            var max = await this.CountNotifications();
             AssertionConcern.AssertArgumentRange(sequenceId, 1, max, nameof(sequenceId));
 
-            var query = this.connection.Table<EventInfo>().Where(e => e.SequenceId >= sequenceId);
+            var query = this.connection.Table<Notification>().Where(e => e.SequenceId >= sequenceId);
             return (await query.ToListAsync()).ToArray();
         }
 
-        public async Task<EventInfo[]> GetEventInfoRange(long lowSequenceId, long highSequenceId)
+        public async Task<Notification[]> GetNotificationRange(long lowSequenceId, long highSequenceId)
         {
             AssertionConcern.AssertMinimumMaximumValid(lowSequenceId, highSequenceId, nameof(lowSequenceId), nameof(highSequenceId));
             AssertionConcern.AssertMinimum(lowSequenceId, 1, nameof(lowSequenceId));
 
-            var query = this.connection.Table<EventInfo>().Where(e => e.SequenceId >= lowSequenceId && e.SequenceId <= highSequenceId);
+            var query = this.connection.Table<Notification>().Where(e => e.SequenceId >= lowSequenceId && e.SequenceId <= highSequenceId);
             return (await query.ToListAsync()).ToArray();
-        }
-
-        public async Task<IEvent> GetLastEvent(Guid guid)
-        {
-            string id = guid.ToString();
-            var query = this.connection.Table<EventInfo>().Where(e => e.Id == id);
-            var result = await query.ToListAsync();
-
-            IEvent @event = null;
-
-            if (result.Any())
-                @event = result.Last().ToDomainEvent(this.serializer);
-
-            return @event;
         }
 
         public async Task Initialize(string storeId)
@@ -91,13 +77,10 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
         {
             if (!events.Any())
                 throw new ArgumentException("Specified 'events' cannot be empty.", nameof(events));
+            if (events.First() != null && !(events.First() is IAuthoredEvent))
+                throw new ArgumentException("Specified 'events' must implement IAuthoredEvent.");
 
-            var eventData = events.Select(e => e.ToEventInfo(this.serializer));
-            var firstEvent = events.ToArray()[0];
-            var lastEvent = await this.GetLastEvent(firstEvent.Id);
-            if (lastEvent != null && lastEvent.Version != firstEvent.Version - 1)
-                throw new InvalidOperationException("Unexpected version of specified event.");
-
+            var eventData = events.Select(e => ((IAuthoredEvent) e).ToNotification(this.serializer));
             await this.connection.RunInTransactionAsync(c => c.InsertAll(eventData));
             
             events.ToList().ForEach(e => this.publisher.Publish(e, cancellationToken));            
@@ -112,7 +95,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
                 AssertionConcern.AssertPathValid(databasePath, nameof(databasePath));
 
             result = new SQLiteAsyncConnection(databasePath);
-            await result.CreateTableAsync<EventInfo>();
+            await result.CreateTableAsync<Notification>();
             return result;
         }
     }

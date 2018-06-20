@@ -12,14 +12,18 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
 {
     public abstract class Context : TestContext<Neuron>
     {
+        private string authorId = Guid.NewGuid().ToString();
+
         protected override void Given()
         {
             base.Given();
 
             var id = Guid.NewGuid();
-            this.sut = new Neuron(id);
+            this.sut = new Neuron(id, string.Empty, authorId);
         }
-    }
+
+        protected virtual string AuthorId => this.authorId;
+}
 
     public class When_created_with_id_only : Context
     {
@@ -73,7 +77,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public async Task Should_throw_argument_null_exception()
                 {
-                    await Assert.ThrowsAsync<ArgumentNullException>("terminals", () => this.sut.AddTerminals(null));
+                    await Assert.ThrowsAsync<ArgumentNullException>("terminals", () => this.sut.AddTerminals(this.AuthorId, null));
                 }
             }
 
@@ -83,7 +87,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 public async Task Should_throw_argument_exception()
                 {
                     // Assert
-                    await Assert.ThrowsAsync<ArgumentException>("terminals", () => this.sut.AddTerminals(new Terminal[0]));
+                    await Assert.ThrowsAsync<ArgumentException>("terminals", () => this.sut.AddTerminals(new Terminal[0], this.AuthorId));
                 }
             }
 
@@ -93,7 +97,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 {
                     base.Given();
 
-                    this.sut.Deactivate();
+                    this.sut.Deactivate(this.AuthorId);
                 }
 
                 protected override bool InvokeWhenOnConstruct => false;
@@ -101,7 +105,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public async Task Should_throw_invalid_operation_exception()
                 {
-                    await Assert.ThrowsAsync<InvalidOperationException>(() => this.sut.AddTerminals(this.terminals));
+                    await Assert.ThrowsAsync<InvalidOperationException>(() => this.sut.AddTerminals(this.terminals, this.AuthorId));
                 }
             }
         }
@@ -112,7 +116,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             {
                 base.When();
 
-                Task.Run(async () => await this.sut.AddTerminals(this.TerminalsForAdding)).Wait();
+                Task.Run(async () => await this.sut.AddTerminals(this.TerminalsForAdding, this.AuthorId)).Wait();
             }
 
             protected virtual Func<Terminal, bool> TerminalValidator => t => true;
@@ -162,7 +166,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 {
                     base.Given();
 
-                    Task.Run(async () => await this.sut.AddTerminals(this.terminals[0])).Wait();
+                    Task.Run(async () => await this.sut.AddTerminals(this.AuthorId, this.terminals[0])).Wait();
                 }
             }
 
@@ -214,7 +218,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 {
                     base.Given();
 
-                    Task.Run(async () => await this.sut.AddTerminals(this.terminals[0], this.terminals[1])).Wait();
+                    Task.Run(async () => await this.sut.AddTerminals(this.AuthorId, this.terminals[0], this.terminals[1])).Wait();
                 }
             }
 
@@ -235,7 +239,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 public async Task Should_throw_an_argument_exception()
                 {
                     // Assert
-                    await Assert.ThrowsAsync<ArgumentException>(() => this.sut.AddTerminals(this.terminals[2]));
+                    await Assert.ThrowsAsync<ArgumentException>(() => this.sut.AddTerminals(this.AuthorId, this.terminals[2]));
                 }
             }            
         }        
@@ -249,13 +253,13 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             {
                 base.Given();
 
-                this.sut.Deactivate();
+                this.sut.Deactivate(this.AuthorId);
             }
 
             [Fact]
             public void Should_throw_invalid_operation_exception()
             {
-                Assert.Throws<InvalidOperationException>(() => this.sut.ChangeData(string.Empty));
+                Assert.Throws<InvalidOperationException>(() => this.sut.ChangeData(string.Empty, this.AuthorId));
             }
         }
 
@@ -265,7 +269,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             {
                 base.Given();
 
-                this.sut.ChangeData(this.NewData);
+                this.sut.ChangeData(this.NewData, this.AuthorId);
             }
 
             protected abstract string NewData
@@ -310,7 +314,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_null_exception()
                 {
-                    Assert.Throws<ArgumentNullException>("terminals", () => this.sut.RemoveTerminals(null));
+                    Assert.Throws<ArgumentNullException>("terminals", () => this.sut.RemoveTerminals(null, this.AuthorId));
                 }
             }
 
@@ -319,7 +323,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_exception()
                 {
-                    Assert.Throws<ArgumentException>("terminals", () => this.sut.RemoveTerminals());
+                    Assert.Throws<ArgumentException>("terminals", () => this.sut.RemoveTerminals(this.AuthorId));
                 }
             }
 
@@ -329,13 +333,13 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 {
                     base.Given();
 
-                    this.sut.Deactivate();
+                    this.sut.Deactivate(this.AuthorId);
                 }
 
                 [Fact]
                 public void Should_throw_invalid_operation_exception()
                 {
-                    Assert.Throws<InvalidOperationException>(() => this.sut.RemoveTerminals());
+                    Assert.Throws<InvalidOperationException>(() => this.sut.RemoveTerminals(this.AuthorId));
                 }
             }
         }
@@ -364,7 +368,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_exception()
                 {
-                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(new Terminal(this.terminalIds[0])));
+                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(this.AuthorId, new Terminal(this.terminalIds[0])));
                     Assert.Contains(this.terminalIds[0].ToString(), ex.Message);
                 }
             }
@@ -380,7 +384,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                             new Terminal(Guid.NewGuid()),
                             new Terminal(Guid.NewGuid())
                     };
-                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(ts));
+                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(this.AuthorId, ts));
                     Assert.Contains(ts[0].TargetId.ToString(), ex.Message);
                 }
             }
@@ -394,7 +398,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
 
                 foreach (Guid g in this.terminalIds)
                 {
-                    Task.Run(() => this.sut.AddTerminals(new Terminal(g))).Wait();
+                    Task.Run(() => this.sut.AddTerminals(this.AuthorId, new Terminal(g))).Wait();
                 }
             }
         }
@@ -405,7 +409,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             {
                 protected override void When()
                 {
-                    this.sut.RemoveTerminals(new Terminal(this.terminalIds[0]));
+                    this.sut.RemoveTerminals(this.AuthorId, new Terminal(this.terminalIds[0]));
                 }
 
                 [Fact]
@@ -426,7 +430,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_exception()
                 {
-                    Assert.Throws<ArgumentException>("terminals", () => this.sut.RemoveTerminals(new Terminal(Guid.NewGuid())));
+                    Assert.Throws<ArgumentException>("terminals", () => this.sut.RemoveTerminals(this.AuthorId, new Terminal(Guid.NewGuid())));
                 }
             }
         }
@@ -448,7 +452,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                     base.When();
 
                     var ts = this.terminalIds.Select(g => new Terminal(g));
-                    this.sut.RemoveTerminals(ts);
+                    this.sut.RemoveTerminals(ts, this.AuthorId);
                 }
 
                 [Fact]
@@ -473,7 +477,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                     base.Given();
 
                     this.initCount = this.terminalIds.Count();
-                    this.sut.RemoveTerminals(new Terminal(this.terminalIds[1]));
+                    this.sut.RemoveTerminals(this.AuthorId, new Terminal(this.terminalIds[1]));
                 }
 
                 [Fact]
@@ -506,7 +510,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             {
                 base.Given();
 
-                this.sut.Deactivate();
+                this.sut.Deactivate(this.AuthorId);
             }
         }
 
@@ -524,7 +528,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             [Fact]
             public void Should_throw_invalid_operation_exception()
             {
-                Assert.Throws<InvalidOperationException>(() => this.sut.Deactivate());
+                Assert.Throws<InvalidOperationException>(() => this.sut.Deactivate(this.AuthorId));
             }
         }
     }

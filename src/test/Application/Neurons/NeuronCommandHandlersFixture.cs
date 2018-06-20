@@ -21,6 +21,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             private const string DataValue = "Hello World";
             private const string AvatarIdValue = "samplebody";
             private Guid guid;
+            private string authorId;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
@@ -31,12 +32,13 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected override IEnumerable<IEvent> Given()
             {
                 this.guid = Guid.NewGuid();
+                this.authorId = Guid.NewGuid().ToString();
                 return new List<IEvent>();
             }
 
             protected override CreateNeuron When()
             {
-                return new CreateNeuron(AvatarIdValue, this.guid, DataValue);
+                return new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId);
             }
 
             [Fact]
@@ -67,6 +69,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             private const string AvatarIdValue = "samplebody";
             protected Guid guid;
             protected Guid targetGuid;
+            protected string authorId;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
@@ -78,6 +81,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             {
                 this.guid = Guid.NewGuid();
                 this.targetGuid = Guid.NewGuid();
+                this.authorId = Guid.NewGuid().ToString();
                 return this.GetEvents();
             }
 
@@ -88,7 +92,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override CreateNeuronWithTerminals When()
             {
-                return new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid) });
+                return new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid) }, this.authorId);
             }
         }
 
@@ -133,7 +137,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         {
             protected override List<IEvent> GetEvents()
             {
-                return new List<IEvent>() { new NeuronCreated(this.guid, DataValue) { Version = 1 } };
+                return new List<IEvent>() { new NeuronCreated(this.guid, DataValue, this.authorId) { Version = 1 } };
             }
 
             protected override bool InvokeWhenOnConstruct => false;
@@ -153,6 +157,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected const string OrigDataValue = "Hello World";
             private const string AvatarIdValue = "samplebody";
             protected Guid guid;
+            protected string authorId;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
@@ -162,15 +167,16 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected override IEnumerable<IEvent> Given()
             {
                 this.guid = Guid.NewGuid();
+                this.authorId = Guid.NewGuid().ToString();
                 return new List<IEvent>
             {
-                new NeuronCreated(this.guid, OrigDataValue) { Version = 1}
+                new NeuronCreated(this.guid, OrigDataValue, this.authorId) { Version = 1}
             };
             }
 
             protected override ChangeNeuronData When()
             {
-                return new ChangeNeuronData(AvatarIdValue, this.guid, NewDataValue, 1);
+                return new ChangeNeuronData(AvatarIdValue, this.guid, NewDataValue, this.authorId, 1);
             }
 
             protected virtual string NewDataValue
@@ -220,6 +226,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             private const string AvatarIdValue = "samplebody";
             protected Guid guid;
             protected Guid targetGuid;
+            protected string authorId;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
@@ -239,7 +246,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var ts = new List<Terminal>();
                 foreach (Guid g in this.Targets)
                     ts.Add(new Terminal(g));
-                return new AddTerminalsToNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.GivenEventsCount);
+                return new AddTerminalsToNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId, this.GivenEventsCount);
             }
 
             protected virtual int GivenEventsCount
@@ -256,13 +263,14 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             {
                 this.guid = Guid.NewGuid();
                 this.targetGuid = Guid.NewGuid();
+                this.authorId = Guid.NewGuid().ToString();
             }
 
             protected virtual IEvent[] GetEvents()
             {
                 return new IEvent[]
                 {
-                new NeuronCreated(this.guid, AddTerminalsToNeuronContext.DataValue) { Version = 1}
+                new NeuronCreated(this.guid, AddTerminalsToNeuronContext.DataValue, this.authorId) { Version = 1}
                 };
             }
         }
@@ -323,7 +331,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 protected override IEvent[] GetEvents()
                 {
                     return base.GetEvents().Concat(
-                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid) }) { Version = 2 } }
+                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid) }, this.authorId) { Version = 2 } }
                     ).ToArray();
                 }
 
@@ -365,6 +373,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             private const string AvatarIdValue = "samplebody";
             protected Guid guid;
             protected Guid targetGuid;
+            protected string authorId;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
@@ -384,7 +393,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var ts = new List<Terminal>();
                 foreach (Guid g in this.CommandTargets)
                     ts.Add(new Terminal(g));
-                return new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.GivenEventsCount);
+                return new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId, this.GivenEventsCount);
             }
 
             protected virtual int GivenEventsCount
@@ -401,13 +410,14 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             {
                 this.guid = Guid.NewGuid();
                 this.targetGuid = Guid.NewGuid();
+                this.authorId = Guid.NewGuid().ToString();
             }
 
             protected virtual IEvent[] GetEvents()
             {
                 return new IEvent[]
                 {
-                new NeuronCreated(this.guid, DataValue) { Version = 1}
+                new NeuronCreated(this.guid, DataValue, this.authorId) { Version = 1}
                 };
             }
         }
@@ -423,7 +433,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 protected override IEvent[] GetEvents()
                 {
                     return base.GetEvents().Concat(
-                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid) }) { Version = 2 } }
+                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid) }, this.authorId) { Version = 2 } }
                     ).ToArray();
                 }
 
@@ -475,11 +485,17 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 protected override IEvent[] GetEvents()
                 {
                     return base.GetEvents().Concat(
-                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] {
-                    new Terminal(this.targetGuid),
-                    new Terminal(this.targetGuid2),
-                    new Terminal(this.targetGuid3)
-                }) { Version = 2 } }
+                        new IEvent[] {
+                            new TerminalsAdded(
+                                this.guid, 
+                                new Terminal[] {
+                                    new Terminal(this.targetGuid),
+                                    new Terminal(this.targetGuid2),
+                                    new Terminal(this.targetGuid3)
+                                },
+                                this.authorId
+                            ) { Version = 2 }
+                        }
                     ).ToArray();
                 }
 
@@ -519,6 +535,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected const string OrigDataValue = "Hello World";
             private const string AvatarIdValue = "samplebody";
             protected Guid guid;
+            protected string authorId;
 
             protected override NeuronCommandHandlers BuildHandler()
             {
@@ -528,15 +545,16 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected override IEnumerable<IEvent> Given()
             {
                 this.guid = Guid.NewGuid();
+                this.authorId = Guid.NewGuid().ToString();
                 return new List<IEvent>
                 {
-                    new NeuronCreated(this.guid, OrigDataValue) { Version = 1}
+                    new NeuronCreated(this.guid, OrigDataValue, this.authorId) { Version = 1}
                 };
             }
 
             protected override DeactivateNeuron When()
             {
-                return new DeactivateNeuron(AvatarIdValue, this.guid, this.Given().Last().Version);
+                return new DeactivateNeuron(AvatarIdValue, this.guid, this.authorId, this.Given().Last().Version);
             }
         }
 
@@ -560,7 +578,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected override IEnumerable<IEvent> Given()
             {
                 var baseEvents = base.Given().ToList();
-                baseEvents.Add(new NeuronDeactivated(this.guid) { Version = 2 });
+                baseEvents.Add(new NeuronDeactivated(this.guid, this.authorId) { Version = 2 });
                 return baseEvents;
             }
 

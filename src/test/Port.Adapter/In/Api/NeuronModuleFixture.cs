@@ -78,7 +78,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                         {
                             ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
                         }
-                        ]
+                        ],
+                        ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                     }"
                     );
                 };
@@ -102,7 +103,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     with.Body(@"{
-                              ""Data"": ""2017/11/09 22:41""
+                              ""Data"": ""2017/11/09 22:41"",
+                              ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                             }"
                     );
                 };
@@ -127,7 +129,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                                     {
                                       ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
                                     }
-                                  ]
+                                  ],
+                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                                 }"
                     );
                 };
@@ -197,7 +200,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                     {
                         ""Target"": ""ceeb5d65-4468-437d-8e99-22cfb66a6eca""
                     }
-                    ]
+                    ],
+                    ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                 }"
                     );
                 };
@@ -221,7 +225,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     base.BrowserContext(with);
-                    with.Body(@"{ }"
+                    with.Body(@"{ ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"" }"
                     );
                 };
 
@@ -249,7 +253,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     with.Body(@"{
-                            ""Data"": ""Hello World""
+                            ""Data"": ""Hello World"",
+                            ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                         }"
                     );
                 };
@@ -285,7 +290,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                                 {
                                   ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
                                 }
-                              ]
+                              ],
+                              ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                             }"
                     );
                 };
@@ -331,6 +337,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                     base.BrowserContext(with);
                     with.Body(@"{
                                   ""Data"": ""New Data"",
+                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                                 }"
                     );    
                 };
@@ -359,7 +366,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                         {
                             ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
                         }
-                        ]
+                        ],
+                        ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                     }"
                     );
                 };
@@ -392,7 +400,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                                     {
                                       ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
                                     }
-                                  ]
+                                  ],
+                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                                 }"
                     );
                 };
@@ -423,7 +432,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                                     {
                                       ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
                                     }
-                                  ]
+                                  ],
+                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                                 }"
                     );
                 };
@@ -460,11 +470,20 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 protected const string TerminalId = "123457a8-615c-4a83-be49-fde69f4ff456";
 
                 protected override string Path => "/samplebody/cortex/neurons/" + Context.NeuronId + "/terminals/" + DeleteTerminalContext.TerminalId;
+
+                protected override Action<BrowserContext> BrowserContext => with =>
+                {
+                    with.Body(@"{ ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"" }");
+                };
             }
 
             public class When_header_has_expected_version : DeleteTerminalContext
-            {   
-                protected override Action<BrowserContext> BrowserContext => with => with.Header("ETag", "5");
+            {
+                protected override Action<BrowserContext> BrowserContext => with =>
+                {
+                    base.BrowserContext(with);
+                    with.Header("ETag", "5");
+                };
 
                 [Fact]
                 public void Should_send_RemoveTerminalsFromNeuron_command()
@@ -494,7 +513,10 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
 
             public class When_header_expected_version_is_missing : DeleteTerminalContext
             {
-                protected override Action<BrowserContext> BrowserContext => with => { };
+                protected override Action<BrowserContext> BrowserContext => with => 
+                {
+                    base.BrowserContext(with);
+                };
 
                 [Fact]
                 public void Should_respond_with_bad_request()
@@ -517,13 +539,22 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
             public abstract class DeactivateNeuronContext : DeleteRequestContext
             {
                 protected override string Path => "/samplebody/cortex/neurons/" + Context.NeuronId;
+
+                protected override Action<BrowserContext> BrowserContext => with =>
+                {
+                    with.Body(@"{ ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"" }");
+                };
             }
 
             public class When_header_has_expected_version : DeactivateNeuronContext
             {
                 protected const int ExpectedVersion = 5;
 
-                protected override Action<BrowserContext> BrowserContext => with => { with.Header("ETag", When_header_has_expected_version.ExpectedVersion.ToString()); };
+                protected override Action<BrowserContext> BrowserContext => with =>
+                {
+                    base.BrowserContext(with);
+                    with.Header("ETag", When_header_has_expected_version.ExpectedVersion.ToString());
+                };
 
                 [Fact]
                 public void Should_send_deactivate_neuron_command()
@@ -553,7 +584,10 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
 
             public class When_header_expected_version_is_missing : DeactivateNeuronContext
             {
-                protected override Action<BrowserContext> BrowserContext => with => { };
+                protected override Action<BrowserContext> BrowserContext => with =>
+                {
+                    base.BrowserContext(with);
+                };
 
                 [Fact]
                 public void Should_respond_with_bad_request()

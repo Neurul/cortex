@@ -3,7 +3,7 @@ using CQRSlite.Routing;
 using Nancy;
 using Nancy.TinyIoc;
 using org.neurul.Common.Events;
-using org.neurul.Cortex.Application.EventInfo;
+using org.neurul.Cortex.Application.Notification;
 using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events;
 using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite;
 
@@ -23,7 +23,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api
             container.Register<IEventPublisher, Router>(ipb);
             container.Register<IEventSerializer, EventSerializer>();
             container.Register<INavigableEventStore, EventStore>();
-            container.Register<IEventInfoApplicationService, EventInfoApplicationService>();
+            container.Register<INotificationApplicationService, NotificationApplicationService>();
         }
     }
 }

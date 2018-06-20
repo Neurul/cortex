@@ -23,6 +23,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\main\Application\Application.csproj" />
+    <ProjectReference Include="..\..\..\..\main\Domain.Model\Domain.Model.csproj" />
+    <ProjectReference Include="..\..\..\..\main\Port.Adapter\IO\Persistence\Events\Events.csproj" />
+    <ProjectReference Include="..\..\..\..\main\Port.Adapter\IO\Persistence\Events\SQLite\SQLite.csproj" />
     <ProjectReference Include="..\..\..\..\main\Port.Adapter\Out\Api\Out.Api.csproj" />
   </ItemGroup>
 

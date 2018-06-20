@@ -13,12 +13,13 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
         }
 
         [JsonConstructor]
-        public CreateNeuronWithTerminals(string avatarId, Guid id, string data, IEnumerable<Terminal> terminals)
+        public CreateNeuronWithTerminals(string avatarId, Guid id, string data, IEnumerable<Terminal> terminals, string authorId)
         {
             this.AvatarId = avatarId;
             this.Id = id;            
             this.Data = data;
             this.Terminals = terminals;
+            this.AuthorId = authorId;
         }
 
         public string AvatarId { get; private set; }
@@ -28,7 +29,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
         public string Data { get; private set; }
 
         public IEnumerable<Terminal> Terminals { get; private set; }
-        
+
+        public string AuthorId { get; set; }
+
         public int ExpectedVersion { get; set; }
     }
 }
