@@ -76,7 +76,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                         ""Data"": ""2017/11/09 22:41"",
                         ""Terminals"": [
                         {
-                            ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
+                            ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+                            ""Effect"": ""Excite"",
+                            ""Strength"": ""1""
                         }
                         ],
                         ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
@@ -127,7 +129,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                     with.Body(@"{
                                   ""Terminals"": [
                                     {
-                                      ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
+                                      ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+                                        ""Effect"": ""Excite"",
+                                        ""Strength"": ""1""
                                     }
                                   ],
                                   ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
@@ -198,7 +202,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                     with.Body(@"{
                     ""Terminals"": [
                     {
-                        ""Target"": ""ceeb5d65-4468-437d-8e99-22cfb66a6eca""
+                        ""TargetId"": ""ceeb5d65-4468-437d-8e99-22cfb66a6eca"",
+                        ""Effect"": ""1"",
+                        ""Strength"": ""1""
                     }
                     ],
                     ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
@@ -288,7 +294,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                     with.Body(@"{
                               ""Terminals"": [
                                 {
-                                  ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
+                                  ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+                                ""Effect"": ""Excite"",
+                                ""Strength"": ""1""
                                 }
                               ],
                               ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
@@ -364,7 +372,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                     with.Body(@"{
                         ""Terminals"": [
                         {
-                            ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
+                            ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+                            ""Effect"": ""Excite"",
+                            ""Strength"": ""1""
                         }
                         ],
                         ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
@@ -398,7 +408,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                     with.Body(@"{
                                   ""Terminals"": [
                                     {
-                                      ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
+                                      ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+                                    ""Effect"": ""Excite"",
+                                    ""Strength"": ""1""
                                     }
                                   ],
                                   ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
@@ -430,7 +442,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                                   ""Data"": ""New Data"",
                                   ""Terminals"": [
                                     {
-                                      ""Target"": ""5e5aa54e-d585-4348-9109-4be0b498b231""
+                                      ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+                                    ""Effect"": ""Excite"",
+                                    ""Strength"": ""1""
                                     }
                                   ],
                                   ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
@@ -467,9 +481,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
         {
             public abstract class DeleteTerminalContext : DeleteRequestContext
             {
-                protected const string TerminalId = "123457a8-615c-4a83-be49-fde69f4ff456";
+                protected const string TargetId = "123457a8-615c-4a83-be49-fde69f4ff456";
 
-                protected override string Path => "/samplebody/cortex/neurons/" + Context.NeuronId + "/terminals/" + DeleteTerminalContext.TerminalId;
+                protected override string Path => "/samplebody/cortex/neurons/" + Context.NeuronId + "/terminals/" + DeleteTerminalContext.TargetId;
 
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
@@ -501,7 +515,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 [Fact]
                 public void Should_send_correct_terminal_id()
                 {
-                    Assert.Equal(When_header_has_expected_version.TerminalId, ((RemoveTerminalsFromNeuron)this.commandSent).Terminals.ToArray()[0].TargetId.ToString());
+                    Assert.Equal(When_header_has_expected_version.TargetId, ((RemoveTerminalsFromNeuron)this.commandSent).TargetIds.ToArray()[0]);
                 }
 
                 [Fact]

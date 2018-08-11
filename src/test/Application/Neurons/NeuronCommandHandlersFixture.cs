@@ -92,7 +92,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override CreateNeuronWithTerminals When()
             {
-                return new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid) }, this.authorId);
+                return new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId);
             }
         }
 
@@ -245,7 +245,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             {
                 var ts = new List<Terminal>();
                 foreach (Guid g in this.Targets)
-                    ts.Add(new Terminal(g));
+                    ts.Add(new Terminal(g, NeurotransmitterEffect.Excite, 1));
                 return new AddTerminalsToNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId, this.GivenEventsCount);
             }
 
@@ -331,7 +331,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 protected override IEvent[] GetEvents()
                 {
                     return base.GetEvents().Concat(
-                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid) }, this.authorId) { Version = 2 } }
+                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId) { Version = 2 } }
                     ).ToArray();
                 }
 
@@ -390,9 +390,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override RemoveTerminalsFromNeuron When()
             {
-                var ts = new List<Terminal>();
+                var ts = new List<string>();
                 foreach (Guid g in this.CommandTargets)
-                    ts.Add(new Terminal(g));
+                    ts.Add(g.ToString());
                 return new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId, this.GivenEventsCount);
             }
 
@@ -433,7 +433,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 protected override IEvent[] GetEvents()
                 {
                     return base.GetEvents().Concat(
-                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid) }, this.authorId) { Version = 2 } }
+                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId) { Version = 2 } }
                     ).ToArray();
                 }
 
@@ -459,7 +459,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 [Fact]
                 public void Should_have_correct_data()
                 {
-                    Assert.Equal(this.targetGuid, ((TerminalsRemoved)this.PublishedEvents.First()).Terminals.First().TargetId);
+                    Assert.Equal(this.targetGuid.ToString(), ((TerminalsRemoved)this.PublishedEvents.First()).TargetIds.First());
                 }
             }
         }
@@ -489,9 +489,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                             new TerminalsAdded(
                                 this.guid, 
                                 new Terminal[] {
-                                    new Terminal(this.targetGuid),
-                                    new Terminal(this.targetGuid2),
-                                    new Terminal(this.targetGuid3)
+                                    new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1),
+                                    new Terminal(this.targetGuid2, NeurotransmitterEffect.Excite, 1),
+                                    new Terminal(this.targetGuid3, NeurotransmitterEffect.Excite, 1)
                                 },
                                 this.authorId
                             ) { Version = 2 }
@@ -521,8 +521,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 [Fact]
                 public void Should_have_correct_data()
                 {
-                    Assert.Single(((TerminalsRemoved)this.PublishedEvents.First()).Terminals);
-                    Assert.Equal(this.targetGuid2, ((TerminalsRemoved)this.PublishedEvents.Last()).Terminals.First().TargetId);
+                    Assert.Single(((TerminalsRemoved)this.PublishedEvents.First()).TargetIds);
+                    Assert.Equal(this.targetGuid2.ToString(), ((TerminalsRemoved)this.PublishedEvents.Last()).TargetIds.First());
                 }
             }
         }

@@ -6,12 +6,12 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 {
     public class TerminalsRemoved : IAuthoredEvent
     {
-        public readonly IEnumerable<Terminal> Terminals;
+        public readonly IEnumerable<string> TargetIds;
 
-        public TerminalsRemoved(Guid id, IEnumerable<Terminal> terminals, string authorId)
+        public TerminalsRemoved(Guid id, IEnumerable<string> targetIds, string authorId)
         {
             this.Id = id;
-            this.Terminals = terminals;
+            this.TargetIds = targetIds;
             this.AuthorId = authorId;
         }
 

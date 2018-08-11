@@ -6,12 +6,10 @@ using Nancy.IO;
 using Nancy.Responses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using org.neurul.Common.Domain.Model;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,9 +31,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             var ts = new List<Terminal>();
                             if (bodyAsDictionary.ContainsKey("Terminals"))
                                 for (int i = 0; i < bodyAsObject.Terminals.Count; i++)
-                                    ts.Add(new Terminal(Guid.Parse(bodyAsObject.Terminals[i].Target.ToString())));
+                                    ts.Add((Terminal)NeuronModule.CreateTerminalFromDynamic(bodyAsObject.Terminals[i]));
 
-                            var neuronId = Guid.Parse(parameters.neuronId);
+                            var neuronId = System.Guid.Parse(parameters.neuronId);
                             var avatarId = parameters.avatarId;
                             string data = bodyAsObject.Data.ToString();
                             string authorId = bodyAsObject.AuthorId.ToString();
@@ -58,7 +56,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         {
                             var ts = new List<Terminal>();
                             for (int i = 0; i < bodyAsObject.Terminals.Count; i++)
-                                ts.Add(new Terminal(Guid.Parse(bodyAsObject.Terminals[i].Target.ToString())));
+                                ts.Add(NeuronModule.CreateTerminalFromDynamic(bodyAsObject.Terminals[i]));
                             return new AddTerminalsToNeuron(
                                 parameters.avatarId, 
                                 Guid.Parse(parameters.neuronId), 
@@ -94,7 +92,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             }
             );
 
-            this.Delete("/{neuronId}/terminals/{terminalId}", async (parameters) =>
+            this.Delete("/{neuronId}/terminals/{targetId}", async (parameters) =>
             {
                 return await NeuronModule.ProcessCommandResponse(
                         commandSender,
@@ -104,7 +102,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             return new RemoveTerminalsFromNeuron(
                                 parameters.avatarId,
                                 Guid.Parse(parameters.neuronId),
-                                new Terminal[] { new Terminal(Guid.Parse(parameters.terminalId)) },
+                                new string[] { parameters.targetId.ToString() },
                                 bodyAsObject.AuthorId.ToString(),
                                 expectedVersion
                                 );
@@ -132,6 +130,21 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                     );
             }
             );
+        }
+
+        private static Terminal CreateTerminalFromDynamic(dynamic dynamicTerminal)
+        {
+            string ne = dynamicTerminal.Effect.ToString();
+            if (Enum.IsDefined(typeof(NeurotransmitterEffect), (int.TryParse(ne, out int ine) ? (object) ine : ne)))
+            {
+                return new Terminal(
+                    Guid.Parse(dynamicTerminal.TargetId.ToString()),
+                    (NeurotransmitterEffect)Enum.Parse(typeof(NeurotransmitterEffect), dynamicTerminal.Effect.ToString()),
+                    float.Parse(dynamicTerminal.Strength.ToString())
+                    );
+            }
+            else
+                throw new ArgumentOutOfRangeException("Effect", $"Specified NeurotransmitterEffect value of '{dynamicTerminal.Effect.ToString()}' was invalid");
         }
 
         private static async Task<Response> ProcessCommandResponse(ICommandSender commandSender, Request request, Func<dynamic, Dictionary<string, object>, int, ICommand> commandGenerator, params string[] requiredFields)

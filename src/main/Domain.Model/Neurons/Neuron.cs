@@ -76,7 +76,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         private void Apply(TerminalsRemoved e)
         {
-            e.Terminals.ToList().ForEach(t => this.terminals.Remove(t));
+            e.TargetIds.ToList().ForEach(t => this.terminals.RemoveAll(te => te.TargetId.ToString() == t));
         }
 
         public void ChangeData(string value, string authorId)
@@ -94,24 +94,19 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             this.ApplyChange(new NeuronDeactivated(this.Id, authorId));
         }
 
-        public void RemoveTerminals(string authorId, params Terminal[] terminals)
-        {
-            this.RemoveTerminals((IEnumerable<Terminal>)terminals, authorId);
-        }
-
-        public void RemoveTerminals(IEnumerable<Terminal> terminals, string authorId)
+        public void RemoveTerminals(IEnumerable<string> targetIds, string authorId)
         {
             this.AssertActive();
 
-            if (terminals == null)
-                throw new ArgumentNullException(nameof(terminals));
-            if (!terminals.Any())
-                throw new ArgumentException("Specified Terminal list cannot be empty.", nameof(terminals));
-            Terminal nft = Terminal.Empty;
-            if (terminals.Any(t => { nft = t; return !this.terminals.Contains(t); }))
-                throw new ArgumentException($"Specified Terminal '{nft.TargetId.ToString()}' was not found.", nameof(terminals));
+            if (targetIds == null)
+                throw new ArgumentNullException(nameof(targetIds));
+            if (!targetIds.Any())
+                throw new ArgumentException("Specified Terminal list cannot be empty.", nameof(targetIds));
+            string nft = string.Empty;
+            if (targetIds.Any(t => { nft = t; return !this.terminals.Any(te => te.TargetId.ToString() == t); }))
+                throw new ArgumentException($"Specified Terminal '{nft.ToString()}' was not found.", nameof(targetIds));
 
-            base.ApplyChange(new TerminalsRemoved(this.Id, terminals, authorId));
+            base.ApplyChange(new TerminalsRemoved(this.Id, targetIds, authorId));
         }
 
         private void AssertActive()

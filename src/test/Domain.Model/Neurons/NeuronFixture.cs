@@ -65,7 +65,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             {
                 var result = new List<Terminal>();
                 for (int i = 0; i < this.GenerateTerminalsCount; i++)
-                    result.Add(new Terminal(Guid.NewGuid()));
+                    result.Add(new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1));
                 return result.ToArray();
             }
         }
@@ -232,7 +232,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                         t2 = Guid.NewGuid(),
                         t3 = new Guid(t1.ToString());
 
-                    return new Terminal[] { new Terminal(t1), new Terminal(t2), new Terminal(t3) };
+                    return new Terminal[] { new Terminal(t1, NeurotransmitterEffect.Excite, 1), new Terminal(t2, NeurotransmitterEffect.Excite, 1), new Terminal(t3, NeurotransmitterEffect.Excite, 1) };
                 }
 
                 [Fact]
@@ -314,7 +314,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_null_exception()
                 {
-                    Assert.Throws<ArgumentNullException>("terminals", () => this.sut.RemoveTerminals(null, this.AuthorId));
+                    Assert.Throws<ArgumentNullException>("targetIds", () => this.sut.RemoveTerminals(null, this.AuthorId));
                 }
             }
 
@@ -323,7 +323,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_exception()
                 {
-                    Assert.Throws<ArgumentException>("terminals", () => this.sut.RemoveTerminals(this.AuthorId));
+                    Assert.Throws<ArgumentException>("targetIds", () => this.sut.RemoveTerminals(new string[0], this.AuthorId));
                 }
             }
 
@@ -339,7 +339,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_invalid_operation_exception()
                 {
-                    Assert.Throws<InvalidOperationException>(() => this.sut.RemoveTerminals(this.AuthorId));
+                    Assert.Throws<InvalidOperationException>(() => this.sut.RemoveTerminals(new string[0], this.AuthorId));
                 }
             }
         }
@@ -368,7 +368,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_exception()
                 {
-                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(this.AuthorId, new Terminal(this.terminalIds[0])));
+                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(new string[] { this.terminalIds[0].ToString() }, this.AuthorId));
                     Assert.Contains(this.terminalIds[0].ToString(), ex.Message);
                 }
             }
@@ -378,14 +378,14 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_exception()
                 {
-                    var ts = new Terminal[]
+                    var ts = new string[]
                     {
-                            new Terminal(Guid.NewGuid()),
-                            new Terminal(Guid.NewGuid()),
-                            new Terminal(Guid.NewGuid())
+                        Guid.NewGuid().ToString(),
+                        Guid.NewGuid().ToString(),
+                        Guid.NewGuid().ToString()
                     };
-                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(this.AuthorId, ts));
-                    Assert.Contains(ts[0].TargetId.ToString(), ex.Message);
+                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(ts, this.AuthorId));
+                    Assert.Contains(ts[0], ex.Message);
                 }
             }
         }
@@ -398,7 +398,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
 
                 foreach (Guid g in this.terminalIds)
                 {
-                    Task.Run(() => this.sut.AddTerminals(this.AuthorId, new Terminal(g))).Wait();
+                    Task.Run(() => this.sut.AddTerminals(this.AuthorId, new Terminal(g, NeurotransmitterEffect.Excite, 1))).Wait();
                 }
             }
         }
@@ -409,7 +409,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             {
                 protected override void When()
                 {
-                    this.sut.RemoveTerminals(this.AuthorId, new Terminal(this.terminalIds[0]));
+                    this.sut.RemoveTerminals(new string[] { this.terminalIds[0].ToString() }, this.AuthorId);
                 }
 
                 [Fact]
@@ -430,7 +430,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 [Fact]
                 public void Should_throw_argument_exception()
                 {
-                    Assert.Throws<ArgumentException>("terminals", () => this.sut.RemoveTerminals(this.AuthorId, new Terminal(Guid.NewGuid())));
+                    Assert.Throws<ArgumentException>("targetIds", () => this.sut.RemoveTerminals(new string[] { Guid.NewGuid().ToString() }, this.AuthorId));
                 }
             }
         }
@@ -451,8 +451,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 {
                     base.When();
 
-                    var ts = this.terminalIds.Select(g => new Terminal(g));
-                    this.sut.RemoveTerminals(ts, this.AuthorId);
+                    this.sut.RemoveTerminals(this.terminalIds.Select(g => g.ToString()), this.AuthorId);
                 }
 
                 [Fact]
@@ -477,7 +476,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                     base.Given();
 
                     this.initCount = this.terminalIds.Count();
-                    this.sut.RemoveTerminals(this.AuthorId, new Terminal(this.terminalIds[1]));
+                    this.sut.RemoveTerminals(new string[] { this.terminalIds[1].ToString() }, this.AuthorId);
                 }
 
                 [Fact]

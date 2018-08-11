@@ -62,7 +62,7 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             await this.eventStore.Initialize(message.AvatarId);
             var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.RemoveTerminals(message.Terminals, message.AuthorId);
+            neuron.RemoveTerminals(message.TargetIds, message.AuthorId);
             await this.session.Commit(token);
         }
 

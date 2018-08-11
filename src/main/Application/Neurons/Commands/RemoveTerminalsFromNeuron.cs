@@ -7,13 +7,13 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class RemoveTerminalsFromNeuron : ICommand
     {
-        public readonly IEnumerable<Terminal> Terminals;
+        public readonly IEnumerable<string> TargetIds;
 
-        public RemoveTerminalsFromNeuron(string avatarId, Guid id, IEnumerable<Terminal> terminals, string authorId, int originalVersion)
+        public RemoveTerminalsFromNeuron(string avatarId, Guid id, IEnumerable<string> targetIds, string authorId, int originalVersion)
         {
             this.AvatarId = avatarId;
             this.Id = id;
-            this.Terminals = terminals;
+            this.TargetIds = targetIds;
             this.AuthorId = authorId;
             this.ExpectedVersion = originalVersion;
         }
