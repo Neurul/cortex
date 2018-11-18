@@ -75,9 +75,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
 
         public async Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (!events.Any())
-                throw new ArgumentException("Specified 'events' cannot be empty.", nameof(events));
-            if (events.First() != null && !(events.First() is IAuthoredEvent))
+            if (events.FirstOrDefault() != null && !(events.First() is IAuthoredEvent))
                 throw new ArgumentException("Specified 'events' must implement IAuthoredEvent.");
 
             var eventData = events.Select(e => ((IAuthoredEvent) e).ToNotification(this.serializer));

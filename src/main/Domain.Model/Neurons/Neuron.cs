@@ -11,7 +11,6 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
     public class Neuron : AggregateRoot
     {
         private readonly List<Terminal> terminals = new List<Terminal>();
-        private bool activated;
         private const string DeactivatedExceptionMessage = "Already deactivated.";
 
         private Neuron() { }
@@ -22,6 +21,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             this.ApplyChange(new NeuronCreated(id, data, authorId));
         }
 
+        public bool Active { get; private set; }
         public string Data { get; private set; }
 
         public ReadOnlyCollection<Terminal> Terminals
@@ -55,7 +55,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         private void Apply(NeuronCreated e)
         {
-            this.activated = true;
+            this.Active = true;
             this.Data = e.Data;
         }
 
@@ -66,7 +66,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         private void Apply(NeuronDeactivated e)
         {
-            this.activated = false;
+            this.Active = false;
         }
 
         private void Apply(TerminalsAdded e)
@@ -111,7 +111,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         private void AssertActive()
         {
-            if (!this.activated)
+            if (!this.Active)
                 throw new InvalidOperationException(Neuron.DeactivatedExceptionMessage);
         }
     }

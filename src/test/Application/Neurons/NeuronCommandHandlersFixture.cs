@@ -1,4 +1,5 @@
 ﻿using Common.Test;
+using CQRSlite.Commands;
 using CQRSlite.Domain.Exception;
 using CQRSlite.Events;
 using Moq;
@@ -14,33 +15,96 @@ using Xunit;
 
 namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixture.given
 {
+    public abstract class NonexistentAuthorContext<TCommand> : ConditionalWhenSpecification<Neuron, NeuronCommandHandlers, TCommand> where TCommand : ICommand
+    {
+        protected static readonly string DataValue = "Hello World";
+        protected static readonly string AvatarIdValue = "samplebody";
+        protected Guid guid;
+        protected Guid authorId;
+
+        protected override bool InvokeWhenOnConstruct => false;
+
+        protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
+
+        protected override IEnumerable<IEvent> Given()
+        {
+            this.guid = Guid.NewGuid();
+            this.authorId = Guid.NewGuid();
+            return new IEvent[0];
+        }
+    }
+
+    public abstract class ExistingAuthorContext<TCommand> : NonexistentAuthorContext<TCommand> where TCommand : ICommand
+    {
+        protected override bool InvokeWhenOnConstruct => true;
+        protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+            new NeuronCreated(this.authorId, "Author", this.authorId.ToString()) { Version = 1 }
+        });
+    }
+
+    public abstract class ExistingDeactivatedAuthorContext<TCommand> : ExistingAuthorContext<TCommand> where TCommand : ICommand
+    {
+        protected override bool InvokeWhenOnConstruct => false;
+        protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+            new NeuronDeactivated(this.authorId, this.authorId.ToString()) { Version = 2 }
+        });
+    }
+
     public class When_creating_neuron
     {
-        public class When_data_is_specified : Specification<Neuron, NeuronCommandHandlers, CreateNeuron>
+        public class When_specified_author_does_not_exist : NonexistentAuthorContext<CreateNeuron>
         {
-            private const string DataValue = "Hello World";
-            private const string AvatarIdValue = "samplebody";
-            private Guid guid;
-            private string authorId;
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId.ToString());
 
-            protected override NeuronCommandHandlers BuildHandler()
+            [Fact]
+            public async Task Should_throw_aggregate_not_found_exception()
             {
-                var nes = new Mock<INavigableEventStore>();
-                return new NeuronCommandHandlers(nes.Object, this.Session);
+                await Assert.ThrowsAsync<AggregateNotFoundException>(() => this.InvokeWhen());
+            }
+        }
+
+        public class When_specified_author_is_neuron : NonexistentAuthorContext<CreateNeuron>
+        {
+            protected override bool InvokeWhenOnConstruct => true;
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.authorId, DataValue, this.authorId.ToString());
+
+            [Fact]
+            public void Should_create_one_event()
+            {
+                Assert.Equal(1, this.PublishedEvents.Count);
             }
 
-            protected override IEnumerable<IEvent> Given()
+            [Fact]
+            public void Should_create_correct_event()
             {
-                this.guid = Guid.NewGuid();
-                this.authorId = Guid.NewGuid().ToString();
-                return new List<IEvent>();
+                Assert.IsType<NeuronCreated>(this.PublishedEvents.First());
             }
 
-            protected override CreateNeuron When()
+            [Fact]
+            public void Should_have_correct_data()
             {
-                return new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId);
+                Assert.Equal(DataValue, ((NeuronCreated)this.PublishedEvents.First()).Data);
             }
+        }
 
+        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<CreateNeuron>
+        {
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId.ToString());
+        
+            [Fact]
+            public async Task Should_throw_invalid_operation_exception()
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(() => this.InvokeWhen());
+            }
+        }
+
+        public class CreateNeuronWithDataContext : ExistingAuthorContext<CreateNeuron>
+        {
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId.ToString());
+        }
+
+        public class When_data_is_specified : CreateNeuronWithDataContext
+        { 
             [Fact]
             public void Should_create_one_event()
             {
@@ -63,37 +127,57 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_creating_neuron_with_terminals
     {
-        public abstract class CreateNeuronWithTerminalsContext : ConditionalWhenSpecification<Neuron, NeuronCommandHandlers, CreateNeuronWithTerminals>
+        public class When_specified_author_does_not_exist : NonexistentAuthorContext<CreateNeuronWithTerminals>
         {
-            protected const string DataValue = "Hello World";
-            private const string AvatarIdValue = "samplebody";
-            protected Guid guid;
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
+
+            [Fact]
+            public async Task Should_throw_aggregate_not_found_exception()
+            {
+                await Assert.ThrowsAsync<AggregateNotFoundException>(() => this.InvokeWhen());
+            }
+        }
+
+        public class When_specified_author_is_neuron : NonexistentAuthorContext<CreateNeuronWithTerminals>
+        {
+            protected override bool InvokeWhenOnConstruct => true;
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.authorId, DataValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
+
+            [Fact]
+            public void Should_create_one_event()
+            {
+                Assert.Equal(2, this.PublishedEvents.Count);
+            }
+
+            [Fact]
+            public void Should_create_correct_first_event()
+            {
+                Assert.IsType<NeuronCreated>(this.PublishedEvents.First());
+            }
+
+            [Fact]
+            public void Should_have_correct_data()
+            {
+                Assert.Equal(DataValue, ((NeuronCreated)this.PublishedEvents.First()).Data);
+            }
+        }
+
+        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<CreateNeuronWithTerminals>
+        {
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
+
+            [Fact]
+            public async Task Should_throw_invalid_operation_exception()
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(() => this.InvokeWhen());
+            }
+        }
+
+        public abstract class CreateNeuronWithTerminalsContext : ExistingAuthorContext<CreateNeuronWithTerminals>
+        {
             protected Guid targetGuid;
-            protected string authorId;
 
-            protected override NeuronCommandHandlers BuildHandler()
-            {
-                var nes = new Mock<INavigableEventStore>();
-                return new NeuronCommandHandlers(nes.Object, this.Session);
-            }
-
-            protected override IEnumerable<IEvent> Given()
-            {
-                this.guid = Guid.NewGuid();
-                this.targetGuid = Guid.NewGuid();
-                this.authorId = Guid.NewGuid().ToString();
-                return this.GetEvents();
-            }
-
-            protected virtual List<IEvent> GetEvents()
-            {
-                return new List<IEvent>();
-            }
-
-            protected override CreateNeuronWithTerminals When()
-            {
-                return new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId);
-            }
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
         }
 
         public class When_data_and_single_terminal_are_specified : CreateNeuronWithTerminalsContext
@@ -135,10 +219,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
         public class When_identical_neuron_exists : CreateNeuronWithTerminalsContext
         {
-            protected override List<IEvent> GetEvents()
-            {
-                return new List<IEvent>() { new NeuronCreated(this.guid, DataValue, this.authorId) { Version = 1 } };
-            }
+            protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+                new NeuronCreated(this.guid, DataValue, this.authorId.ToString()) { Version = 1 }
+            });
 
             protected override bool InvokeWhenOnConstruct => false;
 
@@ -152,32 +235,41 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_changing_data
     {
-        public abstract class ChangeNeuronDataContext : Specification<Neuron, NeuronCommandHandlers, ChangeNeuronData>
+        public class When_specified_author_does_not_exist : NonexistentAuthorContext<ChangeNeuronData>
+        {
+            protected override ChangeNeuronData When() => new ChangeNeuronData(AvatarIdValue, this.guid, string.Empty, this.authorId.ToString(), 1);
+
+            protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+                new NeuronCreated(this.guid, string.Empty, this.authorId.ToString()) { Version = 1}
+            });
+
+            [Fact]
+            public async Task Should_throw_aggregate_not_found_exception()
+            {
+                await Assert.ThrowsAsync<AggregateNotFoundException>(() => this.InvokeWhen());
+            }
+        }
+
+        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<ChangeNeuronData>
+        {
+            protected override ChangeNeuronData When() => new ChangeNeuronData(AvatarIdValue, this.guid, string.Empty, this.authorId.ToString(), 1);
+
+            [Fact]
+            public async Task Should_throw_invalid_operation_exception()
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(() => this.InvokeWhen());
+            }
+        }
+
+        public abstract class ChangeNeuronDataContext : ExistingAuthorContext<ChangeNeuronData>
         {
             protected const string OrigDataValue = "Hello World";
-            private const string AvatarIdValue = "samplebody";
-            protected Guid guid;
-            protected string authorId;
 
-            protected override NeuronCommandHandlers BuildHandler()
-            {
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
-            }
+            protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+                new NeuronCreated(this.guid, OrigDataValue, this.authorId.ToString()) { Version = 1}
+            });
 
-            protected override IEnumerable<IEvent> Given()
-            {
-                this.guid = Guid.NewGuid();
-                this.authorId = Guid.NewGuid().ToString();
-                return new List<IEvent>
-            {
-                new NeuronCreated(this.guid, OrigDataValue, this.authorId) { Version = 1}
-            };
-            }
-
-            protected override ChangeNeuronData When()
-            {
-                return new ChangeNeuronData(AvatarIdValue, this.guid, NewDataValue, this.authorId, 1);
-            }
+            protected override ChangeNeuronData When() => new ChangeNeuronData(AvatarIdValue, this.guid, NewDataValue, this.authorId.ToString(), 1);
 
             protected virtual string NewDataValue
             {
@@ -220,25 +312,43 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_adding_terminal
     {
-        public abstract class AddTerminalsToNeuronContext : Specification<Neuron, NeuronCommandHandlers, AddTerminalsToNeuron>
+        public class When_specified_author_does_not_exist : NonexistentAuthorContext<AddTerminalsToNeuron>
         {
-            protected const string DataValue = "Hello World";
-            private const string AvatarIdValue = "samplebody";
-            protected Guid guid;
-            protected Guid targetGuid;
-            protected string authorId;
+            protected override AddTerminalsToNeuron When() => new AddTerminalsToNeuron(AvatarIdValue, this.guid, new Terminal[0], this.authorId.ToString(), 0);
 
-            protected override NeuronCommandHandlers BuildHandler()
+            protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+                new NeuronCreated(this.guid, string.Empty, this.authorId.ToString()) { Version = 1}
+            });
+
+            [Fact]
+            public async Task Should_throw_aggregate_not_found_exception()
             {
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
+                await Assert.ThrowsAsync<AggregateNotFoundException>(() => this.InvokeWhen());
             }
+        }
 
+        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<AddTerminalsToNeuron>
+        {
+            protected override AddTerminalsToNeuron When() => new AddTerminalsToNeuron(AvatarIdValue, this.guid, new Terminal[0], this.authorId.ToString(), 0);
+
+            [Fact]
+            public async Task Should_throw_invalid_operation_exception()
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(() => this.InvokeWhen());
+            }
+        }
+
+        public abstract class AddTerminalsToNeuronContext : ExistingAuthorContext<AddTerminalsToNeuron>
+        {            
+            protected Guid targetGuid;            
+         
             protected override IEnumerable<IEvent> Given()
             {
-                this.InitFields();
-                var l = new List<IEvent>();
-                l.AddRange(this.GetEvents());
-                return l;
+                this.targetGuid = Guid.NewGuid();
+                return base.Given().Concat(new IEvent[]
+                {
+                    new NeuronCreated(this.guid, AddTerminalsToNeuronContext.DataValue, this.authorId.ToString()) { Version = 1}
+                });
             }
 
             protected override AddTerminalsToNeuron When()
@@ -246,7 +356,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var ts = new List<Terminal>();
                 foreach (Guid g in this.Targets)
                     ts.Add(new Terminal(g, NeurotransmitterEffect.Excite, 1));
-                return new AddTerminalsToNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId, this.GivenEventsCount);
+                return new AddTerminalsToNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId.ToString(), this.GivenEventsCount);
             }
 
             protected virtual int GivenEventsCount
@@ -257,21 +367,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected virtual Guid[] Targets
             {
                 get;
-            }
-
-            protected virtual void InitFields()
-            {
-                this.guid = Guid.NewGuid();
-                this.targetGuid = Guid.NewGuid();
-                this.authorId = Guid.NewGuid().ToString();
-            }
-
-            protected virtual IEvent[] GetEvents()
-            {
-                return new IEvent[]
-                {
-                new NeuronCreated(this.guid, AddTerminalsToNeuronContext.DataValue, this.authorId) { Version = 1}
-                };
             }
         }
 
@@ -317,23 +412,18 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 private Guid targetGuid2;
                 private Guid targetGuid3;
 
-                protected override void InitFields()
+                protected override IEnumerable<IEvent> Given()
                 {
-                    base.InitFields();
                     this.targetGuid2 = Guid.NewGuid();
                     this.targetGuid3 = Guid.NewGuid();
+                    return base.Given().Concat(
+                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString()) { Version = 2 } }
+                    );
                 }
-
+                    
                 protected override int GivenEventsCount => 2;
 
                 protected override Guid[] Targets => new Guid[] { this.targetGuid2, this.targetGuid3 };
-
-                protected override IEvent[] GetEvents()
-                {
-                    return base.GetEvents().Concat(
-                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId) { Version = 2 } }
-                    ).ToArray();
-                }
 
                 [Fact]
                 public void Should_contain_three_terminals()
@@ -367,25 +457,43 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_removing_terminal
     {
-        public abstract class RemoveTerminalsFromNeuronContext : Specification<Neuron, NeuronCommandHandlers, RemoveTerminalsFromNeuron>
+        public class When_specified_author_does_not_exist : NonexistentAuthorContext<RemoveTerminalsFromNeuron>
         {
-            protected const string DataValue = "Hello World";
-            private const string AvatarIdValue = "samplebody";
-            protected Guid guid;
-            protected Guid targetGuid;
-            protected string authorId;
+            protected override RemoveTerminalsFromNeuron When() => new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, new string[0], this.authorId.ToString(), 0);
 
-            protected override NeuronCommandHandlers BuildHandler()
+            protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+                new NeuronCreated(this.guid, string.Empty, this.authorId.ToString()) { Version = 1}
+            });
+
+            [Fact]
+            public async Task Should_throw_aggregate_not_found_exception()
             {
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
+                await Assert.ThrowsAsync<AggregateNotFoundException>(() => this.InvokeWhen());
             }
+        }
 
+        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<RemoveTerminalsFromNeuron>
+        {
+            protected override RemoveTerminalsFromNeuron When() => new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, new string[0], this.authorId.ToString(), 0);
+
+            [Fact]
+            public async Task Should_throw_invalid_operation_exception()
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(() => this.InvokeWhen());
+            }
+        }
+
+        public abstract class RemoveTerminalsFromNeuronContext : ExistingAuthorContext<RemoveTerminalsFromNeuron>
+        {
+            protected Guid targetGuid;
+            
             protected override IEnumerable<IEvent> Given()
             {
-                this.InitFields();
-                var l = new List<IEvent>();
-                l.AddRange(this.GetEvents());
-                return l;
+                this.targetGuid = Guid.NewGuid();
+                return base.Given().Concat(new IEvent[]
+                {
+                    new NeuronCreated(this.guid, DataValue, this.authorId.ToString()) { Version = 1}
+                });
             }
 
             protected override RemoveTerminalsFromNeuron When()
@@ -393,7 +501,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 var ts = new List<string>();
                 foreach (Guid g in this.CommandTargets)
                     ts.Add(g.ToString());
-                return new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId, this.GivenEventsCount);
+                return new RemoveTerminalsFromNeuron(AvatarIdValue, this.guid, ts.ToArray(), this.authorId.ToString(), this.GivenEventsCount);
             }
 
             protected virtual int GivenEventsCount
@@ -405,21 +513,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             {
                 get;
             }
-
-            protected virtual void InitFields()
-            {
-                this.guid = Guid.NewGuid();
-                this.targetGuid = Guid.NewGuid();
-                this.authorId = Guid.NewGuid().ToString();
-            }
-
-            protected virtual IEvent[] GetEvents()
-            {
-                return new IEvent[]
-                {
-                new NeuronCreated(this.guid, DataValue, this.authorId) { Version = 1}
-                };
-            }
         }
 
         public class When_terminals_have_one_terminal
@@ -430,13 +523,13 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
                 protected override Guid[] CommandTargets => new Guid[] { this.targetGuid };
 
-                protected override IEvent[] GetEvents()
+                protected override IEnumerable<IEvent> Given()
                 {
-                    return base.GetEvents().Concat(
-                        new IEvent[] { new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId) { Version = 2 } }
-                    ).ToArray();
+                    return base.Given().Concat(new IEvent[] {
+                        new TerminalsAdded(this.guid, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString()) { Version = 2 }
+                    });
                 }
-
+                
                 [Fact]
                 public void Should_have_empty_terminals()
                 {
@@ -471,33 +564,28 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 private Guid targetGuid2;
                 private Guid targetGuid3;
 
-                protected override void InitFields()
+                protected override IEnumerable<IEvent> Given()
                 {
-                    base.InitFields();
                     this.targetGuid2 = Guid.NewGuid();
                     this.targetGuid3 = Guid.NewGuid();
-                }
-
-                protected override int GivenEventsCount => 2;
-
-                protected override Guid[] CommandTargets => new Guid[] { this.targetGuid2 };
-
-                protected override IEvent[] GetEvents()
-                {
-                    return base.GetEvents().Concat(
+                    return base.Given().Concat(
                         new IEvent[] {
                             new TerminalsAdded(
-                                this.guid, 
+                                this.guid,
                                 new Terminal[] {
                                     new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1),
                                     new Terminal(this.targetGuid2, NeurotransmitterEffect.Excite, 1),
                                     new Terminal(this.targetGuid3, NeurotransmitterEffect.Excite, 1)
                                 },
-                                this.authorId
+                                this.authorId.ToString()
                             ) { Version = 2 }
                         }
-                    ).ToArray();
+                    );
                 }
+
+                protected override int GivenEventsCount => 2;
+
+                protected override Guid[] CommandTargets => new Guid[] { this.targetGuid2 };
 
                 [Fact]
                 public void Should_contain_two_terminals()
@@ -530,31 +618,47 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
     
     public class When_deactivating_neuron
     {
-        public abstract class DeactivateNeuronContext : ConditionalWhenSpecification<Neuron, NeuronCommandHandlers, DeactivateNeuron>
+        public class When_specified_author_does_not_exist : NonexistentAuthorContext<DeactivateNeuron>
+        {
+            protected override DeactivateNeuron When() => new DeactivateNeuron(AvatarIdValue, this.guid, this.authorId.ToString(), this.Given().Last().Version);
+
+            protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
+                new NeuronCreated(this.guid, string.Empty, this.authorId.ToString()) { Version = 1}
+            });
+
+            [Fact]
+            public async Task Should_throw_aggregate_not_found_exception()
+            {
+                await Assert.ThrowsAsync<AggregateNotFoundException>(() => this.InvokeWhen());
+            }
+        }
+
+        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<DeactivateNeuron>
+        {
+            protected override DeactivateNeuron When() => new DeactivateNeuron(AvatarIdValue, this.guid, this.authorId.ToString(), this.Given().Last().Version);
+
+            [Fact]
+            public async Task Should_throw_invalid_operation_exception()
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(() => this.InvokeWhen());
+            }
+        }
+
+        public abstract class DeactivateNeuronContext : ExistingAuthorContext<DeactivateNeuron>
         {
             protected const string OrigDataValue = "Hello World";
-            private const string AvatarIdValue = "samplebody";
-            protected Guid guid;
-            protected string authorId;
-
-            protected override NeuronCommandHandlers BuildHandler()
-            {
-                return new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, this.Session);
-            }
 
             protected override IEnumerable<IEvent> Given()
             {
-                this.guid = Guid.NewGuid();
-                this.authorId = Guid.NewGuid().ToString();
-                return new List<IEvent>
+                return base.Given().Concat(new IEvent[]
                 {
-                    new NeuronCreated(this.guid, OrigDataValue, this.authorId) { Version = 1}
-                };
+                    new NeuronCreated(this.guid, OrigDataValue, this.authorId.ToString()) { Version = 1}
+                });
             }
 
             protected override DeactivateNeuron When()
             {
-                return new DeactivateNeuron(AvatarIdValue, this.guid, this.authorId, this.Given().Last().Version);
+                return new DeactivateNeuron(AvatarIdValue, this.guid, this.authorId.ToString(), this.Given().Last().Version);
             }
         }
 
@@ -577,9 +681,10 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         {
             protected override IEnumerable<IEvent> Given()
             {
-                var baseEvents = base.Given().ToList();
-                baseEvents.Add(new NeuronDeactivated(this.guid, this.authorId) { Version = 2 });
-                return baseEvents;
+                return base.Given().Concat(new IEvent[]
+                {
+                    new NeuronDeactivated(this.guid, this.authorId.ToString()) { Version = 2 }
+                });
             }
 
             protected override bool InvokeWhenOnConstruct => false;
