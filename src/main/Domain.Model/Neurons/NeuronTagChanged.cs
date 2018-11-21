@@ -3,14 +3,14 @@ using System;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
 {
-    public class NeuronDataChanged : IAuthoredEvent
+    public class NeuronTagChanged : IAuthoredEvent
     {
-        public readonly string Data;
+        public readonly string Tag;
 
-        public NeuronDataChanged(Guid id, string data, string authorId)
+        public NeuronTagChanged(Guid id, string tag, string authorId)
         {
             this.Id = id;
-            this.Data = data;
+            this.Tag = tag;
             this.AuthorId = authorId;
         }
 

@@ -66,14 +66,14 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
             protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Put;
         }
 
-        public class When_body_contains_data
+        public class When_body_contains_tag
         {
             public class When_body_contains_terminals : PutRequestContext
             {
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     with.Body(@"{
-                        ""Data"": ""2017/11/09 22:41"",
+                        ""Tag"": ""2017/11/09 22:41"",
                         ""Terminals"": [
                         {
                             ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
@@ -105,7 +105,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     with.Body(@"{
-                              ""Data"": ""2017/11/09 22:41"",
+                              ""Tag"": ""2017/11/09 22:41"",
                               ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                             }"
                     );
@@ -120,7 +120,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
             }
         }
 
-        public class When_body_is_missing_data
+        public class When_body_is_missing_tag
         {
             public class When_body_contains_terminals : PutRequestContext
             {
@@ -147,10 +147,10 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 }
 
                 [Fact]
-                public void Should_respond_with_body_containing_data()
+                public void Should_respond_with_body_containing_tag()
                 {
                     // assert
-                    Assert.Contains("Data", this.response.Body.AsString());
+                    Assert.Contains("Tag", this.response.Body.AsString());
                 }
             }
 
@@ -169,10 +169,10 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 }
 
                 [Fact]
-                public void Should_respond_with_body_containing_data()
+                public void Should_respond_with_body_containing_tag()
                 {
                     // assert
-                    Assert.Contains("Data", this.response.Body.AsString());
+                    Assert.Contains("Tag", this.response.Body.AsString());
                 }
             }
         }
@@ -259,7 +259,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     with.Body(@"{
-                            ""Data"": ""Hello World"",
+                            ""Tag"": ""Hello World"",
                             ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                         }"
                     );
@@ -338,23 +338,23 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 protected override Action<BrowserContext> BrowserContext => with => with.Header("ETag", "5");
             }
 
-            public class When_body_contains_data : HasExpectedVersionContext
+            public class When_body_contains_tag : HasExpectedVersionContext
             {
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     base.BrowserContext(with);
                     with.Body(@"{
-                                  ""Data"": ""New Data"",
+                                  ""Tag"": ""New Tag"",
                                   ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                                 }"
                     );    
                 };
 
                 [Fact]
-                public void Should_send_ChangeNeuronData_command()
+                public void Should_send_ChangeNeuronTag_command()
                 {
                     // assert
-                    Assert.IsAssignableFrom<ChangeNeuronData>(this.commandSent);
+                    Assert.IsAssignableFrom<ChangeNeuronTag>(this.commandSent);
                 }
 
                 [Fact]
@@ -364,7 +364,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 }
             }
 
-            public class When_body_is_missing_data : HasExpectedVersionContext
+            public class When_body_is_missing_tag : HasExpectedVersionContext
             {
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
@@ -390,10 +390,10 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 }
 
                 [Fact]
-                public void Should_respond_body_containing_data_only()
+                public void Should_respond_body_containing_tag_only()
                 {
                     // assert
-                    Assert.Contains("Data", this.response.Body.AsString());
+                    Assert.Contains("Tag", this.response.Body.AsString());
                     Assert.DoesNotContain("ExpectedVersion", this.response.Body.AsString());
                 }
             }
@@ -401,7 +401,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
 
         public class When_header_expected_version_is_missing
         {
-            public class When_body_is_missing_data : PatchRequestContext
+            public class When_body_is_missing_tag : PatchRequestContext
             {
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
@@ -426,20 +426,20 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 }
 
                 [Fact]
-                public void Should_respond_with_body_containing_data_and_expected_version()
+                public void Should_respond_with_body_containing_tag_and_expected_version()
                 {
                     // assert
-                    Assert.Contains("Data", this.response.Body.AsString());
+                    Assert.Contains("Tag", this.response.Body.AsString());
                     Assert.Contains("ExpectedVersion", this.response.Body.AsString());
                 }
             }
 
-            public class When_body_contains_data : PatchRequestContext
+            public class When_body_contains_tag : PatchRequestContext
             {
                 protected override Action<BrowserContext> BrowserContext => with =>
                 {
                     with.Body(@"{
-                                  ""Data"": ""New Data"",
+                                  ""Tag"": ""New Tag"",
                                   ""Terminals"": [
                                     {
                                       ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
@@ -464,7 +464,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
                 {
                     // assert
                     Assert.Contains("ExpectedVersion", this.response.Body.AsString());
-                    Assert.DoesNotContain("Data", this.response.Body.AsString());
+                    Assert.DoesNotContain("Tag", this.response.Body.AsString());
                 }
             }
         }

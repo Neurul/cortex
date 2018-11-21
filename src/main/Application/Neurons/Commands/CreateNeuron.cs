@@ -13,11 +13,11 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
         }
 
         [JsonConstructor]
-        public CreateNeuron(string avatarId, Guid id, string data, string authorId)
+        public CreateNeuron(string avatarId, Guid id, string tag, string authorId)
         {
             this.AvatarId = avatarId;
             this.Id = id;            
-            this.Data = data;
+            this.Tag = tag;
             this.AuthorId = authorId;
         }
 
@@ -25,7 +25,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 
         public Guid Id { get; private set; }
         
-        public string Data { get; private set; }
+        public string Tag { get; private set; }
 
         public string AuthorId { get; set; }
 

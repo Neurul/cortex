@@ -5,12 +5,12 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 {
     public class NeuronCreated : IAuthoredEvent
     {
-        public readonly string Data;
+        public readonly string Tag;
 
-        public NeuronCreated(Guid id, string data, string authorId)
+        public NeuronCreated(Guid id, string tag, string authorId)
         {
             this.Id = id;
-            this.Data = data;
+            this.Tag = tag;
             this.AuthorId = authorId;
         }
 

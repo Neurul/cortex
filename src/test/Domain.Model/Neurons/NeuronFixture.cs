@@ -28,9 +28,9 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
     public class When_created_with_id_only : Context
     {
         [Fact]
-        public void Should_contain_empty_data()
+        public void Should_contain_empty_tag()
         {
-            Assert.Equal(string.Empty, this.sut.Data);
+            Assert.Equal(string.Empty, this.sut.Tag);
         }
 
         [Fact]
@@ -245,7 +245,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
         }        
     }
 
-    public class When_changing_data
+    public class When_changing_tag
     {
         public class When_neuron_is_inactive : Context
         {
@@ -259,48 +259,48 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             [Fact]
             public void Should_throw_invalid_operation_exception()
             {
-                Assert.Throws<InvalidOperationException>(() => this.sut.ChangeData(string.Empty, this.AuthorId));
+                Assert.Throws<InvalidOperationException>(() => this.sut.ChangeTag(string.Empty, this.AuthorId));
             }
         }
 
-        public abstract class ChangingDataContext : Context
+        public abstract class ChangingTagContext : Context
         {
             protected override void Given()
             {
                 base.Given();
 
-                this.sut.ChangeData(this.NewData, this.AuthorId);
+                this.sut.ChangeTag(this.NewTag, this.AuthorId);
             }
 
-            protected abstract string NewData
+            protected abstract string NewTag
             {
                 get;
             }
         }
 
-        public class When_data_is_valid : ChangingDataContext
+        public class When_tag_is_valid : ChangingTagContext
         {
-            protected override string NewData => "Hello World";
+            protected override string NewTag => "Hello World";
 
             [Fact]
-            public void Should_change_data()
+            public void Should_change_tag()
             {
                 // Assert
-                Assert.Equal(this.NewData, ((NeuronDataChanged)this.sut.GetUncommittedChanges().Last()).Data);
-                Assert.Equal(this.NewData, this.sut.Data);
+                Assert.Equal(this.NewTag, ((NeuronTagChanged)this.sut.GetUncommittedChanges().Last()).Tag);
+                Assert.Equal(this.NewTag, this.sut.Tag);
             }
         }
 
-        public class When_new_data_is_same_as_current : ChangingDataContext
+        public class When_new_tag_is_same_as_current : ChangingTagContext
         {
-            protected override string NewData => string.Empty;
+            protected override string NewTag => string.Empty;
 
             [Fact]
             public void Should_do_nothing()
             {
                 // Assert
-                Assert.NotEqual(typeof(NeuronDataChanged), this.sut.GetUncommittedChanges().Last().GetType());
-                Assert.Equal(string.Empty, this.sut.Data);
+                Assert.NotEqual(typeof(NeuronTagChanged), this.sut.GetUncommittedChanges().Last().GetType());
+                Assert.Equal(string.Empty, this.sut.Tag);
             }
         }
     }

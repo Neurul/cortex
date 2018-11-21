@@ -15,14 +15,14 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         private Neuron() { }
 
-        public Neuron(Guid id, string data, string authorId)
+        public Neuron(Guid id, string tag, string authorId)
         {
             this.Id = id;
-            this.ApplyChange(new NeuronCreated(id, data, authorId));
+            this.ApplyChange(new NeuronCreated(id, tag, authorId));
         }
 
         public bool Active { get; private set; }
-        public string Data { get; private set; }
+        public string Tag { get; private set; }
 
         public ReadOnlyCollection<Terminal> Terminals
         {
@@ -56,12 +56,12 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         private void Apply(NeuronCreated e)
         {
             this.Active = true;
-            this.Data = e.Data;
+            this.Tag = e.Tag;
         }
 
-        private void Apply(NeuronDataChanged e)
+        private void Apply(NeuronTagChanged e)
         {
-            this.Data = e.Data;
+            this.Tag = e.Tag;
         }
 
         private void Apply(NeuronDeactivated e)
@@ -79,12 +79,12 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             e.TargetIds.ToList().ForEach(t => this.terminals.RemoveAll(te => te.TargetId.ToString() == t));
         }
 
-        public void ChangeData(string value, string authorId)
+        public void ChangeTag(string value, string authorId)
         {
             this.AssertActive();
 
-            if (value != this.Data)
-                base.ApplyChange(new NeuronDataChanged(this.Id, value, authorId));
+            if (value != this.Tag)
+                base.ApplyChange(new NeuronTagChanged(this.Id, value, authorId));
         }
 
         public void Deactivate(string authorId)

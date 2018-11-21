@@ -35,13 +35,13 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
 
                             var neuronId = System.Guid.Parse(parameters.neuronId);
                             var avatarId = parameters.avatarId;
-                            string data = bodyAsObject.Data.ToString();
+                            string tag = bodyAsObject.Tag.ToString();
                             string authorId = bodyAsObject.AuthorId.ToString();
                             return ts.Count > 0 ?
-                                (ICommand)new CreateNeuronWithTerminals(avatarId, neuronId, data, ts, authorId) :
-                                new CreateNeuron(avatarId, neuronId, data, authorId);
+                                (ICommand)new CreateNeuronWithTerminals(avatarId, neuronId, tag, ts, authorId) :
+                                new CreateNeuron(avatarId, neuronId, tag, authorId);
                         },
-                        "Data",
+                        "Tag",
                         "AuthorId"
                     );
             }
@@ -78,15 +78,15 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         this.Request,
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
-                            return new ChangeNeuronData(
+                            return new ChangeNeuronTag(
                                 parameters.avatarId, 
                                 Guid.Parse(parameters.neuronId), 
-                                bodyAsObject.Data.ToString(),
+                                bodyAsObject.Tag.ToString(),
                                 bodyAsObject.AuthorId.ToString(), 
                                 expectedVersion
                                 );
                         },
-                        "Data",
+                        "Tag",
                         "AuthorId"
                     );
             }

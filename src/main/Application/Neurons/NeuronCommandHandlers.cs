@@ -14,7 +14,7 @@ namespace org.neurul.Cortex.Application.Neurons
     public class NeuronCommandHandlers : 
         ICancellableCommandHandler<CreateNeuron>,
         ICancellableCommandHandler<CreateNeuronWithTerminals>,
-        ICancellableCommandHandler<ChangeNeuronData>,
+        ICancellableCommandHandler<ChangeNeuronTag>,
         ICancellableCommandHandler<AddTerminalsToNeuron>,
         ICancellableCommandHandler<RemoveTerminalsFromNeuron>,
         ICancellableCommandHandler<DeactivateNeuron>
@@ -41,7 +41,7 @@ namespace org.neurul.Cortex.Application.Neurons
             if (message.AuthorId != message.Id.ToString())
                 await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
 
-            var neuron = new Neuron(message.Id, message.Data, message.AuthorId);
+            var neuron = new Neuron(message.Id, message.Tag, message.AuthorId);
             await this.session.Add(neuron, token);
             await this.session.Commit(token);
         }        
@@ -53,20 +53,20 @@ namespace org.neurul.Cortex.Application.Neurons
             if (message.AuthorId != message.Id.ToString())
                 await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
 
-            var neuron = new Neuron(message.Id, message.Data, message.AuthorId);
+            var neuron = new Neuron(message.Id, message.Tag, message.AuthorId);
             await neuron.AddTerminals(message.Terminals, message.AuthorId);
             await this.session.Add(neuron, token);
             await this.session.Commit(token);
         }
 
-        public async Task Handle(ChangeNeuronData message, CancellationToken token = default(CancellationToken))
+        public async Task Handle(ChangeNeuronTag message, CancellationToken token = default(CancellationToken))
         {
             await this.eventStore.Initialize(message.AvatarId);
 
             await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
 
             var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.ChangeData(message.NewData, message.AuthorId);
+            neuron.ChangeTag(message.NewTag, message.AuthorId);
             await this.session.Commit(token);
         }
 

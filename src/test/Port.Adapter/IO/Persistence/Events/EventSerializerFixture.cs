@@ -14,10 +14,10 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.Test.EventSeriali
         }
     }
 
-    public class When_deserializing_NeuronDataChanged_event : Context
+    public class When_deserializing_NeuronTagChanged_event : Context
     {
-        private NeuronDataChanged deserializedEvent;
-        private const string Data = "Hello Worlds";
+        private NeuronTagChanged deserializedEvent;
+        private const string Tag = "Hello Worlds";
         private const string TestGuid = "4eb5c455-3785-4ef0-b73e-eefb61d31e8a";
 
         protected override void When()
@@ -25,14 +25,14 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.Test.EventSeriali
             base.When();
 
             this.deserializedEvent = this.sut.Deserialize(
-                "org.neurul.Cortex.Domain.Model.Neurons.NeuronDataChanged, org.neurul.Cortex.Domain.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "org.neurul.Cortex.Domain.Model.Neurons.NeuronTagChanged, org.neurul.Cortex.Domain.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                 @"{
-                  ""Data"": """ + Data + @""",
+                  ""Tag"": """ + Tag + @""",
                   ""Id"": """ + TestGuid + @""",
                   ""Version"": 6,
                   ""TimeStamp"": ""2017-11-24T12:20:38.851535+00:00""
                 }"
-            ) as NeuronDataChanged;
+            ) as NeuronTagChanged;
         }
 
         [Fact]
@@ -42,9 +42,9 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.Test.EventSeriali
         }
 
         [Fact]
-        public void Should_contain_correct_data()
+        public void Should_contain_correct_tag()
         {
-            Assert.Equal(Data, this.deserializedEvent.Data);
+            Assert.Equal(Tag, this.deserializedEvent.Tag);
         }
 
         [Fact]

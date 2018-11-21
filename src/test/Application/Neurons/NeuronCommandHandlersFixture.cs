@@ -17,7 +17,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 {
     public abstract class NonexistentAuthorContext<TCommand> : ConditionalWhenSpecification<Neuron, NeuronCommandHandlers, TCommand> where TCommand : ICommand
     {
-        protected static readonly string DataValue = "Hello World";
+        protected static readonly string TagValue = "Hello World";
         protected static readonly string AvatarIdValue = "samplebody";
         protected Guid guid;
         protected Guid authorId;
@@ -54,7 +54,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
     {
         public class When_specified_author_does_not_exist : NonexistentAuthorContext<CreateNeuron>
         {
-            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId.ToString());
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, TagValue, this.authorId.ToString());
 
             [Fact]
             public async Task Should_throw_aggregate_not_found_exception()
@@ -66,7 +66,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public class When_specified_author_is_neuron : NonexistentAuthorContext<CreateNeuron>
         {
             protected override bool InvokeWhenOnConstruct => true;
-            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.authorId, DataValue, this.authorId.ToString());
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.authorId, TagValue, this.authorId.ToString());
 
             [Fact]
             public void Should_create_one_event()
@@ -81,15 +81,15 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
 
             [Fact]
-            public void Should_have_correct_data()
+            public void Should_have_correct_tag()
             {
-                Assert.Equal(DataValue, ((NeuronCreated)this.PublishedEvents.First()).Data);
+                Assert.Equal(TagValue, ((NeuronCreated)this.PublishedEvents.First()).Tag);
             }
         }
 
         public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<CreateNeuron>
         {
-            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId.ToString());
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, TagValue, this.authorId.ToString());
         
             [Fact]
             public async Task Should_throw_invalid_operation_exception()
@@ -98,12 +98,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class CreateNeuronWithDataContext : ExistingAuthorContext<CreateNeuron>
+        public class CreateNeuronWithTagContext : ExistingAuthorContext<CreateNeuron>
         {
-            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, DataValue, this.authorId.ToString());
+            protected override CreateNeuron When() => new CreateNeuron(AvatarIdValue, this.guid, TagValue, this.authorId.ToString());
         }
 
-        public class When_data_is_specified : CreateNeuronWithDataContext
+        public class When_tag_is_specified : CreateNeuronWithTagContext
         { 
             [Fact]
             public void Should_create_one_event()
@@ -118,9 +118,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
 
             [Fact]
-            public void Should_have_correct_data()
+            public void Should_have_correct_tag()
             {
-                Assert.Equal(DataValue, ((NeuronCreated)this.PublishedEvents.First()).Data);
+                Assert.Equal(TagValue, ((NeuronCreated)this.PublishedEvents.First()).Tag);
             }
         }
     }
@@ -129,7 +129,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
     {
         public class When_specified_author_does_not_exist : NonexistentAuthorContext<CreateNeuronWithTerminals>
         {
-            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, TagValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
 
             [Fact]
             public async Task Should_throw_aggregate_not_found_exception()
@@ -141,7 +141,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public class When_specified_author_is_neuron : NonexistentAuthorContext<CreateNeuronWithTerminals>
         {
             protected override bool InvokeWhenOnConstruct => true;
-            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.authorId, DataValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.authorId, TagValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
 
             [Fact]
             public void Should_create_one_event()
@@ -156,15 +156,15 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
 
             [Fact]
-            public void Should_have_correct_data()
+            public void Should_have_correct_tag()
             {
-                Assert.Equal(DataValue, ((NeuronCreated)this.PublishedEvents.First()).Data);
+                Assert.Equal(TagValue, ((NeuronCreated)this.PublishedEvents.First()).Tag);
             }
         }
 
         public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<CreateNeuronWithTerminals>
         {
-            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, TagValue, new Terminal[] { new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
 
             [Fact]
             public async Task Should_throw_invalid_operation_exception()
@@ -177,10 +177,10 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         {
             protected Guid targetGuid;
 
-            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, DataValue, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
+            protected override CreateNeuronWithTerminals When() => new CreateNeuronWithTerminals(AvatarIdValue, this.guid, TagValue, new Terminal[] { new Terminal(this.targetGuid, NeurotransmitterEffect.Excite, 1) }, this.authorId.ToString());
         }
 
-        public class When_data_and_single_terminal_are_specified : CreateNeuronWithTerminalsContext
+        public class When_tag_and_single_terminal_are_specified : CreateNeuronWithTerminalsContext
         {
             [Fact]
             public void Should_contain_one_terminal()
@@ -190,7 +190,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
 
             [Fact]
-            public void Should_contain_correct_terminal_data()
+            public void Should_contain_correct_terminal_tag()
             {
                 var n = this.Session.Get<Neuron>(this.guid);
                 Assert.Equal(this.targetGuid, n.Result.Terminals.Last().TargetId);
@@ -210,9 +210,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
 
             [Fact]
-            public void Should_have_correct_data()
+            public void Should_have_correct_tag()
             {
-                Assert.Equal(DataValue, ((NeuronCreated)this.PublishedEvents.First()).Data);
+                Assert.Equal(TagValue, ((NeuronCreated)this.PublishedEvents.First()).Tag);
                 Assert.Equal(this.targetGuid, ((TerminalsAdded)this.PublishedEvents.Skip(1).First()).Terminals.First().TargetId);
             }
         }
@@ -220,7 +220,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public class When_identical_neuron_exists : CreateNeuronWithTerminalsContext
         {
             protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
-                new NeuronCreated(this.guid, DataValue, this.authorId.ToString()) { Version = 1 }
+                new NeuronCreated(this.guid, TagValue, this.authorId.ToString()) { Version = 1 }
             });
 
             protected override bool InvokeWhenOnConstruct => false;
@@ -233,11 +233,11 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         }
     }
 
-    public class When_changing_data
+    public class When_changing_tag
     {
-        public class When_specified_author_does_not_exist : NonexistentAuthorContext<ChangeNeuronData>
+        public class When_specified_author_does_not_exist : NonexistentAuthorContext<ChangeNeuronTag>
         {
-            protected override ChangeNeuronData When() => new ChangeNeuronData(AvatarIdValue, this.guid, string.Empty, this.authorId.ToString(), 1);
+            protected override ChangeNeuronTag When() => new ChangeNeuronTag(AvatarIdValue, this.guid, string.Empty, this.authorId.ToString(), 1);
 
             protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
                 new NeuronCreated(this.guid, string.Empty, this.authorId.ToString()) { Version = 1}
@@ -250,9 +250,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<ChangeNeuronData>
+        public class When_specified_author_is_deactivated : ExistingDeactivatedAuthorContext<ChangeNeuronTag>
         {
-            protected override ChangeNeuronData When() => new ChangeNeuronData(AvatarIdValue, this.guid, string.Empty, this.authorId.ToString(), 1);
+            protected override ChangeNeuronTag When() => new ChangeNeuronTag(AvatarIdValue, this.guid, string.Empty, this.authorId.ToString(), 1);
 
             [Fact]
             public async Task Should_throw_invalid_operation_exception()
@@ -261,23 +261,23 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public abstract class ChangeNeuronDataContext : ExistingAuthorContext<ChangeNeuronData>
+        public abstract class ChangeNeuronTagContext : ExistingAuthorContext<ChangeNeuronTag>
         {
-            protected const string OrigDataValue = "Hello World";
+            protected const string OrigTagValue = "Hello World";
 
             protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[] {
-                new NeuronCreated(this.guid, OrigDataValue, this.authorId.ToString()) { Version = 1}
+                new NeuronCreated(this.guid, OrigTagValue, this.authorId.ToString()) { Version = 1}
             });
 
-            protected override ChangeNeuronData When() => new ChangeNeuronData(AvatarIdValue, this.guid, NewDataValue, this.authorId.ToString(), 1);
+            protected override ChangeNeuronTag When() => new ChangeNeuronTag(AvatarIdValue, this.guid, NewTagValue, this.authorId.ToString(), 1);
 
-            protected virtual string NewDataValue
+            protected virtual string NewTagValue
             {
                 get { return "How are you"; }
             }
         }
 
-        public class When_new_data_is_specified : ChangeNeuronDataContext
+        public class When_new_tag_is_specified : ChangeNeuronTagContext
         {
             [Fact]
             public void Should_create_one_event()
@@ -288,19 +288,19 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             [Fact]
             public void Should_create_correct_event()
             {
-                Assert.IsType<NeuronDataChanged>(this.PublishedEvents.First());
+                Assert.IsType<NeuronTagChanged>(this.PublishedEvents.First());
             }
 
             [Fact]
-            public void Should_have_correct_data()
+            public void Should_have_correct_tag()
             {
-                Assert.Equal(NewDataValue, ((NeuronDataChanged)this.PublishedEvents.First()).Data);
+                Assert.Equal(NewTagValue, ((NeuronTagChanged)this.PublishedEvents.First()).Tag);
             }
         }
 
-        public class When_new_data_specified_is_equal_to_original_data : ChangeNeuronDataContext
+        public class When_new_tag_specified_is_equal_to_original_tag : ChangeNeuronTagContext
         {
-            protected override string NewDataValue => OrigDataValue;
+            protected override string NewTagValue => OrigTagValue;
 
             [Fact]
             public void Should_not_create_event()
@@ -347,7 +347,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 this.targetGuid = Guid.NewGuid();
                 return base.Given().Concat(new IEvent[]
                 {
-                    new NeuronCreated(this.guid, AddTerminalsToNeuronContext.DataValue, this.authorId.ToString()) { Version = 1}
+                    new NeuronCreated(this.guid, AddTerminalsToNeuronContext.TagValue, this.authorId.ToString()) { Version = 1}
                 });
             }
 
@@ -398,7 +398,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 }
 
                 [Fact]
-                public void Should_have_correct_data()
+                public void Should_have_correct_tag()
                 {
                     Assert.Equal(this.targetGuid, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.First().TargetId);
                 }
@@ -445,7 +445,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 }
 
                 [Fact]
-                public void Should_have_correct_data()
+                public void Should_have_correct_tag()
                 {
                     Assert.Equal(2, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.Count());
                     Assert.Equal(this.targetGuid2, ((TerminalsAdded)this.PublishedEvents.First()).Terminals.First().TargetId);
@@ -492,7 +492,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 this.targetGuid = Guid.NewGuid();
                 return base.Given().Concat(new IEvent[]
                 {
-                    new NeuronCreated(this.guid, DataValue, this.authorId.ToString()) { Version = 1}
+                    new NeuronCreated(this.guid, TagValue, this.authorId.ToString()) { Version = 1}
                 });
             }
 
@@ -550,7 +550,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 }
 
                 [Fact]
-                public void Should_have_correct_data()
+                public void Should_have_correct_tag()
                 {
                     Assert.Equal(this.targetGuid.ToString(), ((TerminalsRemoved)this.PublishedEvents.First()).TargetIds.First());
                 }
@@ -607,7 +607,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 }
 
                 [Fact]
-                public void Should_have_correct_data()
+                public void Should_have_correct_tag()
                 {
                     Assert.Single(((TerminalsRemoved)this.PublishedEvents.First()).TargetIds);
                     Assert.Equal(this.targetGuid2.ToString(), ((TerminalsRemoved)this.PublishedEvents.Last()).TargetIds.First());
@@ -646,13 +646,13 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
         public abstract class DeactivateNeuronContext : ExistingAuthorContext<DeactivateNeuron>
         {
-            protected const string OrigDataValue = "Hello World";
+            protected const string OrigTagValue = "Hello World";
 
             protected override IEnumerable<IEvent> Given()
             {
                 return base.Given().Concat(new IEvent[]
                 {
-                    new NeuronCreated(this.guid, OrigDataValue, this.authorId.ToString()) { Version = 1}
+                    new NeuronCreated(this.guid, OrigTagValue, this.authorId.ToString()) { Version = 1}
                 });
             }
 

@@ -5,15 +5,15 @@ using org.neurul.Cortex.Domain.Model.Neurons;
 
 namespace org.neurul.Cortex.Application.Neurons.Commands
 {
-    public class ChangeNeuronData : ICommand
+    public class ChangeNeuronTag : ICommand
     {
-        public readonly string NewData;
+        public readonly string NewTag;
 
-        public ChangeNeuronData(string avatarId, Guid id, string newData, string authorId, int originalVersion)
+        public ChangeNeuronTag(string avatarId, Guid id, string newTag, string authorId, int originalVersion)
         {
             this.AvatarId = avatarId;
             this.Id = id;            
-            this.NewData = newData;
+            this.NewTag = newTag;
             this.AuthorId = authorId;
             this.ExpectedVersion = originalVersion;
         }
