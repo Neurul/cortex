@@ -11,7 +11,7 @@ using org.neurul.Common.Domain.Model;
 
 namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
 {
-    public class EventStore : INavigableEventStore, IDisposable
+    public class EventStore : INavigableEventStore
     {
         private SQLiteAsyncConnection connection;
         private IEventSerializer serializer;
@@ -29,11 +29,6 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
         public async Task<long> CountNotifications()
         {
             return await this.connection.Table<Notification>().CountAsync();
-        }
-
-        public void Dispose()
-        {
-            this.connection?.CloseAsync().Wait();
         }
 
         public async Task<IEnumerable<IEvent>> Get(Guid aggregateId, int fromVersion, CancellationToken cancellationToken = default(CancellationToken))

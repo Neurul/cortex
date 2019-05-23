@@ -28,9 +28,14 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             container.Register<ICommandSender, Router>(ipb);
             container.Register<IHandlerRegistrar, Router>(ipb);
             container.Register<IEventPublisher, Router>(ipb);
-            container.Register<IEventSerializer, EventSerializer>();
+            container.Register<IEventSerializer, EventSerializer>(new EventSerializer());
 
-            container.Register<INavigableEventStore, EventStore>();
+            container.Register<INavigableEventStore, EventStore>(
+                new EventStore(
+                    container.Resolve<IEventSerializer>(),
+                    container.Resolve<IEventPublisher>()
+                )
+                );
             container.Register<NeuronCommandHandlers>();
 
             var ticl = new TinyIoCServiceLocator(container);
