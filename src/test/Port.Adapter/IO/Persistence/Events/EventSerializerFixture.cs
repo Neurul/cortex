@@ -36,19 +36,19 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.Test.EventSeriali
         }
 
         [Fact]
-        public void Should_deserialize_successfully()
+        public void Then_should_deserialize_successfully()
         {
             Assert.NotNull(this.deserializedEvent);
         }
 
         [Fact]
-        public void Should_contain_correct_tag()
+        public void Then_should_contain_correct_tag()
         {
             Assert.Equal(Tag, this.deserializedEvent.Tag);
         }
 
         [Fact]
-        public void Should_contain_correct_id()
+        public void Then_should_contain_correct_id()
         {
             Assert.Equal(TestGuid, this.deserializedEvent.Id.ToString());
         }

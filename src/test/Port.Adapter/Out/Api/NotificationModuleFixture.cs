@@ -69,26 +69,26 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             protected override NotificationLog NotificationLogResult => new NotificationLog(new NotificationLogId(0,0), null, null, null, new Notification[0], false);
             
             [Fact]
-            public void Should_invoke_method()
+            public void Then_should_invoke_method()
             {
                 Assert.True(this.invoked);
             }
 
             [Fact]
-            public void Should_respond_with_ok()
+            public void Then_should_respond_with_ok()
             {
                 Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
             }
 
             [Fact]
-            public void Should_have_empty_notification_in_response_body()
+            public void Then_should_have_empty_notification_in_response_body()
             {
                 var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                 Assert.Empty(eil);
             }
 
             [Fact]
-            public void Should_have_log_id()
+            public void Then_should_have_log_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
                     this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -99,7 +99,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             }
 
             [Fact]
-            public void Should_have_no_first_id()
+            public void Then_should_have_no_first_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
                     this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -110,7 +110,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             }
 
             [Fact]
-            public void Should_have_correct_self_link()
+            public void Then_should_have_correct_self_link()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
                     this.response.Headers[Common.Constants.Response.Header.Link.Key], 
@@ -150,26 +150,26 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 protected override NotificationLogId PreviousId => new NotificationLogId(1,5);
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -180,7 +180,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -191,7 +191,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -202,7 +202,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -213,7 +213,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_next_id()
+                public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -224,7 +224,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_next_link()
+                public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -235,7 +235,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_previous_id()
+                public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -246,7 +246,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_previous_link()
+                public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -262,26 +262,26 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 protected override NotificationLogId PreviousId => null;
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -292,7 +292,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -303,7 +303,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -314,7 +314,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -325,7 +325,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_next_id()
+                public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -336,7 +336,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_next_link()
+                public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -347,7 +347,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_no_previous_id()
+                public void Then_should_have_no_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -388,26 +388,26 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 protected override NotificationLogId PreviousId => new NotificationLogId(1,5);
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -418,7 +418,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -429,7 +429,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -440,7 +440,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -451,7 +451,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_previous_id()
+                public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -462,7 +462,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_previous_link()
+                public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -473,7 +473,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_not_have_next_id()
+                public void Then_should_not_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -489,26 +489,26 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 protected override NotificationLogId PreviousId => null;
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -519,7 +519,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -530,7 +530,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -541,7 +541,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -552,7 +552,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_not_have_next_id()
+                public void Then_should_not_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -563,7 +563,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_not_have_previous_id()
+                public void Then_should_not_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -601,32 +601,32 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             public override string UriLogId => "1,5";
 
             [Fact]
-            public void Should_invoke_method()
+            public void Then_should_invoke_method()
             {
                 Assert.True(this.invoked);
             }
 
             [Fact]
-            public void Should_process_correct_log_id()
+            public void Then_should_process_correct_log_id()
             {
                 Assert.Equal(this.UriLogId, this.gettingLogId);
             }
 
             [Fact]
-            public void Should_respond_with_ok()
+            public void Then_should_respond_with_ok()
             {
                 Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
             }
 
             [Fact]
-            public void Should_have_empty_notification_in_response_body()
+            public void Then_should_have_empty_notification_in_response_body()
             {
                 var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                 Assert.Empty(eil);
             }
 
             [Fact]
-            public void Should_have_log_id()
+            public void Then_should_have_log_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
                     this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -637,7 +637,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             }
 
             [Fact]
-            public void Should_have_correct_self_link()
+            public void Then_should_have_correct_self_link()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
                     this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -648,7 +648,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             }
 
             [Fact]
-            public void Should_not_have_first_id()
+            public void Then_should_not_have_first_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
                     this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -690,32 +690,32 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public override string UriLogId => "6,10";
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_process_correct_log_id()
+                public void Then_should_process_correct_log_id()
                 {
                     Assert.Equal(this.UriLogId, this.gettingLogId);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -726,7 +726,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -737,7 +737,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -748,7 +748,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -759,7 +759,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_next_id()
+                public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -770,7 +770,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_next_link()
+                public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -781,7 +781,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_previous_id()
+                public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -792,7 +792,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_previous_link()
+                public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -810,32 +810,32 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public override string UriLogId => "6,10";
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_process_correct_log_id()
+                public void Then_should_process_correct_log_id()
                 {
                     Assert.Equal(this.UriLogId, this.gettingLogId);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -846,7 +846,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -857,7 +857,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -868,7 +868,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -879,7 +879,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_next_id()
+                public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -890,7 +890,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_next_link()
+                public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -901,7 +901,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_no_previous_id()
+                public void Then_should_have_no_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -944,32 +944,32 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public override string UriLogId => "6,10";
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_process_correct_log_id()
+                public void Then_should_process_correct_log_id()
                 {
                     Assert.Equal(this.UriLogId, this.gettingLogId);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -980,7 +980,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -991,7 +991,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1002,7 +1002,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1013,7 +1013,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_previous_id()
+                public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1024,7 +1024,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_previous_link()
+                public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1035,7 +1035,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_not_have_next_id()
+                public void Then_should_not_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1053,32 +1053,32 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public override string UriLogId => "6,10";
 
                 [Fact]
-                public void Should_invoke_method()
+                public void Then_should_invoke_method()
                 {
                     Assert.True(this.invoked);
                 }
 
                 [Fact]
-                public void Should_process_correct_log_id()
+                public void Then_should_process_correct_log_id()
                 {
                     Assert.Equal(this.UriLogId, this.gettingLogId);
                 }
 
                 [Fact]
-                public void Should_respond_with_ok()
+                public void Then_should_respond_with_ok()
                 {
                     Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
                 }
 
                 [Fact]
-                public void Should_have_correct_notification_count_in_response_body()
+                public void Then_should_have_correct_notification_count_in_response_body()
                 {
                     var eil = JsonConvert.DeserializeObject<Notification[]>(this.response.Body.AsString());
                     Assert.Equal(5, eil.Length);
                 }
 
                 [Fact]
-                public void Should_have_log_id()
+                public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1089,7 +1089,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_self_link()
+                public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1100,7 +1100,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_first_id()
+                public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1111,7 +1111,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_correct_first_link()
+                public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1122,7 +1122,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_no_previous_id()
+                public void Then_should_have_no_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],
@@ -1133,7 +1133,7 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 }
 
                 [Fact]
-                public void Should_have_no_next_id()
+                public void Then_should_have_no_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
                         this.response.Headers[Common.Constants.Response.Header.Link.Key],

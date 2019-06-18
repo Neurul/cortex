@@ -78,37 +78,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override int CountOfEventsToAdd => 0;
 
             [Fact]
-            public void Should_return_correct_count_of_events()
+            public void Then_should_return_correct_count_of_events()
             {
                 Assert.Equal(0, this.log.TotalNotification);
             }
 
             [Fact]
-            public void Should_have_correct_log_id()
+            public void Then_should_have_correct_log_id()
             {
                 Assert.Equal("0,0", this.log.NotificationLogId);
             }
 
             [Fact]
-            public void Should_be_null_for_first_log_id()
+            public void Then_should_be_null_for_first_log_id()
             {
                 Assert.Null(this.log.FirstNotificationLogId);
             }
 
             [Fact]
-            public void Should_be_null_for_previous_log_id()
+            public void Then_should_be_null_for_previous_log_id()
             {
                 Assert.Null(this.log.PreviousNotificationLogId);
             }
 
             [Fact]
-            public void Should_be_null_for_next_log_id()
+            public void Then_should_be_null_for_next_log_id()
             {
                 Assert.Null(this.log.NextNotificationLogId);
             }
 
             [Fact]
-            public void Should_not_be_marked_archived()
+            public void Then_should_not_be_marked_archived()
             {
                 Assert.False(this.log.IsArchived);
             }
@@ -119,49 +119,49 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override int CountOfEventsToAdd => 15;
 
             [Fact]
-            public void Should_return_correct_count_of_events()
+            public void Then_should_return_correct_count_of_events()
             {
                 Assert.Equal(15, this.log.TotalNotification);
             }
 
             [Fact]
-            public void Should_return_correct_first_event()
+            public void Then_should_return_correct_first_event()
             {
                 Assert.Equal(1, this.log.NotificationList.First().SequenceId);
             }
 
             [Fact]
-            public void Should_return_correct_last_event()
+            public void Then_should_return_correct_last_event()
             {
                 Assert.Equal(15, this.log.NotificationList.Last().SequenceId);
             }
 
             [Fact]
-            public void Should_have_correct_log_id()
+            public void Then_should_have_correct_log_id()
             {
                 Assert.Equal("1,20", this.log.NotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_first_log_id()
+            public void Then_should_have_correct_first_log_id()
             {
                 Assert.Equal("1,20", this.log.FirstNotificationLogId);
             }
 
             [Fact]
-            public void Should_have_null_previous_log_id()
+            public void Then_should_have_null_previous_log_id()
             {
                 Assert.Null(this.log.PreviousNotificationLogId);
             }
 
             [Fact]
-            public void Should_not_be_marked_archived()
+            public void Then_should_not_be_marked_archived()
             {
                 Assert.False(this.log.IsArchived);
             }
 
             [Fact]
-            public void Should_be_null_for_next_id()
+            public void Then_should_be_null_for_next_id()
             {
                 Assert.Null(this.log.NextNotificationLogId);
             }
@@ -172,49 +172,49 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override int CountOfEventsToAdd => 30;
 
             [Fact]
-            public void Should_return_correct_count_of_events_in_excess_of_log_size()
+            public void Then_should_return_correct_count_of_events_in_excess_of_log_size()
             {
                 Assert.Equal(10, this.log.TotalNotification);
             }
 
             [Fact]
-            public void Should_return_correct_first_event()
+            public void Then_should_return_correct_first_event()
             {
                 Assert.Equal(21, this.log.NotificationList.First().SequenceId);
             }
 
             [Fact]
-            public void Should_return_correct_last_event()
+            public void Then_should_return_correct_last_event()
             {
                 Assert.Equal(30, this.log.NotificationList.Last().SequenceId);
             }
 
             [Fact]
-            public void Should_have_correct_log_id()
+            public void Then_should_have_correct_log_id()
             {
                 Assert.Equal("21,40", this.log.NotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_first_log_id()
+            public void Then_should_have_correct_first_log_id()
             {
                 Assert.Equal("1,20", this.log.FirstNotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_previous_log_id()
+            public void Then_should_have_correct_previous_log_id()
             {
                 Assert.Equal("1,20", this.log.PreviousNotificationLogId);
             }
 
             [Fact]
-            public void Should_not_be_marked_archived()
+            public void Then_should_not_be_marked_archived()
             {
                 Assert.False(this.log.IsArchived);
             }
 
             [Fact]
-            public void Should_be_null_for_next_id()
+            public void Then_should_be_null_for_next_id()
             {
                 Assert.Null(this.log.NextNotificationLogId);
             }
@@ -225,49 +225,49 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override int CountOfEventsToAdd => 45;
 
             [Fact]
-            public void Should_return_correct_count_of_events_in_excess_of_log_size()
+            public void Then_should_return_correct_count_of_events_in_excess_of_log_size()
             {
                 Assert.Equal(5, this.log.TotalNotification);
             }
 
             [Fact]
-            public void Should_return_correct_first_event()
+            public void Then_should_return_correct_first_event()
             {
                 Assert.Equal(41, this.log.NotificationList.First().SequenceId);
             }
 
             [Fact]
-            public void Should_return_correct_last_event()
+            public void Then_should_return_correct_last_event()
             {
                 Assert.Equal(45, this.log.NotificationList.Last().SequenceId);
             }
 
             [Fact]
-            public void Should_have_correct_log_id()
+            public void Then_should_have_correct_log_id()
             {
                 Assert.Equal("41,60", this.log.NotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_first_log_id()
+            public void Then_should_have_correct_first_log_id()
             {
                 Assert.Equal("1,20", this.log.FirstNotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_previous_log_id()
+            public void Then_should_have_correct_previous_log_id()
             {
                 Assert.Equal("21,40", this.log.PreviousNotificationLogId);
             }
 
             [Fact]
-            public void Should_not_be_marked_archived()
+            public void Then_should_not_be_marked_archived()
             {
                 Assert.False(this.log.IsArchived);
             }
 
             [Fact]
-            public void Should_be_null_for_next_id()
+            public void Then_should_be_null_for_next_id()
             {
                 Assert.Null(this.log.NextNotificationLogId);
             }
@@ -278,49 +278,49 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override int CountOfEventsToAdd => 20;
 
             [Fact]
-            public void Should_return_correct_count_of_events()
+            public void Then_should_return_correct_count_of_events()
             {
                 Assert.Equal(20, this.log.TotalNotification);
             }
 
             [Fact]
-            public void Should_return_correct_first_event()
+            public void Then_should_return_correct_first_event()
             {
                 Assert.Equal(1, this.log.NotificationList.First().SequenceId);
             }
 
             [Fact]
-            public void Should_return_correct_last_event()
+            public void Then_should_return_correct_last_event()
             {
                 Assert.Equal(20, this.log.NotificationList.Last().SequenceId);
             }
 
             [Fact]
-            public void Should_have_correct_log_id()
+            public void Then_should_have_correct_log_id()
             {
                 Assert.Equal("1,20", this.log.NotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_first_log_id()
+            public void Then_should_have_correct_first_log_id()
             {
                 Assert.Equal("1,20", this.log.FirstNotificationLogId);
             }
 
             [Fact]
-            public void Should_have_null_previous_log_id()
+            public void Then_should_have_null_previous_log_id()
             {
                 Assert.Null(this.log.PreviousNotificationLogId);
             }
 
             [Fact]
-            public void Should_be_marked_archived()
+            public void Then_should_be_marked_archived()
             {
                 Assert.True(this.log.IsArchived);
             }
 
             [Fact]
-            public void Should_be_null_for_next_id()
+            public void Then_should_be_null_for_next_id()
             {
                 Assert.Null(this.log.NextNotificationLogId);
             }
@@ -331,49 +331,49 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override int CountOfEventsToAdd => 60;
 
             [Fact]
-            public void Should_return_correct_count_of_events()
+            public void Then_should_return_correct_count_of_events()
             {
                 Assert.Equal(20, this.log.TotalNotification);
             }
 
             [Fact]
-            public void Should_return_correct_first_event()
+            public void Then_should_return_correct_first_event()
             {
                 Assert.Equal(41, this.log.NotificationList.First().SequenceId);
             }
 
             [Fact]
-            public void Should_return_correct_last_event()
+            public void Then_should_return_correct_last_event()
             {
                 Assert.Equal(60, this.log.NotificationList.Last().SequenceId);
             }
 
             [Fact]
-            public void Should_have_correct_log_id()
+            public void Then_should_have_correct_log_id()
             {
                 Assert.Equal("41,60", this.log.NotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_first_log_id()
+            public void Then_should_have_correct_first_log_id()
             {
                 Assert.Equal("1,20", this.log.FirstNotificationLogId);
             }
 
             [Fact]
-            public void Should_have_correct_previous_log_id()
+            public void Then_should_have_correct_previous_log_id()
             {
                 Assert.Equal("21,40", this.log.PreviousNotificationLogId);
             }
 
             [Fact]
-            public void Should_be_marked_archived()
+            public void Then_should_be_marked_archived()
             {
                 Assert.True(this.log.IsArchived);
             }
 
             [Fact]
-            public void Should_be_null_for_next_id()
+            public void Then_should_be_null_for_next_id()
             {
                 Assert.Null(this.log.NextNotificationLogId);
             }
@@ -403,7 +403,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override bool InvokeWhenOnConstruct => false;
 
             [Fact]
-            public async Task Should_throw_format_exception()
+            public async Task Then_should_throw_format_exception()
             {
                 await Assert.ThrowsAsync<FormatException>(() => this.sut.GetNotificationLog("samplebody", this.NotificationLogId));
             }
@@ -416,37 +416,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected override string NotificationLogId => "1,20";
 
             [Fact]
-            public void Should_return_correct_count_of_events()
+            public void Then_should_return_correct_count_of_events()
             {
                 Assert.Equal(0, this.log.TotalNotification);
             }
 
             [Fact]
-            public void Should_have_correct_log_id()
+            public void Then_should_have_correct_log_id()
             {
                 Assert.Equal("1,20", this.log.NotificationLogId);
             }
 
             [Fact]
-            public void Should_be_null_for_first_log_id()
+            public void Then_should_be_null_for_first_log_id()
             {
                 Assert.Null(this.log.FirstNotificationLogId);
             }
 
             [Fact]
-            public void Should_be_null_for_previous_log_id()
+            public void Then_should_be_null_for_previous_log_id()
             {
                 Assert.Null(this.log.PreviousNotificationLogId);
             }
 
             [Fact]
-            public void Should_be_null_for_next_log_id()
+            public void Then_should_be_null_for_next_log_id()
             {
                 Assert.Null(this.log.NextNotificationLogId);
             }
 
             [Fact]
-            public void Should_not_be_marked_archived()
+            public void Then_should_not_be_marked_archived()
             {
                 Assert.False(this.log.IsArchived);
             }
@@ -481,37 +481,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "41,60";
 
                     [Fact]
-                    public void Should_have_correct_first_log_id()
+                    public void Then_should_have_correct_first_log_id()
                     {
                         Assert.Equal("1,20", this.log.FirstNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_have_correct_event_id()
+                    public void Then_should_have_correct_event_id()
                     {
                         Assert.Equal("41,60", this.log.NotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_return_correct_number_of_events()
+                    public void Then_should_return_correct_number_of_events()
                     {
                         Assert.Equal(20, this.log.TotalNotification);
                     }                    
 
                     [Fact]
-                    public void Should_be_correct_previous_id()
+                    public void Then_should_be_correct_previous_id()
                     {
                         Assert.Equal("21,40", this.log.PreviousNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_null_for_next_id()
+                    public void Then_should_be_null_for_next_id()
                     {
                         Assert.Null(this.log.NextNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_marked_archived()
+                    public void Then_should_be_marked_archived()
                     {
                         Assert.True(this.log.IsArchived);
                     }
@@ -524,37 +524,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "21,40";
 
                     [Fact]
-                    public void Should_have_correct_first_log_id()
+                    public void Then_should_have_correct_first_log_id()
                     {
                         Assert.Equal("1,20", this.log.FirstNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_have_correct_event_id()
+                    public void Then_should_have_correct_event_id()
                     {
                         Assert.Equal("21,40", this.log.NotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_return_correct_number_of_events()
+                    public void Then_should_return_correct_number_of_events()
                     {
                         Assert.Equal(20, this.log.TotalNotification);
                     }
 
                     [Fact]
-                    public void Should_be_correct_previous_id()
+                    public void Then_should_be_correct_previous_id()
                     {
                         Assert.Equal("1,20", this.log.PreviousNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_correct_next_id()
+                    public void Then_should_be_correct_next_id()
                     {
                         Assert.Equal("41,60", this.log.NextNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_marked_archived()
+                    public void Then_should_be_marked_archived()
                     {
                         Assert.True(this.log.IsArchived);
                     }
@@ -567,37 +567,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "1,20";
 
                     [Fact]
-                    public void Should_have_correct_first_log_id()
+                    public void Then_should_have_correct_first_log_id()
                     {
                         Assert.Equal("1,20", this.log.FirstNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_have_correct_event_id()
+                    public void Then_should_have_correct_event_id()
                     {
                         Assert.Equal("1,20", this.log.NotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_return_correct_number_of_events()
+                    public void Then_should_return_correct_number_of_events()
                     {
                         Assert.Equal(20, this.log.TotalNotification);
                     }
 
                     [Fact]
-                    public void Should_be_null_for_previous_id()
+                    public void Then_should_be_null_for_previous_id()
                     {
                         Assert.Null(this.log.PreviousNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_correct_next_id()
+                    public void Then_should_be_correct_next_id()
                     {
                         Assert.Equal("21,40", this.log.NextNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_marked_archived()
+                    public void Then_should_be_marked_archived()
                     {
                         Assert.True(this.log.IsArchived);
                     }
@@ -610,37 +610,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "61,80";
 
                     [Fact]
-                    public void Should_have_correct_first_log_id()
+                    public void Then_should_have_correct_first_log_id()
                     {
                         Assert.Equal("1,20", this.log.FirstNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_have_correct_event_id()
+                    public void Then_should_have_correct_event_id()
                     {
                         Assert.Equal("61,80", this.log.NotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_return_correct_number_of_events()
+                    public void Then_should_return_correct_number_of_events()
                     {
                         Assert.Equal(0, this.log.TotalNotification);
                     }
 
                     [Fact]
-                    public void Should_be_correct_previous_id()
+                    public void Then_should_be_correct_previous_id()
                     {
                         Assert.Equal("41,60", this.log.PreviousNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_null_for_next_id()
+                    public void Then_should_be_null_for_next_id()
                     {
                         Assert.Null(this.log.NextNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_marked_archived()
+                    public void Then_should_be_marked_archived()
                     {
                         Assert.False(this.log.IsArchived);
                     }
@@ -653,37 +653,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "81,100";
 
                     [Fact]
-                    public void Should_have_correct_first_log_id()
+                    public void Then_should_have_correct_first_log_id()
                     {
                         Assert.Equal("1,20", this.log.FirstNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_have_correct_event_id()
+                    public void Then_should_have_correct_event_id()
                     {
                         Assert.Equal("81,100", this.log.NotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_return_correct_number_of_events()
+                    public void Then_should_return_correct_number_of_events()
                     {
                         Assert.Equal(0, this.log.TotalNotification);
                     }
 
                     [Fact]
-                    public void Should_be_null_for_previous_id()
+                    public void Then_should_be_null_for_previous_id()
                     {
                         Assert.Null(this.log.PreviousNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_null_for_next_id()
+                    public void Then_should_be_null_for_next_id()
                     {
                         Assert.Null(this.log.NextNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_marked_archived()
+                    public void Then_should_be_marked_archived()
                     {
                         Assert.False(this.log.IsArchived);
                     }
@@ -696,37 +696,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "1,20";
 
                     [Fact]
-                    public void Should_have_correct_first_log_id()
+                    public void Then_should_have_correct_first_log_id()
                     {
                         Assert.Equal("1,20", this.log.FirstNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_have_correct_event_id()
+                    public void Then_should_have_correct_event_id()
                     {
                         Assert.Equal("1,20", this.log.NotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_return_correct_number_of_events()
+                    public void Then_should_return_correct_number_of_events()
                     {
                         Assert.Equal(20, this.log.TotalNotification);
                     }
 
                     [Fact]
-                    public void Should_be_null_previous_id()
+                    public void Then_should_be_null_previous_id()
                     {
                         Assert.Null(this.log.PreviousNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_correct_next_id()
+                    public void Then_should_be_correct_next_id()
                     {
                         Assert.Equal("21,40", this.log.NextNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_marked_archived()
+                    public void Then_should_be_marked_archived()
                     {
                         Assert.True(this.log.IsArchived);
                     }
@@ -739,37 +739,37 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "21,40";
 
                     [Fact]
-                    public void Should_have_correct_first_log_id()
+                    public void Then_should_have_correct_first_log_id()
                     {
                         Assert.Equal("1,20", this.log.FirstNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_have_correct_event_id()
+                    public void Then_should_have_correct_event_id()
                     {
                         Assert.Equal("21,40", this.log.NotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_return_correct_number_of_events()
+                    public void Then_should_return_correct_number_of_events()
                     {
                         Assert.Equal(1, this.log.TotalNotification);
                     }
 
                     [Fact]
-                    public void Should_have_correct_previous_id()
+                    public void Then_should_have_correct_previous_id()
                     {
                         Assert.Equal("1,20", this.log.PreviousNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_be_null_for_next_id()
+                    public void Then_should_be_null_for_next_id()
                     {
                         Assert.Null(this.log.NextNotificationLogId);
                     }
 
                     [Fact]
-                    public void Should_not_be_marked_archived()
+                    public void Then_should_not_be_marked_archived()
                     {
                         Assert.False(this.log.IsArchived);
                     }
@@ -787,7 +787,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "45,60";
 
                     [Fact]
-                    public async Task Should_throw_argument_exception()
+                    public async Task Then_should_throw_argument_exception()
                     {
                         await Assert.ThrowsAsync<ArgumentException>("notificationLogId", () => this.sut.GetNotificationLog("samplebody", this.NotificationLogId));
                     }
@@ -802,7 +802,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "1,16";
 
                     [Fact]
-                    public async Task Should_throw_argument_exception()
+                    public async Task Then_should_throw_argument_exception()
                     {
                         await Assert.ThrowsAsync<ArgumentException>("notificationLogId", () => this.sut.GetNotificationLog("samplebody", this.NotificationLogId));
                     }
@@ -817,7 +817,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "21,30";
 
                     [Fact]
-                    public async Task Should_throw_argument_exception()
+                    public async Task Then_should_throw_argument_exception()
                     {
                         await Assert.ThrowsAsync<ArgumentException>("notificationLogId", () => this.sut.GetNotificationLog("samplebody", this.NotificationLogId));
                     }
@@ -832,7 +832,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "0,5";
 
                     [Fact]
-                    public async Task Should_throw_argument_exception()
+                    public async Task Then_should_throw_argument_exception()
                     {
                         await Assert.ThrowsAsync<ArgumentException>("notificationLogId", () => this.sut.GetNotificationLog("samplebody", this.NotificationLogId));
                     }
@@ -847,7 +847,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "16,25";
 
                     [Fact]
-                    public async Task Should_throw_argument_exception()
+                    public async Task Then_should_throw_argument_exception()
                     {
                         await Assert.ThrowsAsync<ArgumentException>("notificationLogId", () => this.sut.GetNotificationLog("samplebody", this.NotificationLogId));
                     }
@@ -862,7 +862,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
                     protected override string NotificationLogId => "16,25";
 
                     [Fact]
-                    public async Task Should_throw_argument_exception()
+                    public async Task Then_should_throw_argument_exception()
                     {
                         await Assert.ThrowsAsync<ArgumentException>("notificationLogId", () => this.sut.GetNotificationLog("samplebody", this.NotificationLogId));
                     }

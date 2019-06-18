@@ -4,14 +4,11 @@ using System.Collections.Generic;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
 {
-    public class TerminalsRemoved : IAuthoredEvent
+    public class TerminalDeactivated : IAuthoredEvent
     {
-        public readonly IEnumerable<string> TargetIds;
-
-        public TerminalsRemoved(Guid id, IEnumerable<string> targetIds, string authorId)
+        public TerminalDeactivated(Guid id, string authorId)
         {
             this.Id = id;
-            this.TargetIds = targetIds;
             this.AuthorId = authorId;
         }
 

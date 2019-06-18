@@ -1,22 +1,19 @@
 ﻿using CQRSlite.Commands;
 using CQRSlite.Domain;
-using System.Threading;
-using System.Threading.Tasks;
+using org.neurul.Common.Domain.Model;
+using org.neurul.Common.Events;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Domain.Model.Neurons;
-using org.neurul.Common.Events;
-using org.neurul.Common.Domain.Model;
 using System;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace org.neurul.Cortex.Application.Neurons
 {
     public class NeuronCommandHandlers : 
         ICancellableCommandHandler<CreateNeuron>,
-        ICancellableCommandHandler<CreateNeuronWithTerminals>,
+        ICancellableCommandHandler<CreateAuthorNeuron>,
         ICancellableCommandHandler<ChangeNeuronTag>,
-        ICancellableCommandHandler<AddTerminalsToNeuron>,
-        ICancellableCommandHandler<RemoveTerminalsFromNeuron>,
         ICancellableCommandHandler<DeactivateNeuron>
     {
         private readonly INavigableEventStore eventStore;
@@ -24,82 +21,61 @@ namespace org.neurul.Cortex.Application.Neurons
 
         public NeuronCommandHandlers(INavigableEventStore eventStore, ISession session)
         {
+            AssertionConcern.AssertArgumentNotNull(eventStore, nameof(eventStore));
+            AssertionConcern.AssertArgumentNotNull(session, nameof(session));
+
             this.eventStore = eventStore;
             this.session = session;
         }
 
-        private static async Task AssertAuthorExistsAndActive(string authorId, CancellationToken token, ISession session)
-        {
-            var author = await session.Get<Neuron>(Guid.Parse(authorId), cancellationToken: token);
-            AssertionConcern.AssertArgumentTrue(author.Active, $"Specified Author id '{authorId}' is not active.");
-        }
-
         public async Task Handle(CreateNeuron message, CancellationToken token = default(CancellationToken))
         {
+            AssertionConcern.AssertArgumentNotNull(message, nameof(message));
+
             await this.eventStore.Initialize(message.AvatarId);
-
-            if (message.AuthorId != message.Id.ToString())
-                await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
-
-            var neuron = new Neuron(message.Id, message.Tag, message.AuthorId);
+            
+            Neuron author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token),
+                neuron = new Neuron(message.Id, message.Tag, author);
+            
             await this.session.Add(neuron, token);
             await this.session.Commit(token);
-        }        
+        }
 
-        public async Task Handle(CreateNeuronWithTerminals message, CancellationToken token = default(CancellationToken))
+        public async Task Handle(CreateAuthorNeuron message, CancellationToken token = default(CancellationToken))
         {
+            AssertionConcern.AssertArgumentNotNull(message, nameof(message));
+            
             await this.eventStore.Initialize(message.AvatarId);
+            
+            var neuron = new Neuron(message.Id, message.Tag);
 
-            if (message.AuthorId != message.Id.ToString())
-                await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
-
-            var neuron = new Neuron(message.Id, message.Tag, message.AuthorId);
-            await neuron.AddTerminals(message.Terminals, message.AuthorId);
             await this.session.Add(neuron, token);
             await this.session.Commit(token);
         }
 
         public async Task Handle(ChangeNeuronTag message, CancellationToken token = default(CancellationToken))
         {
+            AssertionConcern.AssertArgumentNotNull(message, nameof(message));
+
             await this.eventStore.Initialize(message.AvatarId);
 
-            await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
+            Neuron neuron = await this.session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token),
+                author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token);
+            neuron.ChangeTag(message.NewTag, author);
 
-            var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.ChangeTag(message.NewTag, message.AuthorId);
-            await this.session.Commit(token);
-        }
-
-        public async Task Handle(AddTerminalsToNeuron message, CancellationToken token = default(CancellationToken))
-        {
-            await this.eventStore.Initialize(message.AvatarId);
-
-            await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
-
-            var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            await neuron.AddTerminals(message.Terminals, message.AuthorId);
-            await this.session.Commit(token);
-        }
-
-        public async Task Handle(RemoveTerminalsFromNeuron message, CancellationToken token = default(CancellationToken))
-        {
-            await this.eventStore.Initialize(message.AvatarId);
-
-            await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
-
-            var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.RemoveTerminals(message.TargetIds, message.AuthorId);
             await this.session.Commit(token);
         }
 
         public async Task Handle(DeactivateNeuron message, CancellationToken token = default(CancellationToken))
         {
+            AssertionConcern.AssertArgumentNotNull(message, nameof(message));
+
             await this.eventStore.Initialize(message.AvatarId);
 
-            await NeuronCommandHandlers.AssertAuthorExistsAndActive(message.AuthorId, token, session);
-
-            var neuron = await this.session.Get<Neuron>(message.Id, message.ExpectedVersion, token);
-            neuron.Deactivate(message.AuthorId);
+            Neuron neuron = await this.session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token),
+                author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token);
+            
+            neuron.Deactivate(author);
             await this.session.Commit(token);
         }
     }

@@ -1,534 +1,404 @@
-﻿using CQRSlite.Events;
-using Moq;
-using org.neurul.Cortex.Domain.Model.Neurons;
+﻿using org.neurul.Common.Events;
 using org.neurul.Common.Test;
+using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
 {
     public abstract class Context : TestContext<Neuron>
     {
-        private string authorId = Guid.NewGuid().ToString();
+        protected Guid id;
+        protected string tag;
 
-        protected override void Given()
-        {
-            base.Given();
-
-            var id = Guid.NewGuid();
-            this.sut = new Neuron(id, string.Empty, authorId);
-        }
-
-        protected virtual string AuthorId => this.authorId;
-}
-
-    public class When_created_with_id_only : Context
-    {
-        [Fact]
-        public void Should_contain_empty_tag()
-        {
-            Assert.Equal(string.Empty, this.sut.Tag);
-        }
-
-        [Fact]
-        public void Should_have_empty_terminals()
-        {
-            Assert.Empty(this.sut.Terminals);
-        }
-
-        [Fact]
-        public void Should_raise_neuron_created_event()
-        {
-            Assert.IsAssignableFrom<NeuronCreated>(this.sut.GetUncommittedChanges().Last());
-        }
+        protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
+        protected virtual string Tag => this.tag = this.tag ?? string.Empty;
     }
 
-    public class When_adding_terminal
+    public abstract class ConstructingAuthorNeuronContext : Context
     {
-        public abstract class InitializeAddingTerminalContext : Context
-        {
-            protected Terminal[] terminals;
+        protected override bool InvokeWhenOnConstruct => false;
 
-            protected override void Given()
-            {
-                base.Given();
-
-                this.terminals = this.GenerateTerminals();
-            }
-
-            protected virtual int GenerateTerminalsCount => 1;
-
-            protected virtual Terminal[] GenerateTerminals()
-            {
-                var result = new List<Terminal>();
-                for (int i = 0; i < this.GenerateTerminalsCount; i++)
-                    result.Add(new Terminal(Guid.NewGuid(), NeurotransmitterEffect.Excite, 1));
-                return result.ToArray();
-            }
-        }
-
-        public class When_validating_parameters
-        {
-            public class When_null_terminal_is_specified : InitializeAddingTerminalContext 
-            {
-                [Fact]
-                public async Task Should_throw_argument_null_exception()
-                {
-                    await Assert.ThrowsAsync<ArgumentNullException>("terminals", () => this.sut.AddTerminals(this.AuthorId, null));
-                }
-            }
-
-            public class When_empty_terminal_array_is_specified : InitializeAddingTerminalContext
-            {
-                [Fact]
-                public async Task Should_throw_argument_exception()
-                {
-                    // Assert
-                    await Assert.ThrowsAsync<ArgumentException>("terminals", () => this.sut.AddTerminals(new Terminal[0], this.AuthorId));
-                }
-            }
-
-            public class When_neuron_is_deactivated : InitializeAddingTerminalContext
-            {
-                protected override void Given()
-                {
-                    base.Given();
-
-                    this.sut.Deactivate(this.AuthorId);
-                }
-
-                protected override bool InvokeWhenOnConstruct => false;
-
-                [Fact]
-                public async Task Should_throw_invalid_operation_exception()
-                {
-                    await Assert.ThrowsAsync<InvalidOperationException>(() => this.sut.AddTerminals(this.terminals, this.AuthorId));
-                }
-            }
-        }
-
-        public abstract class AddingTerminalContext : InitializeAddingTerminalContext
-        {
-            protected override void When()
-            {
-                base.When();
-
-                Task.Run(async () => await this.sut.AddTerminals(this.TerminalsForAdding, this.AuthorId)).Wait();
-            }
-
-            protected virtual Func<Terminal, bool> TerminalValidator => t => true;
-
-            protected virtual Terminal[] TerminalsForAdding => new Terminal[] { this.terminals[0] };            
-        }
-
-        public class When_terminals_are_empty
-        {
-            public class When_specified_target_exists : AddingTerminalContext
-            {
-                [Fact]
-                public void Should_add_terminal()
-                {
-                    Assert.Single(this.sut.Terminals);
-                }
-
-                [Fact]
-                public void Should_raise_terminals_added_event()
-                {
-                    Assert.NotEmpty(this.sut.GetUncommittedChanges().OfType<TerminalsAdded>());
-                }
-            }
-
-            public class When_two_specified_targets_exist : AddingTerminalContext
-            {
-                protected override int GenerateTerminalsCount => 2;
-
-                protected override Terminal[] TerminalsForAdding => this.terminals.ToArray();
-
-                [Fact]
-                public void Should_add_two_terminals()
-                {
-                    // Assert
-                    Assert.Equal(2, this.sut.Terminals.Count);
-                }
-            }            
-        }
-
-        public class When_terminals_have_one_terminal
-        {
-            public abstract class AddingToTerminalsWithOneTerminalContext : AddingTerminalContext
-            {
-                protected override int GenerateTerminalsCount => 1;
-
-                protected override void Given()
-                {
-                    base.Given();
-
-                    Task.Run(async () => await this.sut.AddTerminals(this.AuthorId, this.terminals[0])).Wait();
-                }
-            }
-
-            public class When_specified_target_exists : AddingToTerminalsWithOneTerminalContext
-            {
-                protected override int GenerateTerminalsCount => base.GenerateTerminalsCount + 1;
-
-                protected override Terminal[] TerminalsForAdding => new Terminal[] { this.terminals[1] };
-
-                [Fact]
-                public void Should_add_terminal()
-                {
-                    Assert.Equal(2, this.sut.Terminals.Count);
-                }
-
-                [Fact]
-                public void Should_add_terminal_as_last_added_terminal_in_terminals()
-                {
-                    Assert.Equal(this.terminals[1], this.sut.Terminals.Last());
-                }
-
-                [Fact]
-                public void Should_raise_terminals_added_event()
-                {
-                    Assert.IsAssignableFrom<TerminalsAdded>(this.sut.GetUncommittedChanges().Last());
-                }
-
-                [Fact]
-                public void Should_reference_terminal_in_last_terminals_added_event()
-                {
-                    Assert.Equal(this.terminals[1], ((TerminalsAdded)this.sut.GetUncommittedChanges().Last()).Terminals.Last());
-                }
-
-                [Fact]
-                public void Should_have_three_uncommitted_changes()
-                {
-                    Assert.Equal(3, this.sut.GetUncommittedChanges().Length);
-                }
-            }
-        }
-
-        public class When_terminals_have_two_terminals
-        {
-            public abstract class AddingToTerminalsWithTwoTerminalsContext : AddingTerminalContext
-            {
-                protected override int GenerateTerminalsCount => 2;
-
-                protected override void Given()
-                {
-                    base.Given();
-
-                    Task.Run(async () => await this.sut.AddTerminals(this.AuthorId, this.terminals[0], this.terminals[1])).Wait();
-                }
-            }
-
-            public class When_adding_duplicate_of_first_terminals_terminal : AddingToTerminalsWithTwoTerminalsContext
-            {
-                protected override bool InvokeWhenOnConstruct => false;
-
-                protected override Terminal[] GenerateTerminals()
-                {
-                    Guid t1 = Guid.NewGuid(),
-                        t2 = Guid.NewGuid(),
-                        t3 = new Guid(t1.ToString());
-
-                    return new Terminal[] { new Terminal(t1, NeurotransmitterEffect.Excite, 1), new Terminal(t2, NeurotransmitterEffect.Excite, 1), new Terminal(t3, NeurotransmitterEffect.Excite, 1) };
-                }
-
-                [Fact]
-                public async Task Should_throw_an_argument_exception()
-                {
-                    // Assert
-                    await Assert.ThrowsAsync<ArgumentException>(() => this.sut.AddTerminals(this.AuthorId, this.terminals[2]));
-                }
-            }            
-        }        
+        protected override void When() => this.sut = new Neuron(this.Id, this.Tag);
     }
 
-    public class When_changing_tag
+    public class When_author_neuron
     {
-        public class When_neuron_is_inactive : Context
+        public class When_constructing
         {
-            protected override void Given()
+            public class When_empty_id_specified : ConstructingAuthorNeuronContext
             {
-                base.Given();
+                protected override Guid Id => Guid.Empty;
 
-                this.sut.Deactivate(this.AuthorId);
+                [Fact]
+                public void Then_should_throw_invalid_operation_exception()
+                {
+                    Assert.Throws<InvalidOperationException>(() => this.When());
+                }
             }
 
-            [Fact]
-            public void Should_throw_invalid_operation_exception()
+            public class When_null_tag_specified : ConstructingAuthorNeuronContext
             {
-                Assert.Throws<InvalidOperationException>(() => this.sut.ChangeTag(string.Empty, this.AuthorId));
+                protected override string Tag => null;
+
+                [Fact]
+                public void Then_should_throw_argument_null_exception()
+                {
+                    Assert.Throws<ArgumentNullException>(() => this.When());
+                }
             }
         }
 
-        public abstract class ChangingTagContext : Context
+        public abstract class ConstructedContext : ConstructingAuthorNeuronContext
         {
-            protected override void Given()
-            {
-                base.Given();
-
-                this.sut.ChangeTag(this.NewTag, this.AuthorId);
-            }
-
-            protected abstract string NewTag
-            {
-                get;
-            }
+            protected override bool InvokeWhenOnConstruct => true;
         }
 
-        public class When_tag_is_valid : ChangingTagContext
+        public class When_constructed : ConstructedContext
         {
-            protected override string NewTag => "Hello World";
-
             [Fact]
-            public void Should_change_tag()
+            public void Then_should_contain_correct_id()
             {
-                // Assert
-                Assert.Equal(this.NewTag, ((NeuronTagChanged)this.sut.GetUncommittedChanges().Last()).Tag);
-                Assert.Equal(this.NewTag, this.sut.Tag);
+                Assert.Equal(this.Id, this.sut.Id);
             }
-        }
-
-        public class When_new_tag_is_same_as_current : ChangingTagContext
-        {
-            protected override string NewTag => string.Empty;
 
             [Fact]
-            public void Should_do_nothing()
+            public void Then_should_contain_empty_tag()
             {
-                // Assert
-                Assert.NotEqual(typeof(NeuronTagChanged), this.sut.GetUncommittedChanges().Last().GetType());
                 Assert.Equal(string.Empty, this.sut.Tag);
             }
+
+            [Fact]
+            public void Then_should_raise_neuron_created_event()
+            {
+                Assert.IsAssignableFrom<NeuronCreated>(this.sut.GetUncommittedChanges().Last());
+            }
+
+            [Fact]
+            public void Then_should_raise_event_with_correct_author()
+            {
+                Assert.Equal(this.Id.ToString(), ((IAuthoredEvent)this.sut.GetUncommittedChanges().Last()).AuthorId);
+            }
         }
     }
 
-    public class When_removing_terminal
+    public class When_non_author_neuron
     {
-        public class When_validating_parameters
+        public abstract class ConstructingNonAuthorNeuronContext : Context
         {
-            public class When_null_is_specified : Context
-            {
-                [Fact]
-                public void Should_throw_argument_null_exception()
-                {
-                    Assert.Throws<ArgumentNullException>("targetIds", () => this.sut.RemoveTerminals(null, this.AuthorId));
-                }
-            }
+            protected Neuron author;
 
-            public class When_empty_terminal_array_is_specified : Context
-            {
-                [Fact]
-                public void Should_throw_argument_exception()
-                {
-                    Assert.Throws<ArgumentException>("targetIds", () => this.sut.RemoveTerminals(new string[0], this.AuthorId));
-                }
-            }
+            protected override bool InvokeWhenOnConstruct => false;
 
-            public class When_neuron_is_deactivated : Context
-            {
-                protected override void Given()
-                {
-                    base.Given();
+            protected virtual Neuron Author => this.author = this.author ?? new Neuron(Guid.NewGuid(), string.Empty);
 
-                    this.sut.Deactivate(this.AuthorId);
-                }
-
-                [Fact]
-                public void Should_throw_invalid_operation_exception()
-                {
-                    Assert.Throws<InvalidOperationException>(() => this.sut.RemoveTerminals(new string[0], this.AuthorId));
-                }
-            }
+            protected override void When() => this.sut = new Neuron(this.Id, this.Tag, this.Author);
         }
 
-        public abstract class RemovingTerminalContext : Context
+        public class When_constructing
         {
-            protected Guid[] terminalIds;
-
-            protected override void Given()
+            public class When_empty_id_specified : ConstructingNonAuthorNeuronContext
             {
-                base.Given();
+                protected override Guid Id => Guid.Empty;
 
-                this.terminalIds = this.GetTerminals();
-            }
-
-            protected virtual Guid[] GetTerminals()
-            {
-                return new Guid[] { Guid.NewGuid() };
-            }
-        }
-
-        public class When_terminals_are_empty
-        {
-            public class When_specifying_terminal_not_in_terminals : RemovingTerminalContext
-            {
                 [Fact]
-                public void Should_throw_argument_exception()
+                public void Then_should_throw_argument_null_exception()
                 {
-                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(new string[] { this.terminalIds[0].ToString() }, this.AuthorId));
-                    Assert.Contains(this.terminalIds[0].ToString(), ex.Message);
+                    Assert.Throws<InvalidOperationException>(() => this.When());
                 }
             }
 
-            public class When_specifying_terminals_not_in_terminals : RemovingTerminalContext
+            public class When_null_tag_specified : ConstructingNonAuthorNeuronContext
             {
+                protected override string Tag => null;
+
                 [Fact]
-                public void Should_throw_argument_exception()
+                public void Then_should_throw_argument_null_exception()
                 {
-                    var ts = new string[]
-                    {
-                        Guid.NewGuid().ToString(),
-                        Guid.NewGuid().ToString(),
-                        Guid.NewGuid().ToString()
-                    };
-                    var ex = Assert.Throws<ArgumentException>(() => this.sut.RemoveTerminals(ts, this.AuthorId));
-                    Assert.Contains(ts[0], ex.Message);
+                    Assert.Throws<ArgumentNullException>(() => this.When());
                 }
             }
-        }
 
-        public abstract class SingleTerminalInTerminalsContext : RemovingTerminalContext
-        {
-            protected override void Given()
+            public class When_null_author_specified : ConstructingNonAuthorNeuronContext
             {
-                base.Given();
+                protected override Neuron Author => null;
 
-                foreach (Guid g in this.terminalIds)
+                [Fact]
+                public void Then_should_throw_argument_null_exception()
                 {
-                    Task.Run(() => this.sut.AddTerminals(this.AuthorId, new Terminal(g, NeurotransmitterEffect.Excite, 1))).Wait();
+                    Assert.Throws<ArgumentNullException>(() => this.When());
                 }
             }
-        }
 
-        public class When_single_terminal_in_terminals
-        {
-            public class When_specifying_single_terminal : SingleTerminalInTerminalsContext
+            public class When_inactive_author_specified : ConstructingNonAuthorNeuronContext
             {
                 protected override void When()
                 {
-                    this.sut.RemoveTerminals(new string[] { this.terminalIds[0].ToString() }, this.AuthorId);
+                    this.Author.Deactivate(this.Author);
+                    base.When();
                 }
 
                 [Fact]
-                public void Should_remove_terminal()
+                public void Then_should_throw_argument_exception()
                 {
-                    Assert.Empty(this.sut.Terminals);
-                }
-
-                [Fact]
-                public void Should_raise_terminals_removed_event()
-                {
-                    Assert.NotEmpty(this.sut.GetUncommittedChanges().OfType<TerminalsRemoved>());
+                    Assert.Throws<ArgumentException>(() => this.When());
                 }
             }
 
-            public class When_specifying_terminal_not_in_terminals : SingleTerminalInTerminalsContext
+            public class When_empty_author_id_specified : ConstructingNonAuthorNeuronContext
             {
+                protected override Neuron Author => new Neuron(Guid.Empty, string.Empty);
+
                 [Fact]
-                public void Should_throw_argument_exception()
+                public void Then_should_throw_invalid_operation_exception()
                 {
-                    Assert.Throws<ArgumentException>("targetIds", () => this.sut.RemoveTerminals(new string[] { Guid.NewGuid().ToString() }, this.AuthorId));
+                    Assert.Throws<InvalidOperationException>(() => this.When());
+                }
+            }
+
+            public class When_authorId_is_equal_to_neuron_id : ConstructingNonAuthorNeuronContext
+            {
+                protected override Guid Id => this.Author.Id;
+
+                [Fact]
+                public void Then_should_throw_argument_exception()
+                {
+                    Assert.Throws<ArgumentException>(() => this.When());
                 }
             }
         }
 
-        public abstract class MultipleTerminalsInTerminalsContext : SingleTerminalInTerminalsContext
+        public abstract class ConstructedNonAuthorNeuronContext : ConstructingNonAuthorNeuronContext
         {
-            protected override Guid[] GetTerminals()
+            protected override bool InvokeWhenOnConstruct => true;
+        }
+
+        public class When_constructed : ConstructedNonAuthorNeuronContext
+        {
+            [Fact]
+            public void Then_should_contain_correct_id()
             {
-                return new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+                Assert.Equal(this.Id, this.sut.Id);
+            }
+
+            [Fact]
+            public void Then_should_contain_empty_tag()
+            {
+                Assert.Equal(string.Empty, this.sut.Tag);
+            }
+
+            [Fact]
+            public void Then_should_raise_neuron_created_event()
+            {
+                Assert.IsAssignableFrom<NeuronCreated>(this.sut.GetUncommittedChanges().Last());
+            }
+
+            [Fact]
+            public void Then_should_raise_event_with_correct_author()
+            {
+                Assert.Equal(this.Author.Id.ToString(), ((IAuthoredEvent)this.sut.GetUncommittedChanges().Last()).AuthorId);
             }
         }
 
-        public class When_multiple_terminals_in_terminals
+        public abstract class DeactivatedConstructedContext : ConstructedNonAuthorNeuronContext
         {
-            public class When_specifying_all_terminals_in_terminals : MultipleTerminalsInTerminalsContext
+            protected override bool InvokeWhenOnConstruct => false;
+
+            protected override void When()
+            {
+                base.When();
+                this.sut.Deactivate(this.Author);
+            }
+        }
+
+        public class When_changing_tag
+        {
+            public class When_neuron_is_inactive : DeactivatedConstructedContext
             {
                 protected override void When()
                 {
                     base.When();
-
-                    this.sut.RemoveTerminals(this.terminalIds.Select(g => g.ToString()), this.AuthorId);
+                    this.sut.ChangeTag(string.Empty, this.Author);
                 }
 
                 [Fact]
-                public void Should_remove_terminals()
+                public void Then_should_throw_invalid_operation_exception()
                 {
-                    Assert.Empty(this.sut.Terminals);
-                }
-
-                [Fact]
-                public void Should_raise_terminals_removed_event()
-                {
-                    Assert.IsAssignableFrom<TerminalsRemoved>(this.sut.GetUncommittedChanges().Last());
+                    Assert.Throws<InvalidOperationException>(() => this.When());
                 }
             }
 
-            public class When_specifying_single_terminal_in_terminals : MultipleTerminalsInTerminalsContext
+            public abstract class ChangingTagContext : ConstructedNonAuthorNeuronContext
             {
-                private int initCount;
+                protected Neuron authorParameter;
 
-                protected override void Given()
+                protected override void When()
                 {
-                    base.Given();
+                    base.When();
 
-                    this.initCount = this.terminalIds.Count();
-                    this.sut.RemoveTerminals(new string[] { this.terminalIds[1].ToString() }, this.AuthorId);
+                    this.sut.ChangeTag(this.TagParameter, this.AuthorParameter);
+                }
+
+                protected abstract string TagParameter
+                {
+                    get;
+                }
+
+                protected virtual Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? this.Author;
+            }
+
+            public class When_tag_is_valid : ChangingTagContext
+            {
+                protected override string TagParameter => "Hello World";
+
+                [Fact]
+                public void Then_should_change_tag()
+                {
+                    // Assert
+                    Assert.Equal(this.TagParameter, ((NeuronTagChanged)this.sut.GetUncommittedChanges().Last()).Tag);
+                    Assert.Equal(this.TagParameter, this.sut.Tag);
+                }
+            }
+
+            public class When_tag_is_null : ChangingTagContext
+            {
+                protected override string TagParameter => null;
+
+                protected override bool InvokeWhenOnConstruct => false;
+
+                [Fact]
+                public void Then_should_throw_argument_null_exception()
+                {
+                    Assert.Throws<ArgumentNullException>(() => this.When());
+                }
+            }
+
+            public class When_new_tag_is_same_as_current : ChangingTagContext
+            {
+                protected override string TagParameter => string.Empty;
+
+                [Fact]
+                public void Then_should_do_nothing()
+                {
+                    // Assert
+                    Assert.NotEqual(typeof(NeuronTagChanged), this.sut.GetUncommittedChanges().Last().GetType());
+                    Assert.Equal(string.Empty, this.sut.Tag);
+                }
+            }
+
+            public class When_new_author_is_null : ChangingTagContext
+            {
+                protected override string TagParameter => "Hello";
+
+                protected override Neuron AuthorParameter => null;
+
+                protected override bool InvokeWhenOnConstruct => false;
+
+                [Fact]
+                public void Then_should_throw_argument_null_exception()
+                {
+                    Assert.Throws<ArgumentNullException>(() => this.When());
+                }
+            }
+
+            public class When_inactive_author_specified : ChangingTagContext
+            {
+                protected override string TagParameter => "Hello";
+
+                protected override Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? new Neuron(Guid.NewGuid(), string.Empty);
+
+                protected override bool InvokeWhenOnConstruct => false;
+
+                protected override void When()
+                {
+                    this.AuthorParameter.Deactivate(this.Author);
+                    base.When();
                 }
 
                 [Fact]
-                public void Should_reduce_terminals_count_by_one()
+                public void Then_should_throw_argument_exception()
                 {
-                    Assert.Equal(initCount - 1, this.sut.Terminals.Count);
-                }
-
-                [Fact]
-                public void Should_retain_other_terminals()
-                {
-                    Assert.Contains(this.sut.Terminals, t => t.TargetId == this.terminalIds[0]);
-                    Assert.Contains(this.sut.Terminals, t => t.TargetId == this.terminalIds[2]);
-                }
-
-                [Fact]
-                public void Should_remove_specified_terminal()
-                {
-                    Assert.DoesNotContain(this.sut.Terminals, t => t.TargetId == this.terminalIds[1]);
+                    Assert.Throws<ArgumentException>(() => this.When());
                 }
             }
         }
-    }
 
-    public class When_deactivating_neuron
-    {
-        public abstract class DeactivatingContext : Context
+        public class When_deactivating_neuron
         {
-            protected override void Given()
+            public class When_neuron_is_inactive : DeactivatedConstructedContext
             {
-                base.Given();
+                protected override bool InvokeWhenOnConstruct => false;
 
-                this.sut.Deactivate(this.AuthorId);
+                protected override void When()
+                {
+                    base.When();
+                    this.sut.Deactivate(this.Author);
+                }
+
+                [Fact]
+                public void Then_should_throw_invalid_operation_exception()
+                {
+                    Assert.Throws<InvalidOperationException>(() => this.When());
+                }
             }
-        }
 
-        public class When_neuron_is_active : DeactivatingContext
-        {
-            [Fact]
-            public void Should_raise_neuron_deactivated_event()
+            public abstract class DeactivatingContext : ConstructedNonAuthorNeuronContext
             {
-                Assert.IsAssignableFrom<NeuronDeactivated>(this.sut.GetUncommittedChanges().Last());
+                protected Neuron authorParameter;
+
+                protected virtual Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? this.Author;
+
+                protected override void When()
+                {
+                    base.When();
+
+                    this.sut.Deactivate(this.AuthorParameter);
+                }
             }
-        }
 
-        public class When_neuron_is_inactive : DeactivatingContext
-        {
-            [Fact]
-            public void Should_throw_invalid_operation_exception()
+            public class When_neuron_is_active : DeactivatingContext
             {
-                Assert.Throws<InvalidOperationException>(() => this.sut.Deactivate(this.AuthorId));
+                [Fact]
+                public void Then_should_raise_neuron_deactivated_event()
+                {
+                    Assert.IsAssignableFrom<NeuronDeactivated>(this.sut.GetUncommittedChanges().Last());
+                }
+            }
+
+            public class When_specified_author_is_null : DeactivatingContext
+            {
+                protected override Neuron AuthorParameter => null;
+
+                protected override bool InvokeWhenOnConstruct => false;
+
+                [Fact]
+                public void Then_should_throw_argument_null_exception()
+                {
+                    Assert.Throws<ArgumentNullException>(() => this.When());
+                }
+            }
+
+            public class When_inactive_author_specified : DeactivatingContext
+            {
+                protected override Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? new Neuron(Guid.NewGuid(), string.Empty);
+
+                protected override bool InvokeWhenOnConstruct => false;
+
+                protected override void When()
+                {
+                    this.AuthorParameter.Deactivate(this.Author);
+                    base.When();
+                }
+
+                [Fact]
+                public void Then_should_throw_argument_exception()
+                {
+                    Assert.Throws<ArgumentException>(() => this.When());
+                }
             }
         }
     }
 }
+
+// TODO: add validators for Neuron events constructors

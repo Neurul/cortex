@@ -19,7 +19,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
         public class When_null_adapter_is_specified : TestContext<EventStore>
         {
             [Fact]
-            public void Should_throw_argument_null_exception()
+            public void Then_should_throw_argument_null_exception()
             {
                 var ep = new Mock<IEventPublisher>().Object;
                 Assert.Throws<ArgumentNullException>("serializer", () => new EventStore(null, ep));
@@ -29,7 +29,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
         public class When_null_publisher_is_specified : TestContext<EventStore>
         {
             [Fact]
-            public void Should_throw_argument_null_exception()
+            public void Then_should_throw_argument_null_exception()
             {
                 var esa = new Mock<IEventSerializer>().Object;
                 Assert.Throws<ArgumentNullException>("publisher", () => new EventStore(esa, null));
@@ -68,7 +68,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
         public class When_null_store_id_is_specified : ProperlyConstructedContext
         {
             [Fact]
-            public async void Should_throw_null_exception()
+            public async void Then_should_throw_null_exception()
             {
                 await Assert.ThrowsAsync<ArgumentNullException>(() => this.sut.Initialize(null));
             }
@@ -77,7 +77,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
         public class When_empty_store_id_is_specified : ProperlyConstructedContext
         {
             [Fact]
-            public async void Should_throw_argument_exception()
+            public async void Then_should_throw_argument_exception()
             {
                 await Assert.ThrowsAsync<ArgumentException>(() => this.sut.Initialize(string.Empty));
             }
@@ -106,6 +106,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             private IEnumerable<IEvent> events;
             private List<IEvent> publishedEventsList;
             private Guid guid;
+            private Guid terminalGuid;
             private string authorId;
 
             protected override void GivenInit()
@@ -113,10 +114,12 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 base.GivenInit();
 
                 this.guid = Guid.NewGuid();
+                this.terminalGuid = Guid.NewGuid();
                 this.authorId = Guid.NewGuid().ToString();
 
                 this.events = new List<IEvent>() {
-                    new NeuronCreated(this.guid, string.Empty, this.authorId) { Version = 1 }
+                    new NeuronCreated(this.guid, string.Empty, this.authorId) { Version = 1 },
+                    new TerminalCreated(this.terminalGuid, Guid.NewGuid(), this.guid, NeurotransmitterEffect.Excite, 1f, this.authorId) { Version = 1 }
                 };
 
                 this.publishedEventsList = new List<IEvent>();
@@ -132,23 +135,30 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             }
 
             [Fact]
-            public async Task Should_contain_correct_typename_prefixes()
+            public async Task Then_should_contain_correct_typename_prefixes()
             {
                 var events = await this.sut.Get(this.guid, 0);
                 Assert.StartsWith("org.neurul.Cortex.Domain.Model", ((IAuthoredEvent) events.Last()).ToNotification(this.serializer).TypeName);
             }
 
             [Fact]
-            public async Task Should_contain_correct_typename()
+            public async Task Then_should_contain_correct_typename_of_first_event()
             {
                 var events = await this.sut.Get(this.guid, 0);
-                Assert.StartsWith("org.neurul.Cortex.Domain.Model.Neurons.NeuronCreated", ((IAuthoredEvent) events.Last()).ToNotification(this.serializer).TypeName);
+                Assert.StartsWith("org.neurul.Cortex.Domain.Model.Neurons.NeuronCreated", ((IAuthoredEvent) events.First()).ToNotification(this.serializer).TypeName);
             }
 
             [Fact]
-            public void Should_publish_event()
+            public async Task Then_should_contain_correct_typename_of_second_event()
             {
-                Assert.Single(this.publishedEventsList);
+                var events = await this.sut.Get(this.terminalGuid, 0);
+                Assert.StartsWith("org.neurul.Cortex.Domain.Model.Neurons.TerminalCreated", ((IAuthoredEvent) events.Last()).ToNotification(this.serializer).TypeName);
+            }
+
+            [Fact]
+            public void Then_should_publish_two_events()
+            {
+                Assert.Equal(2, this.publishedEventsList.Count);
             }
         }
     }
@@ -188,7 +198,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
 
         public void Dispose()
         {
-            this.sut.Dispose();
+            this.sut.CloseConnection();
         }
     }
 
@@ -206,7 +216,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             }
 
             [Fact]
-            public void Should_be_equal_to_nine()
+            public void Then_should_be_equal_to_nine()
             {
                 Assert.Equal(9, this.count);
             }
@@ -238,7 +248,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             public class When_low_sequence_id_is_greater_than_high_sequence_id : ContainingEventsContext
             {
                 [Fact]
-                public async Task Should_throw_argument_exception()
+                public async Task Then_should_throw_argument_exception()
                 {
                     await Assert.ThrowsAsync<ArgumentException>("lowSequenceId", async () => await this.sut.GetNotificationRange(2, 1));
                 }
@@ -251,7 +261,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 protected override long HighSequenceId => 10;
 
                 [Fact]
-                public void Should_return_all_events_that_can_be_returned()
+                public void Then_should_return_all_events_that_can_be_returned()
                 {
                     Assert.Equal(4, this.resultNotification.Length);
                 }
@@ -260,7 +270,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             public class When_low_sequence_id_is_less_than_absolute_minimum : ContainingEventsContext
             {
                 [Fact]
-                public async Task Should_throw_argument_out_of_range_exception()
+                public async Task Then_should_throw_argument_out_of_range_exception()
                 {
                     await Assert.ThrowsAsync<ArgumentOutOfRangeException>("lowSequenceId", async () => await this.sut.GetNotificationRange(0, 9));
                 }
@@ -269,19 +279,19 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             public class When_specified_arguments_are_valid : ContainingEventsContext
             {
                 [Fact]
-                public async Task Should_return_correct_count_of_events()
+                public async Task Then_should_return_correct_count_of_events()
                 {
                     Assert.Equal(5, (await this.sut.GetNotificationRange(4, 8)).Count());
                 }
 
                 [Fact]
-                public async Task Should_return_first_event_with_correct_sequence_id()
+                public async Task Then_should_return_first_event_with_correct_sequence_id()
                 {
                     Assert.Equal(4, (await this.sut.GetNotificationRange(4, 8)).First().SequenceId);
                 }
 
                 [Fact]
-                public async Task Should_return_last_event_with_correct_sequence_id()
+                public async Task Then_should_return_last_event_with_correct_sequence_id()
                 {
                     Assert.Equal(8, (await this.sut.GetNotificationRange(4, 8)).Last().SequenceId);
                 }
@@ -296,7 +306,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             public class When_specified_sequence_id_is_less_than_absolute_minimum : ContainingEventsContext
             {
                 [Fact]
-                public async Task Should_throw_argument_out_of_range_exception()
+                public async Task Then_should_throw_argument_out_of_range_exception()
                 {
                     await Assert.ThrowsAsync<ArgumentOutOfRangeException>("sequenceId", async () => await this.sut.GetAllNotificationsSince(0));
                 }
@@ -305,7 +315,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             public class When_specified_sequence_id_is_greater_than_count : ContainingEventsContext
             {
                 [Fact]
-                public async Task Should_throw_argument_out_of_range_exception()
+                public async Task Then_should_throw_argument_out_of_range_exception()
                 {
                     await Assert.ThrowsAsync<ArgumentOutOfRangeException>("sequenceId", async () => await this.sut.GetAllNotificationsSince(10));
                 }
@@ -314,7 +324,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             public class When_specified_arguments_are_valid : ContainingEventsContext
             {
                 [Fact]
-                public async Task Should_return_correct_count_of_events()
+                public async Task Then_should_return_correct_count_of_events()
                 {
                     Assert.Equal(5, (await this.sut.GetAllNotificationsSince(5)).Count());
                 }

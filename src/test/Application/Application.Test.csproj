@@ -47,6 +47,7 @@
     <Reference Include="CQRSlite, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CqrsLite.0.18.1\lib\net452\CQRSlite.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.3\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
     </Reference>
@@ -65,8 +66,8 @@
     <Reference Include="org.neurul.Common, Version=0.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Neurul.Common.0.1.5\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
     </Reference>
-    <Reference Include="org.neurul.Common.Test, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Neurul.Common.Test.0.1.1\lib\netstandard2.0\org.neurul.Common.Test.dll</HintPath>
+    <Reference Include="org.neurul.Common.Test, Version=0.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Neurul.Common.Test.0.1.5\lib\netstandard2.0\org.neurul.Common.Test.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector, Version=4.0.12.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SimpleInjector.4.0.12\lib\net45\SimpleInjector.dll</HintPath>
@@ -134,6 +135,14 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Neurons\Commands\CreateAuthorNeuronFixture.cs" />
+    <Compile Include="Neurons\Commands\ChangeNeuronTagFixture.cs" />
+    <Compile Include="Neurons\Commands\CreateNeuronFixture.cs" />
+    <Compile Include="Neurons\Commands\CreateTerminalFixture.cs" />
+    <Compile Include="Neurons\Commands\DeactivateNeuronFixture.cs" />
+    <Compile Include="Neurons\Commands\DeactivateTerminalFixture.cs" />
+    <Compile Include="Neurons\TerminalCommandHandlersFixture.cs" />
+    <Compile Include="Neurons\Types.cs" />
     <Compile Include="Notification\NotificationApplicationServiceFixture.cs" />
     <Compile Include="Neurons\NeuronCommandHandlersFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -31,6 +31,11 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
             return await this.connection.Table<Notification>().CountAsync();
         }
 
+        public void CloseConnection()
+        {
+            this.connection?.CloseAsync().Wait();
+        }
+
         public async Task<IEnumerable<IEvent>> Get(Guid aggregateId, int fromVersion, CancellationToken cancellationToken = default(CancellationToken))
         {
             string id = aggregateId.ToString();

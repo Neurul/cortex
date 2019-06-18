@@ -1,13 +1,14 @@
 ﻿using CQRSlite.Commands;
-using Newtonsoft.Json;
 using org.neurul.Common.Domain.Model;
+using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
+using System.Collections.Generic;
 
 namespace org.neurul.Cortex.Application.Neurons.Commands
 {
-    public class CreateNeuron : ICommand
+    public class DeactivateTerminal : ICommand
     {
-        public CreateNeuron(string avatarId, Guid id, string tag, string authorId)
+        public DeactivateTerminal(string avatarId, Guid id, string authorId, int expectedVersion)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -16,7 +17,6 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 Messages.Exception.InvalidId,
                 nameof(id)
                 );
-            AssertionConcern.AssertArgumentNotNull(tag, nameof(tag));
             Guid.TryParse(authorId, out Guid gAuthorId);
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
@@ -24,18 +24,22 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 Messages.Exception.InvalidId,
                 nameof(authorId)
                 );
-            
+            AssertionConcern.AssertArgumentValid(
+                i => i >= 1,
+                expectedVersion,
+                Messages.Exception.InvalidExpectedVersion,
+                nameof(expectedVersion)
+                );
+
             this.AvatarId = avatarId;
-            this.Id = id;            
-            this.Tag = tag;
+            this.Id = id;
             this.AuthorId = authorId;
+            this.ExpectedVersion = expectedVersion;
         }
 
         public string AvatarId { get; private set; }
 
         public Guid Id { get; private set; }
-        
-        public string Tag { get; private set; }
 
         public string AuthorId { get; private set; }
 
