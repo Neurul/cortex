@@ -11,21 +11,21 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
         protected string avatarId;
         protected Guid id;
         protected string tag;
-        protected string authorId;
+        protected Guid authorId;
 
         protected override bool InvokeWhenOnConstruct => false;
 
         protected virtual string AvatarId => this.avatarId = this.avatarId ?? "AvatarId";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
         protected virtual string Tag => this.tag = this.tag ?? "Tag";
-        protected virtual string AuthorId => this.authorId = this.authorId ?? Guid.NewGuid().ToString();
+        protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
 
         protected override void When() => this.sut = new CreateNeuron(this.AvatarId, this.Id, this.Tag, this.AuthorId);
     }
 
     public class When_constructing
     {
-        public class When_specified_avatarId_is_null : ConstructingContext
+        public class When_avatarId_is_null : ConstructingContext
         {
             protected override string AvatarId => null;
 
@@ -36,7 +36,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
             }
         }
 
-        public class When_specified_id_is_invalid : ConstructingContext
+        public class When_id_is_invalid : ConstructingContext
         {
             protected override Guid Id => Guid.Empty;
 
@@ -54,7 +54,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
             }
         }
 
-        public class When_specified_tag_is_null : ConstructingContext
+        public class When_tag_is_null : ConstructingContext
         {
             protected override string Tag => null;
 
@@ -65,20 +65,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
             }
         }
 
-        public class When_specified_authorid_is_null : ConstructingContext
+        public class When_authorid_is_invalid : ConstructingContext
         {
-            protected override string AuthorId => null;
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentException>(() => this.When());
-            }
-        }
-
-        public class When_specified_authorid_is_invalid : ConstructingContext
-        {
-            protected override string AuthorId => "invalidguid";
+            protected override Guid AuthorId => Guid.Empty;
 
             [Fact]
             public void Then_should_throw_argument_exception()

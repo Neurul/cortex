@@ -1,8 +1,6 @@
 ﻿using CQRSlite.Domain;
 using CQRSlite.Domain.Exception;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +15,10 @@ namespace org.neurul.Cortex.Application.Neurons
             try
             {
                 result = await session.Get<T>(id, expectedVersion, cancellationToken);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                throw new ArgumentException($"Error occurred while retrieving '{parameterName}' with Id '{id.ToString()}'.", ioe);
             }
             catch (AggregateNotFoundException anfe)
             {

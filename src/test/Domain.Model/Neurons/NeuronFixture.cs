@@ -27,7 +27,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
     {
         public class When_constructing
         {
-            public class When_empty_id_specified : ConstructingAuthorNeuronContext
+            public class When_empty_id : ConstructingAuthorNeuronContext
             {
                 protected override Guid Id => Guid.Empty;
 
@@ -38,7 +38,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_null_tag_specified : ConstructingAuthorNeuronContext
+            public class When_null_tag : ConstructingAuthorNeuronContext
             {
                 protected override string Tag => null;
 
@@ -78,7 +78,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             [Fact]
             public void Then_should_raise_event_with_correct_author()
             {
-                Assert.Equal(this.Id.ToString(), ((IAuthoredEvent)this.sut.GetUncommittedChanges().Last()).AuthorId);
+                Assert.Equal(this.Id, ((IAuthoredEvent)this.sut.GetUncommittedChanges().Last()).AuthorId);
             }
         }
     }
@@ -98,7 +98,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
 
         public class When_constructing
         {
-            public class When_empty_id_specified : ConstructingNonAuthorNeuronContext
+            public class When_empty_id : ConstructingNonAuthorNeuronContext
             {
                 protected override Guid Id => Guid.Empty;
 
@@ -109,7 +109,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_null_tag_specified : ConstructingNonAuthorNeuronContext
+            public class When_null_tag : ConstructingNonAuthorNeuronContext
             {
                 protected override string Tag => null;
 
@@ -120,7 +120,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_null_author_specified : ConstructingNonAuthorNeuronContext
+            public class When_null_author : ConstructingNonAuthorNeuronContext
             {
                 protected override Neuron Author => null;
 
@@ -131,7 +131,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_inactive_author_specified : ConstructingNonAuthorNeuronContext
+            public class When_inactive_author : ConstructingNonAuthorNeuronContext
             {
                 protected override void When()
                 {
@@ -146,7 +146,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_empty_author_id_specified : ConstructingNonAuthorNeuronContext
+            public class When_empty_author_id : ConstructingNonAuthorNeuronContext
             {
                 protected override Neuron Author => new Neuron(Guid.Empty, string.Empty);
 
@@ -197,7 +197,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
             [Fact]
             public void Then_should_raise_event_with_correct_author()
             {
-                Assert.Equal(this.Author.Id.ToString(), ((IAuthoredEvent)this.sut.GetUncommittedChanges().Last()).AuthorId);
+                Assert.Equal(this.Author.Id, ((IAuthoredEvent)this.sut.GetUncommittedChanges().Last()).AuthorId);
             }
         }
 
@@ -302,7 +302,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_inactive_author_specified : ChangingTagContext
+            public class When_inactive_author : ChangingTagContext
             {
                 protected override string TagParameter => "Hello";
 
@@ -366,7 +366,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_specified_author_is_null : DeactivatingContext
+            public class When_author_is_null : DeactivatingContext
             {
                 protected override Neuron AuthorParameter => null;
 
@@ -379,7 +379,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
                 }
             }
 
-            public class When_inactive_author_specified : DeactivatingContext
+            public class When_inactive_author : DeactivatingContext
             {
                 protected override Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? new Neuron(Guid.NewGuid(), string.Empty);
 

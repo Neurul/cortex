@@ -10,14 +10,14 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.DeactivateNeuronFi
     {
         protected string avatarId;
         protected Guid id;
-        protected string authorId;
+        protected Guid authorId;
         protected int expectedVersion;
 
         protected override bool InvokeWhenOnConstruct => false;
 
         protected virtual string AvatarId => this.avatarId = this.avatarId ?? "AvatarId";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
-        protected virtual string AuthorId => this.authorId = this.authorId ?? Guid.NewGuid().ToString();
+        protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
         protected virtual int ExpectedVersion => this.expectedVersion = this.expectedVersion == 0 ? 1 : this.expectedVersion;
 
         protected override void When() => this.sut = new DeactivateNeuron(this.AvatarId, this.Id, this.AuthorId, this.ExpectedVersion);
@@ -25,7 +25,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.DeactivateNeuronFi
 
     public class When_constructing
     {
-        public class When_specified_avatarId_is_null : ConstructingContext
+        public class When_avatarId_is_null : ConstructingContext
         {
             protected override string AvatarId => null;
 
@@ -36,7 +36,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.DeactivateNeuronFi
             }
         }
 
-        public class When_specified_id_is_invalid : ConstructingContext
+        public class When_id_is_invalid : ConstructingContext
         {
             protected override Guid Id => Guid.Empty;
 
@@ -54,20 +54,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.DeactivateNeuronFi
             }
         }
 
-        public class When_specified_authorid_is_null : ConstructingContext
+        public class When_authorid_is_invalid : ConstructingContext
         {
-            protected override string AuthorId => null;
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentException>(() => this.When());
-            }
-        }
-
-        public class When_specified_authorid_is_invalid : ConstructingContext
-        {
-            protected override string AuthorId => "invalidguid";
+            protected override Guid AuthorId => Guid.Empty;
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -83,7 +72,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.DeactivateNeuronFi
             }
         }
 
-        public class When_specified_expected_version_is_zero : ConstructingContext
+        public class When_expected_version_is_zero : ConstructingContext
         {
             protected override int ExpectedVersion => 0;
 
@@ -94,7 +83,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.DeactivateNeuronFi
             }
         }
 
-        public class When_specified_expected_version_is_negative_nine : ConstructingContext
+        public class When_expected_version_is_negative_nine : ConstructingContext
         {
             protected override int ExpectedVersion => -9;
 

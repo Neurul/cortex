@@ -7,7 +7,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class CreateTerminal : ICommand
     {
-        public CreateTerminal(string avatarId, Guid id, Guid presynapticNeuronId, Guid postsynapticNeuronId, NeurotransmitterEffect effect, float strength, string authorId)
+        public CreateTerminal(string avatarId, Guid id, Guid presynapticNeuronId, Guid postsynapticNeuronId, NeurotransmitterEffect effect, float strength, Guid authorId)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -28,10 +28,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 Messages.Exception.InvalidId,
                 nameof(postsynapticNeuronId)
                 );
-            Guid.TryParse(authorId, out Guid gAuthorId);
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
-                gAuthorId,
+                authorId,
                 Messages.Exception.InvalidId,
                 nameof(authorId)
                 );
@@ -57,7 +56,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 
         public float Strength { get; private set; }
 
-        public string AuthorId { get; private set; }
+        public Guid AuthorId { get; private set; }
 
         public int ExpectedVersion { get; private set; }
     }

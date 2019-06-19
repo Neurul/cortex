@@ -21,7 +21,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
 
     public class When_constructing
     {
-        public class When_null_event_store_specified : TerminalCommandHandlerConstructingContext<CreateTerminal>
+        public class When_null_event_store : TerminalCommandHandlerConstructingContext<CreateTerminal>
         {
             protected override TerminalCommandHandlers BuildHandler() => new TerminalCommandHandlers(null, this.Session);
 
@@ -32,7 +32,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             }
         }
 
-        public class When_null_session_specified : TerminalCommandHandlerConstructingContext<CreateTerminal>
+        public class When_null_session : TerminalCommandHandlerConstructingContext<CreateTerminal>
         {
             protected override TerminalCommandHandlers BuildHandler() => new TerminalCommandHandlers(new Mock<INavigableEventStore>().Object, null);
 
@@ -78,13 +78,13 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             var result = new List<IEvent>(base.Given());
 
             if (this.PreAddAuthor)
-                result.Add(new NeuronCreated(Guid.Parse(this.AuthorId), "Author", this.AuthorId.ToString()) { Version = 1 });
+                result.Add(new NeuronCreated(this.AuthorId, "Author", this.AuthorId) { Version = 1 });
             if (this.PreAddPresynapticNeuron)
-                result.Add(new NeuronCreated(this.PresynapticNeuronId, "Presynaptic", this.AuthorId.ToString()) { Version = 1 });
+                result.Add(new NeuronCreated(this.PresynapticNeuronId, "Presynaptic", this.AuthorId) { Version = 1 });
             if (this.PreAddPostsynapticNeuron)
-                result.Add(new NeuronCreated(this.PostsynapticNeuronId, "Postsynaptic", this.AuthorId.ToString()) { Version = 1 });
+                result.Add(new NeuronCreated(this.PostsynapticNeuronId, "Postsynaptic", this.AuthorId) { Version = 1 });
             if (this.PreAddTerminal)
-                result.Add(new TerminalCreated(this.Id, this.PresynapticNeuronId, this.PostsynapticNeuronId, this.Effect, this.Strength, this.AuthorId.ToString()) { Version = 1 });
+                result.Add(new TerminalCreated(this.Id, this.PresynapticNeuronId, this.PostsynapticNeuronId, this.Effect, this.Strength, this.AuthorId) { Version = 1 });
 
             return result.ToArray();
         }
@@ -95,7 +95,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
         protected Guid postsynapticNeuronId;
         protected NeurotransmitterEffect effect;
         protected float strength;
-        protected string authorId;
+        protected Guid authorId;
 
         protected virtual bool PreAddAuthor => true;
         protected virtual bool PreAddPresynapticNeuron => true;
@@ -108,12 +108,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
         protected virtual Guid PostsynapticNeuronId => this.postsynapticNeuronId = this.postsynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.postsynapticNeuronId;
         protected virtual NeurotransmitterEffect Effect => this.effect = this.effect == NeurotransmitterEffect.NotSet ? NeurotransmitterEffect.Excite : this.effect;
         protected virtual float Strength => this.strength = this.strength == 0f ? 1f : this.strength;
-        protected virtual string AuthorId => this.authorId = this.authorId ?? Guid.NewGuid().ToString();
+        protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
     }
 
     public class When_creating_terminal
     {
-        public class When_null_command_specified : ConstructedContext<CreateTerminal>
+        public class When_null_command : ConstructedContext<CreateTerminal>
         {
             protected override CreateTerminal When() => null;
 
@@ -143,7 +143,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
         {
             protected override bool PreAddTerminal => false;
 
-            protected override Guid Id => Guid.Parse(this.AuthorId);
+            protected override Guid Id => this.AuthorId;
 
             [Fact]
             public async Task Then_should_throw_argument_exception()
@@ -159,7 +159,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
 
             protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[]
             {
-                new NeuronCreated(this.Id, "Preexisting Neuron", this.AuthorId.ToString()) { Version = 1 },
+                new NeuronCreated(this.Id, "Preexisting Neuron", this.AuthorId) { Version = 1 },
             });
 
             protected override bool PreAddTerminal => false;
@@ -171,7 +171,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             }
         }
 
-        public class When_specified_presynaptic_does_not_exist : CreatingTerminalConstructedContext
+        public class When_presynaptic_does_not_exist : CreatingTerminalConstructedContext
         {
             protected override bool PreAddPresynapticNeuron => false;
 
@@ -189,7 +189,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             }
         }
 
-        public class When_specified_postsynaptic_does_not_exist : CreatingTerminalConstructedContext
+        public class When_postsynaptic_does_not_exist : CreatingTerminalConstructedContext
         {
             protected override bool PreAddPostsynapticNeuron => false;
 
@@ -207,7 +207,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             }
         }
 
-        public class When_specified_author_does_not_exist : CreatingTerminalConstructedContext
+        public class When_author_does_not_exist : CreatingTerminalConstructedContext
         {
             protected override bool PreAddAuthor => false;
 
@@ -293,7 +293,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
 
     public class When_deactivating_terminal
     {
-        public class When_null_command_specified : ConstructedContext<DeactivateTerminal>
+        public class When_null_command : ConstructedContext<DeactivateTerminal>
         {
             protected override DeactivateTerminal When() => null;
 
@@ -323,11 +323,29 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             public async Task Then_should_throw_argument_exception_containing_terminal_reference()
             {
                 var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-                Assert.Contains("terminal", ex.Message);
+                Assert.Contains("terminal", ex.Message);    
             }
         }
 
-        public class When_specified_author_does_not_exist : DeactivatingTerminalConstructedContext
+        public class When_terminalId_is_equal_to_preexisting_neuron_id : DeactivatingTerminalConstructedContext
+        {
+            protected override DeactivateTerminal When() => new DeactivateTerminal(this.AvatarId, this.PresynapticNeuronId, this.AuthorId, this.ExpectedVersion);
+
+            [Fact]
+            public async Task Then_should_throw_argument_exception()
+            {
+                await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+            }
+
+            [Fact]
+            public async Task Then_should_throw_argument_exception_with_correct_message()
+            {
+                var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+                Assert.Contains("not a recognized event", ex.ToString());
+            }
+        }
+
+        public class When_author_does_not_exist : DeactivatingTerminalConstructedContext
         {
             protected override bool PreAddAuthor => false;
 
@@ -382,7 +400,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             {
                 return base.Given().Concat(new IEvent[]
                 {
-                    new TerminalDeactivated(this.Id, this.AuthorId.ToString()) { Version = 2 }
+                    new TerminalDeactivated(this.Id, this.AuthorId) { Version = 2 }
                 });
             }
 
@@ -397,3 +415,28 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
         }
     }
 }
+
+// TODO: add tests
+    //- terminal
+	   // - create
+		  //  \ When_terminalId_is_equal_to_preexisting_neuron_id
+			 //   - already exists
+		  //  ] When_presynapticNeuronId_is_equal_to_preexisting_terminal_id
+		  //  ] When_postsynapticNeuronId_is_equal_to_preexisting_terminal_id
+		  //  ] When_authorId_is_equal_to_preexisting_terminal_id
+	   // - deactivate
+		  //  / When_terminalId_is_equal_to_preexisting_neuron_id
+		  //  ] When_authorId_is_equal_to_preexisting_terminal_id
+    //- neuron
+	   // / formulate test cases
+	   // - create neuron
+		  //  ] When_neuronId_is_equal_to_preexisting_terminal_id
+		  //  ] When_authorId_is_equal_to_preexisting_terminal_id
+	   // - create author neuron
+		  //  ] When_neuronId_is_equal_to_preexisting_terminal_id
+	   // - change tag
+		  //  ] When_neuronId_is_equal_to_preexisting_terminal_id
+		  //  ] When_authorId_is_equal_to_preexisting_terminal_id
+	   // - deactivate neuron
+		  //  ] When_neuronId_is_equal_to_preexisting_terminal_id
+		  //  ] When_authorId_is_equal_to_preexisting_terminal_id

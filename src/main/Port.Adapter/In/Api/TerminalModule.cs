@@ -20,7 +20,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         {
                             var terminalId = Guid.Parse(parameters.terminalId);
                             var avatarId = parameters.avatarId;
-                            string authorId = bodyAsObject.AuthorId.ToString();
+                            var authorId = Guid.Parse(bodyAsObject.AuthorId.ToString());
 
                             TerminalModule.CreateTerminalFromDynamic(bodyAsObject, out Guid presynapticNeuronId, 
                                 out Guid postsynapticNeuronId, out NeurotransmitterEffect effect, out float strength);
@@ -47,7 +47,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             return new DeactivateTerminal(
                                 parameters.avatarId,
                                 Guid.Parse(parameters.terminalId),
-                                bodyAsObject.AuthorId.ToString(),
+                                Guid.Parse(bodyAsObject.AuthorId.ToString()),
                                 expectedVersion
                                 );
                         },

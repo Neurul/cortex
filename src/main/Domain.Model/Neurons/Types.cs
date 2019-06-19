@@ -17,6 +17,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         {
             public const string IdEmpty = "Specified Id cannot be empty.";
             public const string NeuronInactive = "Neuron must be active.";
+            public const string TerminalInactive = "Terminal must be active.";
             public const string NonAuthorConstructor = "Cannot create Author Neuron using current constructor. Use Author Neuron constructor overload instead.";
             public const string InvalidTerminalIdCreation = "Terminal Id cannot be equal to Author Id";
             public const string ValidEffect = "Effect must either be Excite or Inhibit";

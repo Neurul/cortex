@@ -5,7 +5,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 {
     public class NeuronDeactivated : IAuthoredEvent
     {
-        public NeuronDeactivated(Guid id, string authorId)
+        public NeuronDeactivated(Guid id, Guid authorId)
         {
             this.Id = id;
             this.AuthorId = authorId;
@@ -17,6 +17,6 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         public DateTimeOffset TimeStamp { get; set; }
 
-        public string AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

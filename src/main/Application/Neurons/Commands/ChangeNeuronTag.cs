@@ -6,7 +6,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class ChangeNeuronTag : ICommand
     {
-        public ChangeNeuronTag(string avatarId, Guid id, string newTag, string authorId, int expectedVersion)
+        public ChangeNeuronTag(string avatarId, Guid id, string newTag, Guid authorId, int expectedVersion)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -16,10 +16,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 nameof(id)
                 );
             AssertionConcern.AssertArgumentNotNull(newTag, nameof(newTag));
-            Guid.TryParse(authorId, out Guid gAuthorId);
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
-                gAuthorId,
+                authorId,
                 Messages.Exception.InvalidId,
                 nameof(authorId)
                 );
@@ -43,7 +42,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 
         public string NewTag { get; private set; }
 
-        public string AuthorId { get; private set; }
+        public Guid AuthorId { get; private set; }
 
         public int ExpectedVersion { get; private set; }
     }

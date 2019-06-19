@@ -22,7 +22,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateAuthorNeuron
 
     public class When_constructing
     {
-        public class When_specified_avatarId_is_null : ConstructingContext
+        public class When_avatarId_is_null : ConstructingContext
         {
             protected override string AvatarId => null;
 
@@ -33,7 +33,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateAuthorNeuron
             }
         }
 
-        public class When_specified_id_is_invalid : ConstructingContext
+        public class When_id_is_invalid : ConstructingContext
         {
             protected override Guid Id => Guid.Empty;
 
@@ -51,7 +51,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateAuthorNeuron
             }
         }
 
-        public class When_specified_tag_is_null : ConstructingContext
+        public class When_tag_is_null : ConstructingContext
         {
             protected override string Tag => null;
 

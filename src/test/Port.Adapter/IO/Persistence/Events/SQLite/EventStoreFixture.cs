@@ -16,7 +16,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
 {
     public class When_constructing
     { 
-        public class When_null_adapter_is_specified : TestContext<EventStore>
+        public class When_null_adapter : TestContext<EventStore>
         {
             [Fact]
             public void Then_should_throw_argument_null_exception()
@@ -26,7 +26,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             }
         }
 
-        public class When_null_publisher_is_specified : TestContext<EventStore>
+        public class When_null_publisher : TestContext<EventStore>
         {
             [Fact]
             public void Then_should_throw_argument_null_exception()
@@ -65,7 +65,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
 
     public class When_initializing
     {
-        public class When_null_store_id_is_specified : ProperlyConstructedContext
+        public class When_null_store_id : ProperlyConstructedContext
         {
             [Fact]
             public async void Then_should_throw_null_exception()
@@ -74,7 +74,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             }
         }
 
-        public class When_empty_store_id_is_specified : ProperlyConstructedContext
+        public class When_empty_store_id : ProperlyConstructedContext
         {
             [Fact]
             public async void Then_should_throw_argument_exception()
@@ -107,7 +107,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             private List<IEvent> publishedEventsList;
             private Guid guid;
             private Guid terminalGuid;
-            private string authorId;
+            private Guid authorId;
 
             protected override void GivenInit()
             {
@@ -115,7 +115,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
 
                 this.guid = Guid.NewGuid();
                 this.terminalGuid = Guid.NewGuid();
-                this.authorId = Guid.NewGuid().ToString();
+                this.authorId = Guid.NewGuid();
 
                 this.events = new List<IEvent>() {
                     new NeuronCreated(this.guid, string.Empty, this.authorId) { Version = 1 },
@@ -183,15 +183,15 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
             base.Given();
 
             Task.Run(async () => await this.sut.Save(new IEvent[] {
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()),
-                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString())
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()),
+                    new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid())
                 }
             )).Wait();
         }
@@ -276,7 +276,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 }
             }
 
-            public class When_specified_arguments_are_valid : ContainingEventsContext
+            public class When_arguments_are_valid : ContainingEventsContext
             {
                 [Fact]
                 public async Task Then_should_return_correct_count_of_events()
@@ -303,7 +303,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
     {
         public class When_store_contains_events
         {
-            public class When_specified_sequence_id_is_less_than_absolute_minimum : ContainingEventsContext
+            public class When_sequence_id_is_less_than_absolute_minimum : ContainingEventsContext
             {
                 [Fact]
                 public async Task Then_should_throw_argument_out_of_range_exception()
@@ -312,7 +312,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 }
             }
 
-            public class When_specified_sequence_id_is_greater_than_count : ContainingEventsContext
+            public class When_sequence_id_is_greater_than_count : ContainingEventsContext
             {
                 [Fact]
                 public async Task Then_should_throw_argument_out_of_range_exception()
@@ -321,7 +321,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
                 }
             }
 
-            public class When_specified_arguments_are_valid : ContainingEventsContext
+            public class When_arguments_are_valid : ContainingEventsContext
             {
                 [Fact]
                 public async Task Then_should_return_correct_count_of_events()

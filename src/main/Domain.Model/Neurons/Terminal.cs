@@ -5,7 +5,7 @@ using System;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
 {
-    public class Terminal : AggregateRoot
+    public class Terminal : AssertiveAggregateRoot
     {
         private const string DeactivatedExceptionMessage = "Already deactivated.";
 
@@ -28,7 +28,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             AssertionConcern.AssertArgumentValid(g => g != author.Id, id, Messages.Exception.InvalidTerminalIdCreation, nameof(id));
 
             this.Id = id;
-            this.ApplyChange(new TerminalCreated(id, presynapticNeuron.Id, postsynapticNeuron.Id, effect, strength, author.Id.ToString()));
+            this.ApplyChange(new TerminalCreated(id, presynapticNeuron.Id, postsynapticNeuron.Id, effect, strength, author.Id));
         }
 
         public bool Active { get; private set; }
@@ -55,9 +55,9 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         {
             AssertionConcern.AssertArgumentNotNull(author, nameof(author));
             AssertionConcern.AssertArgumentValid(n => n.Active, author, Messages.Exception.NeuronInactive, nameof(author));
-            AssertionConcern.AssertStateTrue(this.Active, Messages.Exception.NeuronInactive);
+            AssertionConcern.AssertStateTrue(this.Active, Messages.Exception.TerminalInactive);
 
-            this.ApplyChange(new TerminalDeactivated(this.Id, author.Id.ToString()));
+            this.ApplyChange(new TerminalDeactivated(this.Id, author.Id));
         }
     }
 }

@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="CqrsLite" Version="0.18.1" />
-    <PackageReference Include="Neurul.Common" Version="0.1.5" />
+    <PackageReference Include="Neurul.Common" Version="0.1.6" />
   </ItemGroup>
 
   <ItemGroup>

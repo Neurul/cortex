@@ -11,7 +11,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         public readonly NeurotransmitterEffect Effect;
         public readonly float Strength;
 
-        public TerminalCreated(Guid id, Guid presynapticNeuronId, Guid postsynapticNeuronId, NeurotransmitterEffect effect, float strength, string authorId)
+        public TerminalCreated(Guid id, Guid presynapticNeuronId, Guid postsynapticNeuronId, NeurotransmitterEffect effect, float strength, Guid authorId)
         {
             this.Id = id;
             this.PresynapticNeuronId = presynapticNeuronId;
@@ -27,6 +27,6 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         public DateTimeOffset TimeStamp { get; set; }
 
-        public string AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

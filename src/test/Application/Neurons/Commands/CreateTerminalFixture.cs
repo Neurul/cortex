@@ -15,7 +15,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
         protected Guid postsynapticNeuronId;
         protected NeurotransmitterEffect effect;
         protected float strength;
-        protected string authorId;
+        protected Guid authorId;
 
         protected override bool InvokeWhenOnConstruct => false;
 
@@ -25,7 +25,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
         protected virtual Guid PostsynapticNeuronId => this.postsynapticNeuronId = this.postsynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.postsynapticNeuronId;
         protected virtual NeurotransmitterEffect Effect => this.effect = this.effect == NeurotransmitterEffect.NotSet ? NeurotransmitterEffect.Excite : this.effect;
         protected virtual float Strength => this.strength = this.strength == 0f ? 1f : this.strength;
-        protected virtual string AuthorId => this.authorId = this.authorId ?? Guid.NewGuid().ToString();
+        protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
 
         protected override void When() => this.sut = new CreateTerminal(this.AvatarId, this.Id, this.PresynapticNeuronId, 
             this.PostsynapticNeuronId, this.Effect, this.Strength, this.AuthorId);
@@ -33,7 +33,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
 
     public class When_constructing
     {
-        public class When_specified_avatarId_is_null : ConstructingContext
+        public class When_avatarId_is_null : ConstructingContext
         {
             protected override string AvatarId => null;
 
@@ -44,7 +44,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
             }
         }
 
-        public class When_specified_id_is_invalid : ConstructingContext
+        public class When_id_is_invalid : ConstructingContext
         {
             protected override Guid Id => Guid.Empty;
 
@@ -62,7 +62,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
             }
         }
 
-        public class When_specified_presynaptic_is_invalid : ConstructingContext
+        public class When_presynaptic_is_invalid : ConstructingContext
         {
             protected override Guid PresynapticNeuronId => Guid.Empty;
 
@@ -80,7 +80,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
             }
         }
 
-        public class When_specified_postsynaptic_is_invalid : ConstructingContext
+        public class When_postsynaptic_is_invalid : ConstructingContext
         {
             protected override Guid PostsynapticNeuronId => Guid.Empty;
 
@@ -98,20 +98,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
             }
         }
 
-        public class When_specified_authorid_is_null : ConstructingContext
+        public class When_authorid_is_invalid : ConstructingContext
         {
-            protected override string AuthorId => null;
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentException>(() => this.When());
-            }
-        }
-
-        public class When_specified_authorid_is_invalid : ConstructingContext
-        {
-            protected override string AuthorId => "invalidguid";
+            protected override Guid AuthorId => Guid.Empty;
 
             [Fact]
             public void Then_should_throw_argument_exception()

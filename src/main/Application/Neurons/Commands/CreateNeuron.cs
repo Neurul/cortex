@@ -7,7 +7,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class CreateNeuron : ICommand
     {
-        public CreateNeuron(string avatarId, Guid id, string tag, string authorId)
+        public CreateNeuron(string avatarId, Guid id, string tag, Guid authorId)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -17,10 +17,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 nameof(id)
                 );
             AssertionConcern.AssertArgumentNotNull(tag, nameof(tag));
-            Guid.TryParse(authorId, out Guid gAuthorId);
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
-                gAuthorId,
+                authorId,
                 Messages.Exception.InvalidId,
                 nameof(authorId)
                 );
@@ -37,7 +36,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
         
         public string Tag { get; private set; }
 
-        public string AuthorId { get; private set; }
+        public Guid AuthorId { get; private set; }
 
         public int ExpectedVersion { get; private set; }
     }

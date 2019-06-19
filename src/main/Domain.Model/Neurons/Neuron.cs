@@ -4,7 +4,7 @@ using System;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
 {
-    public class Neuron : AggregateRoot
+    public class Neuron : AssertiveAggregateRoot
     {
         private Neuron() { }
 
@@ -28,7 +28,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             AssertionConcern.AssertArgumentNotNull(tag, nameof(tag));
 
             this.Id = id;
-            this.ApplyChange(new NeuronCreated(id, tag, authorId.ToString()));
+            this.ApplyChange(new NeuronCreated(id, tag, authorId));
         }
 
         public bool Active { get; private set; }
@@ -58,7 +58,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             AssertionConcern.AssertStateTrue(this.Active, Messages.Exception.NeuronInactive);
 
             if (value != this.Tag)
-                base.ApplyChange(new NeuronTagChanged(this.Id, value, author.Id.ToString()));
+                base.ApplyChange(new NeuronTagChanged(this.Id, value, author.Id));
         }
 
         public void Deactivate(Neuron author)
@@ -67,7 +67,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             AssertionConcern.AssertArgumentValid(n => n.Active, author, Messages.Exception.NeuronInactive, nameof(author));
             AssertionConcern.AssertStateTrue(this.Active, Messages.Exception.NeuronInactive);
 
-            this.ApplyChange(new NeuronDeactivated(this.Id, author.Id.ToString()));
+            this.ApplyChange(new NeuronDeactivated(this.Id, author.Id));
         }
     }
 }

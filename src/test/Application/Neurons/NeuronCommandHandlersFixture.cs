@@ -21,7 +21,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_constructing
     {
-        public class When_null_event_store_specified : NeuronCommandHandlerConstructingContext<CreateNeuron>
+        public class When_null_event_store : NeuronCommandHandlerConstructingContext<CreateNeuron>
         {
             protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(null, this.Session);
 
@@ -32,7 +32,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_null_session_specified : NeuronCommandHandlerConstructingContext<CreateNeuron>
+        public class When_null_session : NeuronCommandHandlerConstructingContext<CreateNeuron>
         {
             protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, null);
 
@@ -78,9 +78,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             var result = new List<IEvent>(base.Given());
 
             if (this.PreAddAuthor)
-                result.Add(new NeuronCreated(Guid.Parse(this.AuthorId), "Author", this.AuthorId.ToString()) { Version = 1 });
+                result.Add(new NeuronCreated(this.AuthorId, "Author", this.AuthorId) { Version = 1 });
             if (this.PreAddNeuron)
-                result.Add(new NeuronCreated(this.Id, this.Tag, this.AuthorId.ToString()) { Version = 1 });
+                result.Add(new NeuronCreated(this.Id, this.Tag, this.AuthorId) { Version = 1 });
 
             return result.ToArray();
         }
@@ -88,7 +88,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         protected string avatarId;
         protected Guid id;
         protected string tag;
-        protected string authorId;
+        protected Guid authorId;
 
         protected virtual bool PreAddAuthor => true;
         protected virtual bool PreAddNeuron => true;
@@ -96,12 +96,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         protected virtual string AvatarId => this.avatarId = this.avatarId ?? "samplebody";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
         protected virtual string Tag => this.tag = this.tag ?? "Hello";
-        protected virtual string AuthorId => this.authorId = this.authorId ?? Guid.NewGuid().ToString();
+        protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
     }
 
     public class When_creating_neuron
     {
-        public class When_null_command_specified : ConstructedContext<CreateNeuron>
+        public class When_null_command : ConstructedContext<CreateNeuron>
         {
             protected override CreateNeuron When() => null;
 
@@ -130,7 +130,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         {
             protected override bool PreAddNeuron => false;
 
-            protected override Guid Id => Guid.Parse(this.AuthorId);
+            protected override Guid Id => this.AuthorId;
 
             [Fact]
             public async Task Then_should_throw_argument_exception()
@@ -146,8 +146,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[]
             {
-                new NeuronCreated(this.Author2Id, "Author2", this.AuthorId.ToString()) { Version = 1 },
-                new TerminalCreated(this.Id, this.Author2Id, Guid.Parse(this.AuthorId), NeurotransmitterEffect.Excite, 1f, this.AuthorId.ToString()) { Version = 1 }
+                new NeuronCreated(this.Author2Id, "Author2", this.AuthorId) { Version = 1 },
+                new TerminalCreated(this.Id, this.Author2Id, this.AuthorId, NeurotransmitterEffect.Excite, 1f, this.AuthorId) { Version = 1 }
             });
 
             protected override bool PreAddNeuron => false;
@@ -159,7 +159,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_specified_author_does_not_exist : CreatingNeuronConstructedContext
+        public class When_author_does_not_exist : CreatingNeuronConstructedContext
         {
             protected override bool PreAddAuthor => false;
 
@@ -220,7 +220,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_creating_author_neuron
     {
-        public class When_null_command_specified : ConstructedContext<CreateAuthorNeuron>
+        public class When_null_command : ConstructedContext<CreateAuthorNeuron>
         {
             protected override CreateAuthorNeuron When() => null;
 
@@ -252,8 +252,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[]
             {
-                new NeuronCreated(this.Author2Id, "Author2", this.AuthorId.ToString()) { Version = 1 },
-                new TerminalCreated(this.Id, this.Author2Id, Guid.Parse(this.AuthorId), NeurotransmitterEffect.Excite, 1f, this.AuthorId.ToString()) { Version = 1 }
+                new NeuronCreated(this.Author2Id, "Author2", this.AuthorId) { Version = 1 },
+                new TerminalCreated(this.Id, this.Author2Id, this.AuthorId, NeurotransmitterEffect.Excite, 1f, this.AuthorId) { Version = 1 }
             });
 
             protected override bool PreAddNeuron => false;
@@ -303,7 +303,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_changing_tag
     {
-        public class When_null_command_specified : ConstructedContext<ChangeNeuronTag>
+        public class When_null_command : ConstructedContext<ChangeNeuronTag>
         {
             protected override ChangeNeuronTag When() => null;
 
@@ -339,7 +339,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_specified_author_does_not_exist : ChangingTagConstructedContext
+        public class When_author_does_not_exist : ChangingTagConstructedContext
         {
             protected override bool PreAddAuthor => false;
 
@@ -373,7 +373,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             protected override bool InvokeWhenOnConstruct => true;
         }
 
-        public class When_new_tag_is_specified : ChangedNeuronTagContext
+        public class When_new_tag : ChangedNeuronTagContext
         {
             [Fact]
             public void Then_should_create_one_event()
@@ -394,7 +394,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_new_tag_specified_is_equal_to_original_tag : ChangedNeuronTagContext
+        public class When_new_tag_is_equal_to_original_tag : ChangedNeuronTagContext
         {
             protected override string NewTag => this.Tag;
 
@@ -408,7 +408,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
     public class When_deactivating_neuron
     {
-        public class When_null_command_specified : ConstructedContext<DeactivateNeuron>
+        public class When_null_command : ConstructedContext<DeactivateNeuron>
         {
             protected override DeactivateNeuron When() => null;
 
@@ -442,7 +442,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_specified_author_does_not_exist : DeactivatingNeuronConstructedContext
+        public class When_author_does_not_exist : DeactivatingNeuronConstructedContext
         {
             protected override bool PreAddAuthor => false;
 
@@ -497,7 +497,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             {
                 return base.Given().Concat(new IEvent[]
                 {
-                    new NeuronDeactivated(this.Id, this.AuthorId.ToString()) { Version = 2 }
+                    new NeuronDeactivated(this.Id, this.AuthorId) { Version = 2 }
                 });
             }
 

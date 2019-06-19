@@ -8,7 +8,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class DeactivateNeuron : ICommand
     {
-        public DeactivateNeuron(string avatarId, Guid id, string authorId, int expectedVersion)
+        public DeactivateNeuron(string avatarId, Guid id, Guid authorId, int expectedVersion)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -17,10 +17,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 Messages.Exception.InvalidId,
                 nameof(id)
                 );
-            Guid.TryParse(authorId, out Guid gAuthorId);
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
-                gAuthorId,
+                authorId,
                 Messages.Exception.InvalidId,
                 nameof(authorId)
                 );
@@ -41,7 +40,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 
         public Guid Id { get; private set; }
 
-        public string AuthorId { get; private set; }
+        public Guid AuthorId { get; private set; }
 
         public int ExpectedVersion { get; private set; }
     }

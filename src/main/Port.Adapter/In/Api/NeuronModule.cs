@@ -18,10 +18,10 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         false,
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
-                            var neuronId = System.Guid.Parse(parameters.neuronId);
+                            var neuronId = Guid.Parse(parameters.neuronId);
                             var avatarId = parameters.avatarId;
                             string tag = bodyAsObject.Tag.ToString();
-                            string authorId = bodyAsObject.AuthorId.ToString();
+                            var authorId = Guid.Parse(bodyAsObject.AuthorId.ToString());
                             return new CreateNeuron(avatarId, neuronId, tag, authorId);
                         },
                         "Tag",
@@ -41,7 +41,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                                 parameters.avatarId, 
                                 Guid.Parse(parameters.neuronId), 
                                 bodyAsObject.Tag.ToString(),
-                                bodyAsObject.AuthorId.ToString(), 
+                                Guid.Parse(bodyAsObject.AuthorId.ToString()), 
                                 expectedVersion
                                 );
                         },
@@ -61,7 +61,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             return new DeactivateNeuron(
                                 parameters.avatarId,
                                 Guid.Parse(parameters.neuronId),
-                                bodyAsObject.AuthorId.ToString(),
+                                Guid.Parse(bodyAsObject.AuthorId.ToString()),
                                 expectedVersion
                                 );
                         },

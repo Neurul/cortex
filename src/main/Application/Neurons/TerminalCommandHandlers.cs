@@ -36,7 +36,7 @@ namespace org.neurul.Cortex.Application.Neurons
 
             Neuron presynaptic = await this.session.Get<Neuron>(message.PresynapticNeuronId, nameof(presynaptic), cancellationToken: token),
                 postsynaptic = await this.session.Get<Neuron>(message.PostsynapticNeuronId, nameof(postsynaptic), cancellationToken: token),
-                author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token);
+                author = await this.session.Get<Neuron>(message.AuthorId, nameof(author), cancellationToken: token);
 
             var terminal = new Terminal(message.Id, presynaptic, postsynaptic,
                 message.Effect, message.Strength, author);
@@ -50,7 +50,7 @@ namespace org.neurul.Cortex.Application.Neurons
 
             await this.eventStore.Initialize(message.AvatarId);
 
-            Neuron author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token);
+            Neuron author = await this.session.Get<Neuron>(message.AuthorId, nameof(author), cancellationToken: token);
             Terminal terminal = await this.session.Get<Terminal>(message.Id, nameof(terminal), message.ExpectedVersion, token);
 
             terminal.Deactivate(author);

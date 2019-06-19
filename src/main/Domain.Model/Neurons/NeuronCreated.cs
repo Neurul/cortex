@@ -7,7 +7,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
     {
         public readonly string Tag;
 
-        public NeuronCreated(Guid id, string tag, string authorId)
+        public NeuronCreated(Guid id, string tag, Guid authorId)
         {
             this.Id = id;
             this.Tag = tag;
@@ -20,6 +20,6 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         public DateTimeOffset TimeStamp { get; set; }
 
-        public string AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

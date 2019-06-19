@@ -51,7 +51,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             var result = new List<Common.Events.Notification>();
             for (int i = 0; i < this.CountOfEventsToAdd; i++)
             {
-                var ei = new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid().ToString()).ToNotification(serializer);
+                var ei = new NeuronCreated(Guid.NewGuid(), string.Empty, Guid.NewGuid()).ToNotification(serializer);
                 ei.SequenceId = i + 1;
                 result.Add(ei);
             }
@@ -394,7 +394,7 @@ namespace org.neurul.Cortex.Application.Test.Notification.NotificationApplicatio
             protected abstract string NotificationLogId { get; }
         }
 
-        public class When_specified_id_format_is_invalid : GettingLogContext
+        public class When_id_format_is_invalid : GettingLogContext
         {
             protected override int CountOfEventsToAdd => 1;
 

@@ -32,7 +32,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
 
     public class When_constructing
     {
-        public class When_empty_id_specified : ConstructingTerminalContext
+        public class When_empty_id : ConstructingTerminalContext
         {
             protected override Guid Id => Guid.Empty;
 
@@ -43,7 +43,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_null_presynapticNeuron_specified : ConstructingTerminalContext
+        public class When_null_presynapticNeuron : ConstructingTerminalContext
         {
             protected override Neuron PresynapticNeuron => null;
 
@@ -54,7 +54,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_inactive_presynapticNeuron_specified : ConstructingTerminalContext
+        public class When_inactive_presynapticNeuron : ConstructingTerminalContext
         {
             protected override void When()
             {
@@ -80,7 +80,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_null_postsynapticNeuron_specified : ConstructingTerminalContext
+        public class When_null_postsynapticNeuron : ConstructingTerminalContext
         {
             protected override Neuron PostsynapticNeuron => null;
 
@@ -91,7 +91,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_inactive_postsynapticNeuron_specified : ConstructingTerminalContext
+        public class When_inactive_postsynapticNeuron : ConstructingTerminalContext
         {
             protected override void When()
             {
@@ -117,7 +117,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_specified_presynaptic_and_postsynaptic_are_equal : ConstructingTerminalContext
+        public class When_presynaptic_and_postsynaptic_are_equal : ConstructingTerminalContext
         {
             protected override Neuron PostsynapticNeuron => this.PresynapticNeuron;
 
@@ -128,7 +128,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_notset_effect_specified : ConstructingTerminalContext
+        public class When_notset_effect : ConstructingTerminalContext
         {
             protected override NeurotransmitterEffect Effect => NeurotransmitterEffect.NotSet;
 
@@ -139,7 +139,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_excessive_strength_specified : ConstructingTerminalContext
+        public class When_excessive_strength : ConstructingTerminalContext
         {
             protected override float Strength => 1.001f;
 
@@ -150,7 +150,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_insufficient_strength_specified : ConstructingTerminalContext
+        public class When_insufficient_strength : ConstructingTerminalContext
         {
             protected override float Strength => 0f;
 
@@ -161,7 +161,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_null_author_specified : ConstructingTerminalContext
+        public class When_null_author : ConstructingTerminalContext
         {
             protected override Neuron Author => null;
 
@@ -172,7 +172,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_inactive_author_specified : ConstructingTerminalContext
+        public class When_inactive_author : ConstructingTerminalContext
         {
             protected override void When()
             {
@@ -294,7 +294,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_specified_author_is_null : DeactivatingContext
+        public class When_author_is_null : DeactivatingContext
         {
             protected override Neuron AuthorParameter => null;
 
@@ -307,7 +307,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_inactive_author_specified : DeactivatingContext
+        public class When_inactive_author : DeactivatingContext
         {
             protected override Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? new Neuron(Guid.NewGuid(), string.Empty);
 

@@ -34,7 +34,7 @@ namespace org.neurul.Cortex.Application.Neurons
 
             await this.eventStore.Initialize(message.AvatarId);
             
-            Neuron author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token),
+            Neuron author = await this.session.Get<Neuron>(message.AuthorId, nameof(author), cancellationToken: token),
                 neuron = new Neuron(message.Id, message.Tag, author);
             
             await this.session.Add(neuron, token);
@@ -60,7 +60,7 @@ namespace org.neurul.Cortex.Application.Neurons
             await this.eventStore.Initialize(message.AvatarId);
 
             Neuron neuron = await this.session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token),
-                author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token);
+                author = await this.session.Get<Neuron>(message.AuthorId, nameof(author), cancellationToken: token);
             neuron.ChangeTag(message.NewTag, author);
 
             await this.session.Commit(token);
@@ -73,7 +73,7 @@ namespace org.neurul.Cortex.Application.Neurons
             await this.eventStore.Initialize(message.AvatarId);
 
             Neuron neuron = await this.session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token),
-                author = await this.session.Get<Neuron>(Guid.Parse(message.AuthorId), nameof(author), cancellationToken: token);
+                author = await this.session.Get<Neuron>(message.AuthorId, nameof(author), cancellationToken: token);
             
             neuron.Deactivate(author);
             await this.session.Commit(token);
