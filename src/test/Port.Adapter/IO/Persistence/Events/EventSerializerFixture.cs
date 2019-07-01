@@ -30,7 +30,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.Test.EventSeriali
                   ""Tag"": """ + Tag + @""",
                   ""Id"": """ + TestGuid + @""",
                   ""Version"": 6,
-                  ""TimeStamp"": ""2017-11-24T12:20:38.851535+00:00""
+                  ""Timestamp"": ""2017-11-24T12:20:38.851535+00:00""
                 }"
             ) as NeuronTagChanged;
         }

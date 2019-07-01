@@ -1,4 +1,5 @@
-﻿using org.neurul.Common.Events;
+﻿using Newtonsoft.Json;
+using org.neurul.Common.Events;
 using System;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
@@ -15,6 +16,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         public int Version { get; set; }
 
+        [JsonProperty(PropertyName = "Timestamp")]
         public DateTimeOffset TimeStamp { get; set; }
 
         public Guid AuthorId { get; set; }
