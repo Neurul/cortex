@@ -1,5 +1,6 @@
 ﻿using CQRSlite.Commands;
 using Nancy;
+using Nancy.Security;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
@@ -10,6 +11,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
     {
         public TerminalModule(ICommandSender commandSender) : base("/{avatarId}/cortex/terminals")
         {
+            this.RequiresAuthentication();
+
             this.Put("/{terminalId}", async (parameters) =>
             {
                 return await Helper.ProcessCommandResponse(

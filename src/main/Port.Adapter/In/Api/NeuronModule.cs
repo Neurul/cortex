@@ -1,5 +1,6 @@
 ﻿using CQRSlite.Commands;
 using Nancy;
+using Nancy.Security;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using System;
 
@@ -9,6 +10,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
     {
         public NeuronModule(ICommandSender commandSender) : base("/{avatarId}/cortex/neurons")
         {
+            this.RequiresAuthentication();
+
             this.Put("/{neuronId}", async (parameters) =>
             {
                 // TODO: make idempotent since HTTP PUT should allow any number of calls or change to POST?

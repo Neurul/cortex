@@ -15,5 +15,6 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="Readme.txt" />
+    <None Include="var1.env" />
   </ItemGroup>
 </Project>
