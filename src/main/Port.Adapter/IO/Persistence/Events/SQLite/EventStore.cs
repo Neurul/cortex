@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using org.neurul.Common.Domain.Model;
+using org.neurul.Cortex.Port.Adapter.Common;
 
 namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
 {
@@ -87,7 +88,7 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
         private async Task<SQLiteAsyncConnection> CreateConnection(string storeId)
         {
             SQLiteAsyncConnection result = null;
-            string databasePath = string.Format(Environment.GetEnvironmentVariable("DatabasePath"), storeId);
+            string databasePath = string.Format(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.DatabasePath), storeId);
 
             if (!databasePath.Contains(":memory:"))
                 AssertionConcern.AssertPathValid(databasePath, nameof(databasePath));

@@ -6,7 +6,6 @@ services:
       - ./var1.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - 'DatabasePath=C:\db\{0}.db'
     volumes:
       - C:\db:C:\db
     ports:
@@ -16,7 +15,6 @@ services:
       - ./var1.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - 'DatabasePath=C:\db\{0}.db'
     volumes:
       - C:\db:C:\db
     ports:

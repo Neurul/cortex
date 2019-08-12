@@ -36,31 +36,31 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api
             ResponseHelper.Header.Link.AppendValue(
                 sb,
                 $"{requestUrlBase}/{log.NotificationLogId}", 
-                Common.Constants.Response.Header.Link.Relation.Self
+                org.neurul.Common.Constants.Response.Header.Link.Relation.Self
                 );
 
             if (log.HasFirstNotificationLog)
                 ResponseHelper.Header.Link.AppendValue(
                     sb,
                     $"{requestUrlBase}/{log.FirstNotificationLogId}",
-                    Common.Constants.Response.Header.Link.Relation.First
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.First
                     );
 
             if (log.HasPreviousNotificationLog)
                 ResponseHelper.Header.Link.AppendValue(
                     sb,
                     $"{requestUrlBase}/{log.PreviousNotificationLogId}", 
-                    Common.Constants.Response.Header.Link.Relation.Previous
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.Previous
                     );
 
             if (log.HasNextNotificationLog)
                 ResponseHelper.Header.Link.AppendValue(
                     sb,
                     $"{requestUrlBase}/{log.NextNotificationLogId}", 
-                    Common.Constants.Response.Header.Link.Relation.Next
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.Next
                     );
 
-            response.Headers.Add(Common.Constants.Response.Header.Link.Key, sb.ToString());
+            response.Headers.Add(org.neurul.Common.Constants.Response.Header.Link.Key, sb.ToString());
             return response;
         }
     }

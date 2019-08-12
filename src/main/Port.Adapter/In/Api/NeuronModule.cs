@@ -2,6 +2,7 @@
 using Nancy;
 using Nancy.Security;
 using org.neurul.Cortex.Application.Neurons.Commands;
+using org.neurul.Cortex.Port.Adapter.Common;
 using System;
 
 namespace org.neurul.Cortex.Port.Adapter.In.Api
@@ -10,7 +11,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
     {
         public NeuronModule(ICommandSender commandSender) : base("/{avatarId}/cortex/neurons")
         {
-            this.RequiresAuthentication();
+            if (bool.TryParse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.RequireAuthentication), out bool value) && value)
+                this.RequiresAuthentication();
 
             this.Put("/{neuronId}", async (parameters) =>
             {

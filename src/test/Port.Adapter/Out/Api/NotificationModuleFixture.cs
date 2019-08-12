@@ -91,8 +91,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             public void Then_should_have_log_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
-                    this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                    Common.Constants.Response.Header.Link.Relation.Self,
+                    this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
                 Assert.True(hasLogId);
@@ -102,8 +102,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             public void Then_should_have_no_first_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
-                    this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                    Common.Constants.Response.Header.Link.Relation.First,
+                    this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                     out string link
                     );
                 Assert.False(hasLogId);
@@ -113,8 +113,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             public void Then_should_have_correct_self_link()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
-                    this.response.Headers[Common.Constants.Response.Header.Link.Key], 
-                    Common.Constants.Response.Header.Link.Relation.Self,
+                    this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key], 
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
                 Assert.Equal("http:///samplebody/cortex/notifications/0,0", link);
@@ -172,8 +172,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -183,8 +183,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -194,8 +194,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -205,8 +205,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -216,8 +216,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -227,8 +227,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
@@ -238,8 +238,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -249,8 +249,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
@@ -284,8 +284,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -295,8 +295,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -306,8 +306,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -317,8 +317,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -328,8 +328,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -339,8 +339,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
@@ -350,8 +350,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_no_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.False(hasLogId);
@@ -410,8 +410,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -421,8 +421,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -432,8 +432,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -443,8 +443,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -454,8 +454,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -465,8 +465,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
@@ -476,8 +476,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_not_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.False(hasLogId);
@@ -511,8 +511,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -522,8 +522,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -533,8 +533,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -544,8 +544,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -555,8 +555,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_not_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.False(hasLogId);
@@ -566,8 +566,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_not_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.False(hasLogId);
@@ -629,8 +629,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             public void Then_should_have_log_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
-                    this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                    Common.Constants.Response.Header.Link.Relation.Self,
+                    this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
                 Assert.True(hasLogId);
@@ -640,8 +640,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             public void Then_should_have_correct_self_link()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
-                    this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                    Common.Constants.Response.Header.Link.Relation.Self,
+                    this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                     out string link
                     );
                 Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
@@ -651,8 +651,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
             public void Then_should_not_have_first_id()
             {
                 var hasLogId = ResponseHelper.Header.Link.TryGet(
-                    this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                    Common.Constants.Response.Header.Link.Relation.First,
+                    this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                    org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                     out string link
                     );
                 Assert.False(hasLogId);
@@ -718,8 +718,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -729,8 +729,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -740,8 +740,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -751,8 +751,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -762,8 +762,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -773,8 +773,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
@@ -784,8 +784,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -795,8 +795,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
@@ -838,8 +838,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -849,8 +849,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -860,8 +860,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -871,8 +871,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -882,8 +882,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -893,8 +893,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_next_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/11,15", link);
@@ -904,8 +904,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_no_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.False(hasLogId);
@@ -972,8 +972,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -983,8 +983,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -994,8 +994,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -1005,8 +1005,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -1016,8 +1016,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -1027,8 +1027,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_previous_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,5", link);
@@ -1038,8 +1038,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_not_have_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.False(hasLogId);
@@ -1081,8 +1081,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_log_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -1092,8 +1092,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_self_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Self,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Self,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/6,10", link);
@@ -1103,8 +1103,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_first_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.True(hasLogId);
@@ -1114,8 +1114,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_correct_first_link()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.First,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.First,
                         out string link
                         );
                     Assert.Equal("http:///samplebody/cortex/notifications/1,20", link);
@@ -1125,8 +1125,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_no_previous_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Previous,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Previous,
                         out string link
                         );
                     Assert.False(hasLogId);
@@ -1136,8 +1136,8 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api.Test.NotificationModuleFixture.
                 public void Then_should_have_no_next_id()
                 {
                     var hasLogId = ResponseHelper.Header.Link.TryGet(
-                        this.response.Headers[Common.Constants.Response.Header.Link.Key],
-                        Common.Constants.Response.Header.Link.Relation.Next,
+                        this.response.Headers[org.neurul.Common.Constants.Response.Header.Link.Key],
+                        org.neurul.Common.Constants.Response.Header.Link.Relation.Next,
                         out string link
                         );
                     Assert.False(hasLogId);

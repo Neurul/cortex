@@ -111,6 +111,10 @@
       <Project>{A70FBF47-1B05-4CCF-85EB-AFB0906D551A}</Project>
       <Name>Domain.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\..\main\Port.Adapter\Common\Common.csproj">
+      <Project>{AF555277-0AD2-4357-B125-E666833F3DB0}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\..\main\Port.Adapter\IO\Persistence\Events\Events.csproj">
       <Project>{221ab8c3-f9be-4a07-ba72-62e439830837}</Project>
       <Name>Events</Name>

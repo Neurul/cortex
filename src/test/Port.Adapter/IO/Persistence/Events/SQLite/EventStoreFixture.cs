@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using SQLite;
+using org.neurul.Cortex.Port.Adapter.Common;
 
 namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.EventStoreFixture.given
 {
@@ -89,13 +90,8 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite.Test.Event
         protected override void GivenInit()
         {
             base.GivenInit();
-            Environment.SetEnvironmentVariable("DatabasePath", ":{0}:");            
+            Environment.SetEnvironmentVariable(EnvironmentVariableKeys.DatabasePath, ":{0}:");            
             Task.Run(() => this.sut.Initialize("memory")).Wait();
-            //string databasePath = string.Format(Environment.GetEnvironmentVariable("DatabasePath"), "memory");
-            //using (var c = new SQLiteConnection(databasePath))
-            //{
-            //    c.DeleteAll<Notification>();
-            //}
         }
     }
 
