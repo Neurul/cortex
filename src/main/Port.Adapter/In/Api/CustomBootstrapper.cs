@@ -6,10 +6,13 @@ using Nancy;
 using Nancy.TinyIoc;
 using org.neurul.Common.Events;
 using org.neurul.Common.Http;
+using org.neurul.Cortex.Application.IdentityAccess;
 using org.neurul.Cortex.Application.Neurons;
+using org.neurul.Cortex.Domain.Model.IdentityAccess;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events;
 using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite;
+using org.neurul.Cortex.Port.Adapter.IO.Persistence.IdentityAccess;
 using System;
 
 namespace org.neurul.Cortex.Port.Adapter.In.Api
@@ -49,6 +52,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             ((TinyIoCServiceLocator)container.Resolve<IServiceProvider>()).SetRequestContainer(container);
             container.Register<IRepository>((x, y) => new Repository(x.Resolve<INavigableEventStore>()));
             container.Register<ISession, Session>();
+
+            container.Register<IIdentityPermissionRepository, IdentityPermissionRepository>();
+            container.Register<IIdentityPermissionApplicationService, IdentityPermissionApplicationService>();
         }
     }
 }

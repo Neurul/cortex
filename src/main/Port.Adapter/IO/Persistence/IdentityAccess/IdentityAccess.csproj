@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>org.neurul.Cortex.Port.Adapter.IO.Persistence.IdentityAccess</AssemblyName>
+    <RootNamespace>org.neurul.Cortex.Port.Adapter.IO.Persistence.IdentityAccess</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Domain.Model\Domain.Model.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.csproj" />
+  </ItemGroup>
+
+</Project>
