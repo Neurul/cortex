@@ -6,10 +6,8 @@ using Nancy;
 using Nancy.TinyIoc;
 using org.neurul.Common.Events;
 using org.neurul.Common.Http;
-using org.neurul.Cortex.Application.IdentityAccess;
 using org.neurul.Cortex.Application.Neurons;
-using org.neurul.Cortex.Domain.Model.IdentityAccess;
-using org.neurul.Cortex.Domain.Model.Neurons;
+using org.neurul.Cortex.Domain.Model.Users;
 using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events;
 using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite;
 using org.neurul.Cortex.Port.Adapter.IO.Persistence.IdentityAccess;
@@ -32,7 +30,8 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             container.Register<IHandlerRegistrar, Router>(ipb);
             container.Register<IEventPublisher, Router>(ipb);
             container.Register<IEventSerializer, EventSerializer>(new EventSerializer());
-
+            container.Register<IUserRepository, UserRepository>();
+            container.Register<ILayerPermitRepository, LayerPermitRepository>();
             container.Register<INavigableEventStore, EventStore>(
                 new EventStore(
                     container.Resolve<IEventSerializer>(),
@@ -52,9 +51,6 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             ((TinyIoCServiceLocator)container.Resolve<IServiceProvider>()).SetRequestContainer(container);
             container.Register<IRepository>((x, y) => new Repository(x.Resolve<INavigableEventStore>()));
             container.Register<ISession, Session>();
-
-            container.Register<IIdentityPermissionRepository, IdentityPermissionRepository>();
-            container.Register<IIdentityPermissionApplicationService, IdentityPermissionApplicationService>();
         }
     }
 }

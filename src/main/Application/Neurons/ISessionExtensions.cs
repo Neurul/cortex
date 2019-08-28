@@ -27,5 +27,15 @@ namespace org.neurul.Cortex.Application.Neurons
 
             return result;
         }
+
+        public static async Task<T> GetOrDefaultIfGuidEmpty<T>(this ISession session, Guid id, string parameterName, T defaultValue, int? expectedVersion = null, CancellationToken cancellationToken = default(CancellationToken)) where T : AggregateRoot
+        {
+            T result = defaultValue;
+
+            if (id != Guid.Empty)
+                result = await ISessionExtensions.Get<T>(session, id, parameterName, expectedVersion, cancellationToken);
+
+            return result;
+        }
     }
 }

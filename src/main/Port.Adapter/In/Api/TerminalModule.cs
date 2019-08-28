@@ -15,7 +15,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             if (bool.TryParse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.RequireAuthentication), out bool value) && value)
                 this.RequiresAuthentication();
 
-            this.Put("/{terminalId}", async (parameters) =>
+            this.Post(string.Empty, async (parameters) =>
             {
                 return await Helper.ProcessCommandResponse(
                         commandSender,
@@ -23,21 +23,20 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         false,
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
-                            var terminalId = Guid.Parse(parameters.terminalId);
                             var avatarId = parameters.avatarId;
-                            var authorId = Guid.Parse(bodyAsObject.AuthorId.ToString());
+                            var subjectId = NeuronModule.GetUserSubjectId(this.Context);
 
-                            TerminalModule.CreateTerminalFromDynamic(bodyAsObject, out Guid presynapticNeuronId, 
+                            TerminalModule.CreateTerminalFromDynamic(bodyAsObject, out Guid terminalId, out Guid presynapticNeuronId, 
                                 out Guid postsynapticNeuronId, out NeurotransmitterEffect effect, out float strength);
 
                             return new CreateTerminal(avatarId, terminalId, presynapticNeuronId, postsynapticNeuronId, 
-                                effect, strength, authorId);
+                                effect, strength, subjectId);
                         },
+                        "Id",
                         "PresynapticNeuronId",
                         "PostsynapticNeuronId",
                         "Effect",
-                        "Strength",
-                        "AuthorId"
+                        "Strength"
                     );
             }
             );
@@ -52,19 +51,19 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             return new DeactivateTerminal(
                                 parameters.avatarId,
                                 Guid.Parse(parameters.terminalId),
-                                Guid.Parse(bodyAsObject.AuthorId.ToString()),
+                                NeuronModule.GetUserSubjectId(this.Context),
                                 expectedVersion
                                 );
-                        },
-                        "AuthorId"
+                        }
                     );
                 }
             );
         }
 
-        private static void CreateTerminalFromDynamic(dynamic dynamicTerminal, out Guid presynapticNeuronId, 
+        private static void CreateTerminalFromDynamic(dynamic dynamicTerminal, out Guid terminalId, out Guid presynapticNeuronId, 
             out Guid postsynapticNeuronId, out NeurotransmitterEffect effect, out float strength)
         {
+            terminalId = Guid.Parse(dynamicTerminal.Id.ToString());
             presynapticNeuronId = Guid.Parse(dynamicTerminal.PresynapticNeuronId.ToString());
             postsynapticNeuronId = Guid.Parse(dynamicTerminal.PostsynapticNeuronId.ToString());
             string ne = dynamicTerminal.Effect.ToString();

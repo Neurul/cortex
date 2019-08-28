@@ -7,7 +7,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class CreateNeuron : ICommand
     {
-        public CreateNeuron(string avatarId, Guid id, string tag, Guid authorId)
+        public CreateNeuron(string avatarId, Guid id, string tag, Guid layerId, Guid subjectId)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -19,15 +19,16 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
             AssertionConcern.AssertArgumentNotNull(tag, nameof(tag));
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
-                authorId,
+                subjectId,
                 Messages.Exception.InvalidId,
-                nameof(authorId)
+                nameof(subjectId)
                 );
-            
+
             this.AvatarId = avatarId;
             this.Id = id;            
             this.Tag = tag;
-            this.AuthorId = authorId;
+            this.LayerId = layerId;
+            this.SubjectId = subjectId;
         }
 
         public string AvatarId { get; private set; }
@@ -36,7 +37,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
         
         public string Tag { get; private set; }
 
-        public Guid AuthorId { get; private set; }
+        public Guid LayerId { get; private set; }
+
+        public Guid SubjectId { get; private set; }
 
         public int ExpectedVersion { get; private set; }
     }
