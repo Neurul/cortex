@@ -7,9 +7,6 @@ To build/upload to docker hub:
 2. Remove all running docker images (kitematic)
 3. From CLI
 	1. docker-compose -f docker-compose.yml -f docker-compose.override.yml build
-	2. docker push [image name]
+	2. docker push [image name - see docker-compose]
 		- docker push neurul/cortex.out.api:0.2.1
-
-Latest:
-1. neurul/cortex.in.api:0.2.3
-2. neurul/cortex.out.api:0.2.2
+		- push both "in" and "out" when applicable
