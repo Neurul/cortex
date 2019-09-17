@@ -35,7 +35,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
                 nameof(presynapticNeuronLayer)
                 );
             // TODO: Add TDD test
-            Neuron.ValidateLayerAuthorAccess(presynapticNeuronLayer, author);
+            Neuron.ValidateAuthorAccess(presynapticNeuron.CreatorId, presynapticNeuron.Tag, presynapticNeuronLayer, author);
 
             this.Id = id;
             this.ApplyChange(new TerminalCreated(id, presynapticNeuron.Id, postsynapticNeuron.Id, effect, strength, author.Neuron.Id));
@@ -81,7 +81,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
                 nameof(presynapticNeuronLayer)
                 );
 
-            Neuron.ValidateLayerAuthorAccess(presynapticNeuronLayer, author);
+            Neuron.ValidateAuthorAccess(presynapticNeuron.CreatorId, presynapticNeuron.Tag, presynapticNeuronLayer, author);
 
             this.ApplyChange(new TerminalDeactivated(this.Id, author.Neuron.Id));
         }

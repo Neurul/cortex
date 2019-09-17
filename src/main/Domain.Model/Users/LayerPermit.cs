@@ -12,7 +12,7 @@ namespace org.neurul.Cortex.Domain.Model.Users
 
         public Guid LayerNeuronId { get; set; }
 
-        public bool CanWrite { get; set; }
+        public int WriteLevel { get; set; }
 
         public bool CanRead { get; set; }
 

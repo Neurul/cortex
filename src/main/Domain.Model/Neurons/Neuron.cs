@@ -50,7 +50,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             AssertionConcern.AssertArgumentNotNull(layer, nameof(layer));
 
             // TODO: Add TDD test
-            Neuron.ValidateLayerAuthorAccess(layer, author);
+            Neuron.ValidateAuthorAccess(author.Neuron.Id, tag, layer, author);
 
             this.Construct(id, tag, layer, author.Neuron.Id, false);
         }
@@ -73,28 +73,33 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         /// <param name="layer">Layer neuron Id to be used in the Write process. Specify Guid.Empty to use base layer.</param>
         /// <param name="author">User matched with Subject Id from User database.</param>
         /// <returns></returns>
-        internal static void ValidateLayerAuthorAccess(Neuron layer, Author author)
+        internal static void ValidateAuthorAccess(Guid neuronCreatorId, string neuronTag, Neuron layer, Author author)
         {
-            // TODO: Add TDD test
-            AssertionConcern.AssertArgumentValid(n =>
-                author != null && author.Permits.SingleOrDefault(
-                    l => l.LayerNeuronId == layer.Id && l.CanWrite
-                    ) != null,
-                layer.Id,
-                string.Format(Messages.Exception.UnauthorizedUserWriteTemplate, layer.Tag),
-                nameof(layer)
+            AssertionConcern.AssertArgumentValid(g => g != Guid.Empty, neuronCreatorId, Messages.Exception.IdEmpty, nameof(neuronCreatorId));
+            AssertionConcern.AssertArgumentNotNull(layer, nameof(layer));
+            AssertionConcern.AssertArgumentNotNull(author, nameof(author));
+            // TODO: Add TDD tests
+            var permit = author.Permits.SingleOrDefault(
+                    l => l.LayerNeuronId == layer.Id && l.WriteLevel > 0
+                );
+            AssertionConcern.AssertStateTrue(permit != null, string.Format(Messages.Exception.UnauthorizedLayerWriteTemplate, layer.Tag));
+            AssertionConcern.AssertStateTrue(
+                permit.WriteLevel == 2 || neuronCreatorId == author.Neuron.Id, 
+                string.Format(Messages.Exception.UnauthorizedNeuronWriteTemplate, neuronTag)
                 );
         }
 
         public bool Active { get; private set; }
         public string Tag { get; private set; }
         public Guid LayerId { get; private set; }
+        public Guid CreatorId { get; private set; }
 
         private void Apply(NeuronCreated e)
         {
             this.Active = true;
             this.Tag = e.Tag;
             this.LayerId = e.LayerId;
+            this.CreatorId = e.AuthorId;
         }
 
         private void Apply(NeuronTagChanged e)
@@ -120,7 +125,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
                 );
 
             // TODO: Add TDD test
-            Neuron.ValidateLayerAuthorAccess(layer, author);
+            Neuron.ValidateAuthorAccess(this.CreatorId, this.Tag, layer, author);
 
             if (value != this.Tag)
                 base.ApplyChange(new NeuronTagChanged(this.Id, value, author.Neuron.Id));
@@ -137,7 +142,7 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
                 nameof(layer)
                 );
             // TODO: Add TDD test
-            Neuron.ValidateLayerAuthorAccess(layer, author);
+            Neuron.ValidateAuthorAccess(this.CreatorId, this.Tag, layer, author);
 
             this.ApplyChange(new NeuronDeactivated(this.Id, author.Neuron.Id));
         }
