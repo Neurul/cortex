@@ -32,12 +32,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             container.Register<IEventSerializer, EventSerializer>(new EventSerializer());
             container.Register<IUserRepository, UserRepository>();
             container.Register<ILayerPermitRepository, LayerPermitRepository>();
-            container.Register<INavigableEventStore, EventStore>(
-                new EventStore(
-                    container.Resolve<IEventSerializer>(),
-                    container.Resolve<IEventPublisher>()
-                )
-                );
+            container.Register<IEventSourceFactory, EventSourceFactory>();
             container.Register<NeuronCommandHandlers>();
 
             var ticl = new TinyIoCServiceLocator(container);
@@ -49,8 +44,6 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             // As this is now per-request we could inject a request scoped
             // database "context" or other request scoped services.
             ((TinyIoCServiceLocator)container.Resolve<IServiceProvider>()).SetRequestContainer(container);
-            container.Register<IRepository>((x, y) => new Repository(x.Resolve<INavigableEventStore>()));
-            container.Register<ISession, Session>();
         }
     }
 }

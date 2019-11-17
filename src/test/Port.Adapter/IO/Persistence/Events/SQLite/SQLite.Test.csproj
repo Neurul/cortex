@@ -58,8 +58,8 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.11.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="org.neurul.Common, Version=0.1.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\..\packages\Neurul.Common.0.1.6\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
+    <Reference Include="org.neurul.Common, Version=0.1.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\..\packages\Neurul.Common.0.1.8\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
     </Reference>
     <Reference Include="org.neurul.Common.Test, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\..\packages\Neurul.Common.Test.0.1.1\lib\netstandard2.0\org.neurul.Common.Test.dll</HintPath>
@@ -110,10 +110,6 @@
     <ProjectReference Include="..\..\..\..\..\..\main\Domain.Model\Domain.Model.csproj">
       <Project>{A70FBF47-1B05-4CCF-85EB-AFB0906D551A}</Project>
       <Name>Domain.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\..\main\Port.Adapter\Common\Common.csproj">
-      <Project>{AF555277-0AD2-4357-B125-E666833F3DB0}</Project>
-      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\..\main\Port.Adapter\IO\Persistence\Events\Events.csproj">
       <Project>{221ab8c3-f9be-4a07-ba72-62e439830837}</Project>

@@ -1,6 +1,7 @@
 ﻿using CQRSlite.Commands;
 using Nancy;
 using Nancy.Security;
+using org.neurul.Common.Domain.Model;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Port.Adapter.Common;
 using System;
@@ -79,7 +80,17 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
 
         internal static Guid GetUserSubjectId(NancyContext context)
         {
-            return Guid.Parse(context.CurrentUser.Claims.First(c => c.Type == "sub").Value);
+            Guid result = Guid.Empty;
+
+            if (bool.TryParse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.RequireAuthentication), out bool value) && value)
+            {
+                AssertionConcern.AssertArgumentValid(c => c.CurrentUser != null, context, "Context User is null or not found.", nameof(context));
+                result = Guid.Parse(context.CurrentUser.Claims.First(c => c.Type == "sub").Value);
+            }
+            else
+                result = Guid.Parse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.TestUserSubjectId));
+
+            return result;
         }
     }
 }

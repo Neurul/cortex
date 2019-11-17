@@ -17,21 +17,18 @@ namespace org.neurul.Cortex.Application.Neurons
         ICancellableCommandHandler<CreateTerminal>,
         ICancellableCommandHandler<DeactivateTerminal>
     {
-        private readonly INavigableEventStore eventStore;
-        private readonly ISession session;
+        private readonly IEventSourceFactory eventSourceFactory;
         private readonly IUserRepository userRepository;
         private readonly ILayerPermitRepository layerPermitRepository;
 
-        public TerminalCommandHandlers(INavigableEventStore eventStore, ISession session, IUserRepository userRepository, ILayerPermitRepository layerPermitRepository)
+        public TerminalCommandHandlers(IEventSourceFactory eventSourceFactory, IUserRepository userRepository, ILayerPermitRepository layerPermitRepository)
         {
-            AssertionConcern.AssertArgumentNotNull(eventStore, nameof(eventStore));
-            AssertionConcern.AssertArgumentNotNull(session, nameof(session));
+            AssertionConcern.AssertArgumentNotNull(eventSourceFactory, nameof(eventSourceFactory));
             // TODO: Add TDD test
             AssertionConcern.AssertArgumentNotNull(userRepository, nameof(userRepository));
             AssertionConcern.AssertArgumentNotNull(layerPermitRepository, nameof(layerPermitRepository));
 
-            this.eventStore = eventStore;
-            this.session = session;
+            this.eventSourceFactory = eventSourceFactory;
             this.userRepository = userRepository;
             this.layerPermitRepository = layerPermitRepository;
         }
@@ -40,13 +37,13 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
-            await this.eventStore.Initialize(message.AvatarId);
+            var eventSource = this.eventSourceFactory.CreateEventSource(message.AvatarId);
             await this.userRepository.Initialize(message.AvatarId);
             await this.layerPermitRepository.Initialize(message.AvatarId);
 
-            Neuron presynaptic = await this.session.Get<Neuron>(message.PresynapticNeuronId, nameof(presynaptic), cancellationToken: token),
-                postsynaptic = await this.session.Get<Neuron>(message.PostsynapticNeuronId, nameof(postsynaptic), cancellationToken: token),
-                presynapticLayer = await this.session.GetOrDefaultIfGuidEmpty(
+            Neuron presynaptic = await eventSource.Session.Get<Neuron>(message.PresynapticNeuronId, nameof(presynaptic), cancellationToken: token),
+                postsynaptic = await eventSource.Session.Get<Neuron>(message.PostsynapticNeuronId, nameof(postsynaptic), cancellationToken: token),
+                presynapticLayer = await eventSource.Session.GetOrDefaultIfGuidEmpty(
                     presynaptic.LayerId, 
                     nameof(presynapticLayer), 
                     Neuron.RootLayerNeuron, 
@@ -54,26 +51,26 @@ namespace org.neurul.Cortex.Application.Neurons
                     );
 
             // TODO: Add TDD test
-            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, session, this.userRepository, this.layerPermitRepository, token);
+            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, eventSource.Session, this.userRepository, this.layerPermitRepository, token);
 
             var terminal = new Terminal(message.Id, presynaptic, presynapticLayer, postsynaptic, message.Effect, message.Strength, author);
-            await this.session.Add(terminal, token);
-            await this.session.Commit(token);
+            await eventSource.Session.Add(terminal, token);
+            await eventSource.Session.Commit(token);
         }
 
         public async Task Handle(DeactivateTerminal message, CancellationToken token = default(CancellationToken))
         {
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
-            await this.eventStore.Initialize(message.AvatarId);
+            var eventSource = this.eventSourceFactory.CreateEventSource(message.AvatarId);
             await this.userRepository.Initialize(message.AvatarId);
             await this.layerPermitRepository.Initialize(message.AvatarId);
 
             // TODO: Add TDD test
-            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, session, this.userRepository, this.layerPermitRepository, token);
-            Terminal terminal = await this.session.Get<Terminal>(message.Id, nameof(terminal), message.ExpectedVersion, token);
-            Neuron presynaptic = await this.session.Get<Neuron>(terminal.PresynapticNeuronId, nameof(presynaptic), cancellationToken: token);
-            Neuron presynapticLayer = await this.session.GetOrDefaultIfGuidEmpty(
+            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, eventSource.Session, this.userRepository, this.layerPermitRepository, token);
+            Terminal terminal = await eventSource.Session.Get<Terminal>(message.Id, nameof(terminal), message.ExpectedVersion, token);
+            Neuron presynaptic = await eventSource.Session.Get<Neuron>(terminal.PresynapticNeuronId, nameof(presynaptic), cancellationToken: token);
+            Neuron presynapticLayer = await eventSource.Session.GetOrDefaultIfGuidEmpty(
                     presynaptic.LayerId,
                     nameof(presynapticLayer),
                     Neuron.RootLayerNeuron,
@@ -81,7 +78,7 @@ namespace org.neurul.Cortex.Application.Neurons
                     );
 
             terminal.Deactivate(presynaptic, presynapticLayer, author);
-            await this.session.Commit(token);
+            await eventSource.Session.Commit(token);
         }
     }
 }

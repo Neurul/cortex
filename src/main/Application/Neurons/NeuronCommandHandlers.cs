@@ -16,21 +16,18 @@ namespace org.neurul.Cortex.Application.Neurons
         ICancellableCommandHandler<ChangeNeuronTag>,
         ICancellableCommandHandler<DeactivateNeuron>
     {
-        private readonly INavigableEventStore eventStore;
-        private readonly ISession session;
+        private readonly IEventSourceFactory eventSourceFactory;
         private readonly IUserRepository userRepository;
         private readonly ILayerPermitRepository layerPermitRepository;
 
-        public NeuronCommandHandlers(INavigableEventStore eventStore, ISession session, IUserRepository userRepository, ILayerPermitRepository layerPermitRepository)
+        public NeuronCommandHandlers(IEventSourceFactory eventSourceFactory, IUserRepository userRepository, ILayerPermitRepository layerPermitRepository)
         {
-            AssertionConcern.AssertArgumentNotNull(eventStore, nameof(eventStore));
-            AssertionConcern.AssertArgumentNotNull(session, nameof(session));
+            AssertionConcern.AssertArgumentNotNull(eventSourceFactory, nameof(eventSourceFactory));
             // TODO: Add TDD test
             AssertionConcern.AssertArgumentNotNull(userRepository, nameof(userRepository));
             AssertionConcern.AssertArgumentNotNull(layerPermitRepository, nameof(layerPermitRepository));
 
-            this.eventStore = eventStore;
-            this.session = session;
+            this.eventSourceFactory = eventSourceFactory;
             this.userRepository = userRepository;
             this.layerPermitRepository = layerPermitRepository;
         }
@@ -39,19 +36,19 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
-            await this.eventStore.Initialize(message.AvatarId);
+            var eventSource = this.eventSourceFactory.CreateEventSource(message.AvatarId);
             Neuron neuron = null;
 
             // TODO: Add TDD test
-            if (await this.eventStore.CountNotifications() == 0)
+            if (await eventSource.EventStore.CountNotifications() == 0)
                 neuron = new Neuron(message.Id, message.Tag);
             else
             {
                 await this.userRepository.Initialize(message.AvatarId);
                 await this.layerPermitRepository.Initialize(message.AvatarId);
                 // TODO: Add TDD test
-                var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, session, this.userRepository, this.layerPermitRepository, token);
-                Neuron layer = await this.session.GetOrDefaultIfGuidEmpty(
+                var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, eventSource.Session, this.userRepository, this.layerPermitRepository, token);
+                Neuron layer = await eventSource.Session.GetOrDefaultIfGuidEmpty(
                     message.LayerId,
                     nameof(layer),
                     Neuron.RootLayerNeuron,
@@ -60,8 +57,8 @@ namespace org.neurul.Cortex.Application.Neurons
                 neuron = new Neuron(message.Id, message.Tag, layer, author);
             }
 
-            await this.session.Add(neuron, token);
-            await this.session.Commit(token);
+            await eventSource.Session.Add(neuron, token);
+            await eventSource.Session.Commit(token);
         }
 
         internal static async Task<Author> GetValidatedAuthorUser(Guid subjectId, ISession session, IUserRepository userStore, ILayerPermitRepository layerPermitStore, CancellationToken token = default(CancellationToken))
@@ -82,14 +79,15 @@ namespace org.neurul.Cortex.Application.Neurons
         {
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
-            await this.eventStore.Initialize(message.AvatarId);
+            var eventSource = this.eventSourceFactory.CreateEventSource(message.AvatarId);
+
             await this.userRepository.Initialize(message.AvatarId);
             await this.layerPermitRepository.Initialize(message.AvatarId);
 
             // TODO: Add TDD test
-            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, session, this.userRepository, this.layerPermitRepository, token);
-            Neuron neuron = await this.session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token);
-            Neuron layer = await this.session.GetOrDefaultIfGuidEmpty(
+            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, eventSource.Session, this.userRepository, this.layerPermitRepository, token);
+            Neuron neuron = await eventSource.Session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token);
+            Neuron layer = await eventSource.Session.GetOrDefaultIfGuidEmpty(
                     neuron.LayerId,
                     nameof(layer),
                     Neuron.RootLayerNeuron,
@@ -97,21 +95,21 @@ namespace org.neurul.Cortex.Application.Neurons
                     );
             neuron.ChangeTag(message.NewTag, layer, author);
 
-            await this.session.Commit(token);
+            await eventSource.Session.Commit(token);
         }
 
         public async Task Handle(DeactivateNeuron message, CancellationToken token = default(CancellationToken))
         {
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
-            await this.eventStore.Initialize(message.AvatarId);
+            var eventSource = this.eventSourceFactory.CreateEventSource(message.AvatarId);
             await this.userRepository.Initialize(message.AvatarId);
             await this.layerPermitRepository.Initialize(message.AvatarId);
 
             // TODO: Add TDD test
-            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, session, this.userRepository, this.layerPermitRepository, token);
-            Neuron neuron = await this.session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token);
-            Neuron layer = await this.session.GetOrDefaultIfGuidEmpty(
+            var author = await NeuronCommandHandlers.GetValidatedAuthorUser(message.SubjectId, eventSource.Session, this.userRepository, this.layerPermitRepository, token);
+            Neuron neuron = await eventSource.Session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token);
+            Neuron layer = await eventSource.Session.GetOrDefaultIfGuidEmpty(
                     neuron.LayerId,
                     nameof(layer),
                     Neuron.RootLayerNeuron,
@@ -119,7 +117,7 @@ namespace org.neurul.Cortex.Application.Neurons
                     );
 
             neuron.Deactivate(layer, author);
-            await this.session.Commit(token);
+            await eventSource.Session.Commit(token);
         }
     }
 }

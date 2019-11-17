@@ -5,6 +5,7 @@ using SQLite;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using org.neurul.Cortex.Port.Adapter.Common;
 
 namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.IdentityAccess
 {

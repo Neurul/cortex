@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Test", "test\Application\Application.Test.csproj", "{F2D2AB64-837C-41C7-89B6-745D5C0A74F4}"
 EndProject
@@ -43,9 +43,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Out.Api.Test", "test\Port.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Out.Api", "main\Port.Adapter\Out\Api\Out.Api.csproj", "{947B06FD-1ECB-43B0-9E00-D02843C0FFE4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "main\Port.Adapter\Common\Common.csproj", "{AF555277-0AD2-4357-B125-E666833F3DB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAccess", "main\Port.Adapter\IO\Persistence\IdentityAccess\IdentityAccess.csproj", "{15CACAAC-409A-42A2-8115-6958399D6937}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityAccess", "main\Port.Adapter\IO\Persistence\IdentityAccess\IdentityAccess.csproj", "{15CACAAC-409A-42A2-8115-6958399D6937}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "main\Port.Adapter\Common\Common.csproj", "{07D5414D-1773-4E5D-B296-FE80772113B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,14 +105,14 @@ Global
 		{947B06FD-1ECB-43B0-9E00-D02843C0FFE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947B06FD-1ECB-43B0-9E00-D02843C0FFE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{947B06FD-1ECB-43B0-9E00-D02843C0FFE4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF555277-0AD2-4357-B125-E666833F3DB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF555277-0AD2-4357-B125-E666833F3DB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF555277-0AD2-4357-B125-E666833F3DB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF555277-0AD2-4357-B125-E666833F3DB0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{15CACAAC-409A-42A2-8115-6958399D6937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{15CACAAC-409A-42A2-8115-6958399D6937}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15CACAAC-409A-42A2-8115-6958399D6937}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15CACAAC-409A-42A2-8115-6958399D6937}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07D5414D-1773-4E5D-B296-FE80772113B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07D5414D-1773-4E5D-B296-FE80772113B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07D5414D-1773-4E5D-B296-FE80772113B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07D5414D-1773-4E5D-B296-FE80772113B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,8 +132,8 @@ Global
 		{D50BC565-4A02-4CE9-9E81-04F7AAD7F6B4} = {250B3F59-02D5-436B-91F2-134FAF83B57D}
 		{4732C0F3-C25D-408F-99BF-5D93B53B5526} = {A30F7F77-9251-456D-90EE-AFFEECB77852}
 		{947B06FD-1ECB-43B0-9E00-D02843C0FFE4} = {A30F7F77-9251-456D-90EE-AFFEECB77852}
-		{AF555277-0AD2-4357-B125-E666833F3DB0} = {DBB322C0-BC6A-4962-98DC-8DBB176F9C0C}
 		{15CACAAC-409A-42A2-8115-6958399D6937} = {01745522-9AA8-4F55-8D9B-B3301CA06AE0}
+		{07D5414D-1773-4E5D-B296-FE80772113B9} = {DBB322C0-BC6A-4962-98DC-8DBB176F9C0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52C9D9EC-9427-4D12-AC67-B848B8A8C45A}

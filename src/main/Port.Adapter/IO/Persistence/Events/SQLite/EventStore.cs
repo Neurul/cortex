@@ -12,17 +12,22 @@ using org.neurul.Cortex.Port.Adapter.Common;
 
 namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
 {
+    // TODO: this should be a service that internally calls an Events microservice
+    // TODO: remove initialize method, storeid should be a parameter in all methods
     public class EventStore : INavigableEventStore
     {
         private SQLiteAsyncConnection connection;
         private IEventSerializer serializer;
         private IEventPublisher publisher;
 
-        public EventStore(IEventSerializer serializer, IEventPublisher publisher)
+        public EventStore(string storeId, IEventSerializer serializer, IEventPublisher publisher)
         {
+            AssertionConcern.AssertArgumentNotNull(storeId, nameof(storeId));
+            AssertionConcern.AssertArgumentNotEmpty(storeId, $"'{nameof(storeId)}' cannot be empty.", nameof(storeId));
             AssertionConcern.AssertArgumentNotNull(serializer, nameof(serializer));
             AssertionConcern.AssertArgumentNotNull(publisher, nameof(publisher));
 
+            this.connection = this.CreateConnection(storeId).Result;
             this.serializer = serializer;
             this.publisher = publisher;
         }
@@ -64,14 +69,6 @@ namespace org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite
 
             var query = this.connection.Table<Notification>().Where(e => e.SequenceId >= lowSequenceId && e.SequenceId <= highSequenceId);
             return (await query.ToListAsync()).ToArray();
-        }
-
-        public async Task Initialize(string storeId)
-        {
-            AssertionConcern.AssertArgumentNotNull(storeId, nameof(storeId));
-            AssertionConcern.AssertArgumentNotEmpty(storeId, $"'{nameof(storeId)}' cannot be empty.", nameof(storeId));
-
-            this.connection = await this.CreateConnection(storeId);
         }
 
         public async Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))

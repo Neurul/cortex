@@ -23,19 +23,19 @@ namespace org.neurul.Cortex.Application.Notification
 {
     public class NotificationApplicationService : INotificationApplicationService
     {
-        public NotificationApplicationService(INavigableEventStore eventStore)
+        public NotificationApplicationService(IEventSourceFactory eventSourceFactory)
         {
-            AssertionConcern.AssertArgumentNotNull(eventStore, nameof(eventStore));
-            this.eventStore = eventStore;
+            AssertionConcern.AssertArgumentNotNull(eventSourceFactory, nameof(eventSourceFactory));
+            this.eventSourceFactory = eventSourceFactory;
         }
 
-        readonly INavigableEventStore eventStore;
+        readonly IEventSourceFactory eventSourceFactory;
 
         public async Task<NotificationLog> GetCurrentNotificationLog(string storeId)
         {
+            var eventSource = this.eventSourceFactory.CreateEventSource(storeId);
             // TODO: check if user has permission to access store
-            await this.eventStore.Initialize(storeId);
-            return await new NotificationLogFactory(this.eventStore).CreateCurrentNotificationLog();
+            return await new NotificationLogFactory(eventSource.EventStore).CreateCurrentNotificationLog();
         }
 
         public async Task<NotificationLog> GetNotificationLog(string storeId, string notificationLogId)
@@ -44,9 +44,8 @@ namespace org.neurul.Cortex.Application.Notification
                 throw new FormatException($"Specified {nameof(notificationLogId)} value of '{notificationLogId}' was not in the expected format.");
 
             // TODO: check if user has permission to access store
-            await this.eventStore.Initialize(storeId);
-
-            return await new NotificationLogFactory(this.eventStore).CreateNotificationLog(logId);
+            var eventSource = this.eventSourceFactory.CreateEventSource(storeId);
+            return await new NotificationLogFactory(eventSource.EventStore).CreateNotificationLog(logId);
         }
     }
 }
