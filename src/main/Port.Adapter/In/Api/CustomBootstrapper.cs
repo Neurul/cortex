@@ -1,17 +1,15 @@
 ﻿using CQRSlite.Commands;
-using CQRSlite.Domain;
 using CQRSlite.Events;
 using CQRSlite.Routing;
 using Nancy;
 using Nancy.TinyIoc;
-using org.neurul.Common.Events;
 using org.neurul.Common.Http;
+using org.neurul.Cortex.Application;
 using org.neurul.Cortex.Application.Neurons;
-using org.neurul.Cortex.Domain.Model.Users;
-using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events;
-using org.neurul.Cortex.Port.Adapter.IO.Persistence.Events.SQLite;
-using org.neurul.Cortex.Port.Adapter.IO.Persistence.IdentityAccess;
+using org.neurul.Cortex.Port.Adapter.IO.Process.Services;
 using System;
+using works.ei8.EventSourcing.Client;
+using works.ei8.EventSourcing.Client.In;
 
 namespace org.neurul.Cortex.Port.Adapter.In.Api
 {
@@ -28,11 +26,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
             var ipb = new Router();
             container.Register<ICommandSender, Router>(ipb);
             container.Register<IHandlerRegistrar, Router>(ipb);
-            container.Register<IEventPublisher, Router>(ipb);
             container.Register<IEventSerializer, EventSerializer>(new EventSerializer());
-            container.Register<IUserRepository, UserRepository>();
-            container.Register<ILayerPermitRepository, LayerPermitRepository>();
             container.Register<IEventSourceFactory, EventSourceFactory>();
+            container.Register<ISettingsService, SettingsService>();
             container.Register<NeuronCommandHandlers>();
 
             var ticl = new TinyIoCServiceLocator(container);

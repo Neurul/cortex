@@ -57,21 +57,72 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
         }
     }
 
-    public class When_request_is_put
+    public class When_request_is_post
     {
-        public abstract class PutRequestContext : Context
+        public abstract class PostRequestContext : Context
         {
-            protected override string Path => "samplebody/cortex/neurons/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
+            protected override string Path => "samplebody/cortex/neurons/";
 
-            protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Put;
+            protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Post;
         }
 
-        public class When_body_contains_tag : PutRequestContext
+        // TODO: transfer to cortex tag
+        // public class When_body_contains_tag : PutRequestContext
+        //{
+        //    protected override Action<BrowserContext> BrowserContext => with =>
+        //    {
+        //        with.Body(@"{
+        //                      ""Tag"": ""2017/11/09 22:41"",
+        //                      ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+        //                    }"
+        //        );
+        //    };
+
+        //    [Fact]
+        //    public void Then_should_send_CreateNeuron_command()
+        //    {
+        //        // assert
+        //        Assert.IsAssignableFrom<CreateNeuron>(this.commandSent);
+        //    }
+
+        //    [Fact]
+        //    public void Then_should_respond_with_ok()
+        //    {
+        //        Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
+        //    }
+        //}
+
+        // public class When_body_is_missing_tag : PutRequestContext
+        //{
+        //    protected override Action<BrowserContext> BrowserContext => with =>
+        //    {
+        //        with.Body(@"{
+        //                          ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+        //                        }"
+        //        );
+        //    };
+
+        //    [Fact]
+        //    public void Then_should_respond_with_bad_request()
+        //    {
+        //        // assert
+        //        Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
+        //    }
+
+        //    [Fact]
+        //    public void Then_should_respond_with_body_containing_tag()
+        //    {
+        //        // assert
+        //        Assert.Contains("Tag", this.response.Body.AsString());
+        //    }
+        //}
+
+        public class When_body_contains_Id : PostRequestContext
         {
             protected override Action<BrowserContext> BrowserContext => with =>
             {
                 with.Body(@"{
-                              ""Tag"": ""2017/11/09 22:41"",
+                              ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
                               ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
                             }"
                 );
@@ -91,14 +142,13 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
             }
         }
 
-        public class When_body_is_missing_tag : PutRequestContext
+        public class When_body_is_missing_Id : PostRequestContext
         {
             protected override Action<BrowserContext> BrowserContext => with =>
             {
                 with.Body(@"{
-                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
-                                }"
-                );
+                            ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+                            }");
             };
 
             [Fact]
@@ -112,158 +162,209 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
             public void Then_should_respond_with_body_containing_tag()
             {
                 // assert
-                Assert.Contains("Tag", this.response.Body.AsString());
+                Assert.Contains("Id", this.response.Body.AsString());
+            }
+        }
+
+        public class When_body_contains_authorId : PostRequestContext
+        {
+            protected override Action<BrowserContext> BrowserContext => with =>
+            {
+                with.Body(@"{
+                              ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
+                              ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+                            }"
+                );
+            };
+
+            [Fact]
+            public void Then_should_send_CreateNeuron_command()
+            {
+                // assert
+                Assert.IsAssignableFrom<CreateNeuron>(this.commandSent);
+            }
+
+            [Fact]
+            public void Then_should_respond_with_ok()
+            {
+                Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
+            }
+        }
+
+        public class When_body_is_missing_authorId : PostRequestContext
+        {
+            protected override Action<BrowserContext> BrowserContext => with =>
+            {
+                with.Body(@"{
+                            ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
+                            }");
+            };
+
+            [Fact]
+            public void Then_should_respond_with_bad_request()
+            {
+                // assert
+                Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
+            }
+
+            [Fact]
+            public void Then_should_respond_with_body_containing_tag()
+            {
+                // assert
+                Assert.Contains("AuthorId", this.response.Body.AsString());
             }
         }
     }
 
-    public class When_request_is_patch
-    {
-        public abstract class PatchRequestContext : Context
-        {
-            protected override string Path => "/samplebody/cortex/neurons/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
+    //public class When_request_is_patch
+    //{
+    //    public abstract class PatchRequestContext : Context
+    //    {
+    //        protected override string Path => "/samplebody/cortex/neurons/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
 
-            protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Patch;
-        }
+    //        protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Patch;
+    //    }
 
-        public class When_header_has_expected_version
-        {
-            public abstract class HasExpectedVersionContext : PatchRequestContext
-            {
-                protected override Action<BrowserContext> BrowserContext => with => with.Header("ETag", "5");
-            }
+    // TODO: transfer to cortex tag
+    //public class When_header_has_expected_version
+    //{
+    //    public abstract class HasExpectedVersionContext : PatchRequestContext
+    //    {
+    //        protected override Action<BrowserContext> BrowserContext => with => with.Header("ETag", "5");
+    //    }
 
-            public class When_body_contains_tag : HasExpectedVersionContext
-            {
-                protected override Action<BrowserContext> BrowserContext => with =>
-                {
-                    base.BrowserContext(with);
-                    with.Body(@"{
-                                  ""Tag"": ""New Tag"",
-                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
-                                }"
-                    );    
-                };
+    //    public class When_body_contains_tag : HasExpectedVersionContext
+    //    {
+    //        protected override Action<BrowserContext> BrowserContext => with =>
+    //        {
+    //            base.BrowserContext(with);
+    //            with.Body(@"{
+    //                          ""Tag"": ""New Tag"",
+    //                          ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+    //                        }"
+    //            );    
+    //        };
 
-                [Fact]
-                public void Then_should_send_ChangeNeuronTag_command()
-                {
-                    // assert
-                    Assert.IsAssignableFrom<ChangeNeuronTag>(this.commandSent);
-                }
+    //        [Fact]
+    //        public void Then_should_send_ChangeNeuronTag_command()
+    //        {
+    //            // assert
+    //            Assert.IsAssignableFrom<ChangeNeuronTag>(this.commandSent);
+    //        }
 
-                [Fact]
-                public void Then_should_respond_with_ok()
-                {
-                    Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
-                }
-            }
+    //        [Fact]
+    //        public void Then_should_respond_with_ok()
+    //        {
+    //            Assert.Equal(HttpStatusCode.OK, this.response.StatusCode);
+    //        }
+    //    }
 
-            public class When_body_is_missing_tag : HasExpectedVersionContext
-            {
-                protected override Action<BrowserContext> BrowserContext => with =>
-                {
-                    base.BrowserContext(with);
-                    with.Body(@"{
-                        ""Terminals"": [
-                        {
-                            ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
-                            ""Effect"": ""Excite"",
-                            ""Strength"": ""1""
-                        }
-                        ],
-                        ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
-                    }"
-                    );
-                };
+    //    public class When_body_is_missing_tag : HasExpectedVersionContext
+    //    {
+    //        protected override Action<BrowserContext> BrowserContext => with =>
+    //        {
+    //            base.BrowserContext(with);
+    //            with.Body(@"{
+    //                ""Terminals"": [
+    //                {
+    //                    ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+    //                    ""Effect"": ""Excite"",
+    //                    ""Strength"": ""1""
+    //                }
+    //                ],
+    //                ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+    //            }"
+    //            );
+    //        };
 
-                [Fact]
-                public void Then_should_respond_with_bad_request()
-                {
-                    // assert
-                    Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
-                }
+    //        [Fact]
+    //        public void Then_should_respond_with_bad_request()
+    //        {
+    //            // assert
+    //            Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
+    //        }
 
-                [Fact]
-                public void Then_should_respond_body_containing_tag_only()
-                {
-                    // assert
-                    Assert.Contains("Tag", this.response.Body.AsString());
-                    Assert.DoesNotContain("ExpectedVersion", this.response.Body.AsString());
-                }
-            }
-        }
+    //        [Fact]
+    //        public void Then_should_respond_body_containing_tag_only()
+    //        {
+    //            // assert
+    //            Assert.Contains("Tag", this.response.Body.AsString());
+    //            Assert.DoesNotContain("ExpectedVersion", this.response.Body.AsString());
+    //        }
+    //    }
+    //}
 
-        public class When_header_expected_version_is_missing
-        {
-            public class When_body_is_missing_tag : PatchRequestContext
-            {
-                protected override Action<BrowserContext> BrowserContext => with =>
-                {
-                    with.Body(@"{
-                                  ""Terminals"": [
-                                    {
-                                      ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
-                                    ""Effect"": ""Excite"",
-                                    ""Strength"": ""1""
-                                    }
-                                  ],
-                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
-                                }"
-                    );
-                };
+    // TODO: transfer to cortex tag
+    // public class When_header_expected_version_is_missing
+    //{
+    //    public class When_body_is_missing_tag : PatchRequestContext
+    //    {
+    //        protected override Action<BrowserContext> BrowserContext => with =>
+    //        {
+    //            with.Body(@"{
+    //                          ""Terminals"": [
+    //                            {
+    //                              ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+    //                            ""Effect"": ""Excite"",
+    //                            ""Strength"": ""1""
+    //                            }
+    //                          ],
+    //                          ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+    //                        }"
+    //            );
+    //        };
 
-                [Fact]
-                public void Then_should_respond_with_bad_request()
-                {
-                    // assert
-                    Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
-                }
+    //        [Fact]
+    //        public void Then_should_respond_with_bad_request()
+    //        {
+    //            // assert
+    //            Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
+    //        }
 
-                [Fact]
-                public void Then_should_respond_with_body_containing_tag_and_expected_version()
-                {
-                    // assert
-                    Assert.Contains("Tag", this.response.Body.AsString());
-                    Assert.Contains("ExpectedVersion", this.response.Body.AsString());
-                }
-            }
+    //        [Fact]
+    //        public void Then_should_respond_with_body_containing_tag_and_expected_version()
+    //        {
+    //            // assert
+    //            Assert.Contains("Tag", this.response.Body.AsString());
+    //            Assert.Contains("ExpectedVersion", this.response.Body.AsString());
+    //        }
+    //    }
 
-            public class When_body_contains_tag : PatchRequestContext
-            {
-                protected override Action<BrowserContext> BrowserContext => with =>
-                {
-                    with.Body(@"{
-                                  ""Tag"": ""New Tag"",
-                                  ""Terminals"": [
-                                    {
-                                      ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
-                                    ""Effect"": ""Excite"",
-                                    ""Strength"": ""1""
-                                    }
-                                  ],
-                                  ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
-                                }"
-                    );
-                };
+    //    public class When_body_contains_tag : PatchRequestContext
+    //    {
+    //        protected override Action<BrowserContext> BrowserContext => with =>
+    //        {
+    //            with.Body(@"{
+    //                          ""Tag"": ""New Tag"",
+    //                          ""Terminals"": [
+    //                            {
+    //                              ""TargetId"": ""5e5aa54e-d585-4348-9109-4be0b498b231"",
+    //                            ""Effect"": ""Excite"",
+    //                            ""Strength"": ""1""
+    //                            }
+    //                          ],
+    //                          ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+    //                        }"
+    //            );
+    //        };
 
-                [Fact]
-                public void Then_should_respond_with_bad_request()
-                {
-                    // assert
-                    Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
-                }
+    //        [Fact]
+    //        public void Then_should_respond_with_bad_request()
+    //        {
+    //            // assert
+    //            Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
+    //        }
 
-                [Fact]
-                public void Then_should_respond_with_body_containing_expected_version_only()
-                {
-                    // assert
-                    Assert.Contains("ExpectedVersion", this.response.Body.AsString());
-                    Assert.DoesNotContain("Tag", this.response.Body.AsString());
-                }
-            }
-        }
-    }
+    //        [Fact]
+    //        public void Then_should_respond_with_body_containing_expected_version_only()
+    //        {
+    //            // assert
+    //            Assert.Contains("ExpectedVersion", this.response.Body.AsString());
+    //            Assert.DoesNotContain("Tag", this.response.Body.AsString());
+    //        }
+    //    }
+    //}
+    //}
 
     public class When_request_is_delete
     {

@@ -13,8 +13,9 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
     {
         public NeuronModule(ICommandSender commandSender) : base("/{avatarId}/cortex/neurons")
         {
-            if (bool.TryParse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.RequireAuthentication), out bool value) && value)
-                this.RequiresAuthentication();
+            // TODO: transfer to sentry
+            // if (bool.TryParse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.RequireAuthentication), out bool value) && value)
+            //    this.RequiresAuthentication();
 
             this.Post(string.Empty, async (parameters) =>
             {
@@ -27,34 +28,11 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             return new CreateNeuron(
                                 parameters.avatarId,
                                 Guid.Parse(bodyAsObject.Id.ToString()),
-                                bodyAsObject.Tag.ToString(),
-                                Guid.Parse(bodyAsObject.LayerId.ToString()),
-                                NeuronModule.GetUserSubjectId(this.Context)
+                                Guid.Parse(bodyAsObject.AuthorId.ToString())
                                 );                            
                         },
                         "Id",
-                        "Tag",
-                        "LayerId"
-                    );
-            }
-            );
-
-            this.Patch("/{neuronId}", async (parameters) =>
-            {
-                return await Helper.ProcessCommandResponse(
-                        commandSender,
-                        this.Request,
-                        (bodyAsObject, bodyAsDictionary, expectedVersion) =>
-                        {
-                            return new ChangeNeuronTag(
-                                parameters.avatarId,
-                                Guid.Parse(parameters.neuronId),
-                                bodyAsObject.Tag.ToString(),
-                                NeuronModule.GetUserSubjectId(this.Context),
-                                expectedVersion
-                                );
-                        },
-                        "Tag"
+                        "AuthorId"
                     );
             }
             );
@@ -69,28 +47,14 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                             return new DeactivateNeuron(
                                 parameters.avatarId,
                                 Guid.Parse(parameters.neuronId),
-                                NeuronModule.GetUserSubjectId(this.Context),
+                                Guid.Parse(bodyAsObject.AuthorId.ToString()),
                                 expectedVersion
                                 );
-                        }
+                        },
+                        "AuthorId"
                     );
             }
             );
-        }
-
-        internal static Guid GetUserSubjectId(NancyContext context)
-        {
-            Guid result = Guid.Empty;
-
-            if (bool.TryParse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.RequireAuthentication), out bool value) && value)
-            {
-                AssertionConcern.AssertArgumentValid(c => c.CurrentUser != null, context, "Context User is null or not found.", nameof(context));
-                result = Guid.Parse(context.CurrentUser.Claims.First(c => c.Type == "sub").Value);
-            }
-            else
-                result = Guid.Parse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.TestUserSubjectId));
-
-            return result;
         }
     }
 }

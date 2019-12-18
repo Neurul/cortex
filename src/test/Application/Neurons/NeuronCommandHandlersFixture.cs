@@ -2,7 +2,7 @@
 using CQRSlite.Domain.Exception;
 using CQRSlite.Events;
 using Moq;
-using org.neurul.Common.Events;
+using org.neurul.Common;
 using org.neurul.Cortex.Application.Neurons;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Domain.Model.Neurons;
@@ -16,14 +16,14 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 {
     public abstract class NeuronCommandHandlerConstructingContext<TCommand> : ConstructingContext<Neuron, NeuronCommandHandlers, TCommand> where TCommand : ICommand
     {
-        protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(this.EventStore, this.Session);
+        protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(this.EventSourceFactory, this.SettingsService);
     }
 
     public class When_constructing
     {
         public class When_null_event_store : NeuronCommandHandlerConstructingContext<CreateNeuron>
         {
-            protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(null, this.Session);
+            protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(null, this.SettingsService);
 
             [Fact]
             public void Then_should_throw_argument_null_exception()
@@ -34,7 +34,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
         public class When_null_session : NeuronCommandHandlerConstructingContext<CreateNeuron>
         {
-            protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(new Mock<INavigableEventStore>().Object, null);
+            protected override NeuronCommandHandlers BuildHandler() => new NeuronCommandHandlers(this.EventSourceFactory, null);
 
             [Fact]
             public void Then_should_throw_argument_null_exception()
@@ -56,8 +56,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public void Then_should_contain_correct_eventStore()
         {
             Assert.Equal(
-                this.EventStore,
-                ((object)this.handler).GetFieldValue(typeof(NeuronCommandHandlers), "eventStore")
+                this.EventSourceFactory,
+                ((object)this.handler).GetFieldValue(typeof(NeuronCommandHandlers), "eventSourceFactory")
                 );
         }
 
@@ -65,8 +65,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         public void Then_should_contain_correct_session()
         {
             Assert.Equal(
-                this.Session,
-                ((object)this.handler).GetFieldValue(typeof(NeuronCommandHandlers), "session")
+                this.SettingsService,
+                ((object)this.handler).GetFieldValue(typeof(NeuronCommandHandlers), "settingsService")
                 );
         }
     }
@@ -77,26 +77,27 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         {
             var result = new List<IEvent>(base.Given());
 
-            if (this.PreAddAuthor)
-                result.Add(new NeuronCreated(this.AuthorId, "Author", this.AuthorId) { Version = 1 });
+            // TODO: transfer to Sentry
+            //if (this.PreAddAuthor)
+            //    result.Add(new NeuronCreated(this.AuthorId, this.AuthorId) { Version = 1 });
             if (this.PreAddNeuron)
-                result.Add(new NeuronCreated(this.Id, this.Tag, this.AuthorId) { Version = 1 });
+                result.Add(new NeuronCreated(this.Id) { Version = 1 });
 
             return result.ToArray();
         }
 
         protected string avatarId;
         protected Guid id;
-        protected string tag;
-        protected Guid authorId;
-
-        protected virtual bool PreAddAuthor => true;
+        
+        // TODO: transfer to Sentry 
+        //protected virtual bool PreAddAuthor => true;
         protected virtual bool PreAddNeuron => true;
 
         protected virtual string AvatarId => this.avatarId = this.avatarId ?? "samplebody";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
-        protected virtual string Tag => this.tag = this.tag ?? "Hello";
-        protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
+
+        // TODO: transfer to Cortex.Tag
+        //protected virtual string Tag => this.tag = this.tag ?? "Hello";
     }
 
     public class When_creating_neuron
@@ -114,7 +115,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
         public abstract class CreatingNeuronConstructedContext : CreationPrepareConstructedContext<CreateNeuron>
         {
-            protected override CreateNeuron When() => new CreateNeuron(this.AvatarId, this.Id, this.Tag, this.AuthorId);
+            protected override CreateNeuron When() => new CreateNeuron(this.AvatarId, this.Id, this.AuthorId);
         }
 
         public class When_neuronId_already_exists : CreatingNeuronConstructedContext
@@ -126,19 +127,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_neuronId_is_authorId : CreatingNeuronConstructedContext
-        {
-            protected override bool PreAddNeuron => false;
-
-            protected override Guid Id => this.AuthorId;
-
-            [Fact]
-            public async Task Then_should_throw_argument_exception()
-            {
-                await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-            }
-        }
-
         public class When_neuronId_is_preexisting_terminalId : CreatingNeuronConstructedContext
         {
             protected Guid author2Id;
@@ -146,8 +134,8 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
             protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[]
             {
-                new NeuronCreated(this.Author2Id, "Author2", this.AuthorId) { Version = 1 },
-                new TerminalCreated(this.Id, this.Author2Id, this.AuthorId, NeurotransmitterEffect.Excite, 1f, this.AuthorId) { Version = 1 }
+                new NeuronCreated(this.Author2Id) { Version = 1 },
+                new TerminalCreated(this.Id, this.Author2Id, this.AuthorId, NeurotransmitterEffect.Excite, 1f) { Version = 1 }
             });
 
             protected override bool PreAddNeuron => false;
@@ -159,23 +147,24 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_author_does_not_exist : CreatingNeuronConstructedContext
-        {
-            protected override bool PreAddAuthor => false;
+        // TODO: transfer to Sentry
+        // public class When_author_does_not_exist : CreatingNeuronConstructedContext
+        //{
+        //    protected override bool PreAddAuthor => false;
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception()
-            {
-                await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-            }
+        //    [Fact]
+        //    public async Task Then_should_throw_argument_exception()
+        //    {
+        //        await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+        //    }
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception_containing_author_reference()
-            {
-                var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-                Assert.Contains("author", ex.Message);
-            }
-        }
+        //    [Fact]
+        //    public async Task Then_should_throw_argument_exception_containing_author_reference()
+        //    {
+        //        var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+        //        Assert.Contains("author", ex.Message);
+        //    }
+        //}
 
         public class CreatedNeuronConstructedContext : CreatingNeuronConstructedContext
         {
@@ -204,93 +193,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
                 Assert.Equal(this.Id, ((NeuronCreated)this.PublishedEvents.First()).Id);
             }
 
-            [Fact]
-            public void Then_should_have_correct_tag()
-            {
-                Assert.Equal(this.Tag, ((NeuronCreated)this.PublishedEvents.First()).Tag);
-            }
-
-            [Fact]
-            public void Then_should_have_correct_authorId()
-            {
-                Assert.Equal(this.AuthorId, ((NeuronCreated)this.PublishedEvents.First()).AuthorId);
-            }
-        }
-    }
-
-    public class When_creating_author_neuron
-    {
-        public class When_null_command : ConstructedContext<CreateAuthorNeuron>
-        {
-            protected override CreateAuthorNeuron When() => null;
-
-            [Fact]
-            public async Task Then_should_throw_argument_null_exception()
-            {
-                await Assert.ThrowsAsync<ArgumentNullException>(() => this.InvokeWhen());
-            }
-        }
-
-        public abstract class CreatingAuthorNeuronConstructedContext : CreationPrepareConstructedContext<CreateAuthorNeuron>
-        {
-            protected override CreateAuthorNeuron When() => new CreateAuthorNeuron(this.AvatarId, this.Id, this.Tag);
-        }
-
-        public class When_neuronId_already_exists : CreatingAuthorNeuronConstructedContext
-        {
-            [Fact]
-            public async Task Then_should_throw_concurrency_exception()
-            {
-                await Assert.ThrowsAsync<ConcurrencyException>(() => this.InvokeWhen());
-            }
-        }
-
-        public class When_neuronId_is_preexisting_terminalId : CreatingAuthorNeuronConstructedContext
-        {
-            protected Guid author2Id;
-            protected virtual Guid Author2Id => this.author2Id = this.author2Id == Guid.Empty ? Guid.NewGuid() : this.author2Id;
-
-            protected override IEnumerable<IEvent> Given() => base.Given().Concat(new IEvent[]
-            {
-                new NeuronCreated(this.Author2Id, "Author2", this.AuthorId) { Version = 1 },
-                new TerminalCreated(this.Id, this.Author2Id, this.AuthorId, NeurotransmitterEffect.Excite, 1f, this.AuthorId) { Version = 1 }
-            });
-
-            protected override bool PreAddNeuron => false;
-
-            [Fact]
-            public async Task Then_should_throw_concurrency_exception()
-            {
-                await Assert.ThrowsAsync<ConcurrencyException>(() => this.InvokeWhen());
-            }
-        }
-
-        public class CreatedNeuronConstructedContext : CreatingAuthorNeuronConstructedContext
-        {
-            protected override bool PreAddNeuron => false;
-
-            protected override bool InvokeWhenOnConstruct => true;
-        }
-
-        public class When_requirements_are_met : CreatedNeuronConstructedContext
-        {
-            [Fact]
-            public void Then_should_create_one_event()
-            {
-                Assert.Equal(1, this.PublishedEvents.Count);
-            }
-
-            [Fact]
-            public void Then_should_create_correct_event()
-            {
-                Assert.IsType<NeuronCreated>(this.PublishedEvents.First());
-            }
-
-            [Fact]
-            public void Then_should_have_correct_tag()
-            {
-                Assert.Equal(this.Tag, ((NeuronCreated)this.PublishedEvents.First()).Tag);
-            }
+            // TODO: transfer to cortex.tag
+            // [Fact]
+            //public void Then_should_have_correct_tag()
+            //{
+            //    Assert.Equal(this.Tag, ((NeuronCreated)this.PublishedEvents.First()).Tag);
+            //}
         }
     }
 
@@ -301,110 +209,111 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
         protected virtual int ExpectedVersion => this.expectedVersion = this.expectedVersion == 0 ? 1 : this.expectedVersion;
     }
 
-    public class When_changing_tag
-    {
-        public class When_null_command : ConstructedContext<ChangeNeuronTag>
-        {
-            protected override ChangeNeuronTag When() => null;
+    // TODO: transfer to cortex tag
+    //public class When_changing_tag
+    //{
+    //    public class When_null_command : ConstructedContext<ChangeNeuronTag>
+    //    {
+    //        protected override ChangeNeuronTag When() => null;
 
-            [Fact]
-            public async Task Then_should_throw_argument_null_exception()
-            {
-                await Assert.ThrowsAsync<ArgumentNullException>(() => this.InvokeWhen());
-            }
-        }
+    //        [Fact]
+    //        public async Task Then_should_throw_argument_null_exception()
+    //        {
+    //            await Assert.ThrowsAsync<ArgumentNullException>(() => this.InvokeWhen());
+    //        }
+    //    }
 
-        public abstract class ChangingTagConstructedContext : ModificationPrepareConstructedContext<ChangeNeuronTag>
-        {
-            protected string newTag;
-            protected virtual string NewTag => this.newTag = this.newTag ?? "Hello Worlds";
-            protected override ChangeNeuronTag When() => new ChangeNeuronTag(this.AvatarId, this.Id, this.NewTag, this.AuthorId, this.ExpectedVersion);
-        }
+    //    public abstract class ChangingTagConstructedContext : ModificationPrepareConstructedContext<ChangeNeuronTag>
+    //    {
+    //        protected string newTag;
+    //        protected virtual string NewTag => this.newTag = this.newTag ?? "Hello Worlds";
+    //        protected override ChangeNeuronTag When() => new ChangeNeuronTag(this.AvatarId, this.Id, this.NewTag, this.AuthorId, this.ExpectedVersion);
+    //    }
 
-        public class When_neuronId_does_not_exist : ChangingTagConstructedContext
-        {
-            protected override bool PreAddNeuron => false;
+    //    public class When_neuronId_does_not_exist : ChangingTagConstructedContext
+    //    {
+    //        protected override bool PreAddNeuron => false;
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception()
-            {
-                await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-            }
+    //        [Fact]
+    //        public async Task Then_should_throw_argument_exception()
+    //        {
+    //            await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+    //        }
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception_containing_neuron_reference()
-            {
-                var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-                Assert.Contains("neuron", ex.Message);
-            }
-        }
+    //        [Fact]
+    //        public async Task Then_should_throw_argument_exception_containing_neuron_reference()
+    //        {
+    //            var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+    //            Assert.Contains("neuron", ex.Message);
+    //        }
+    //    }
 
-        public class When_author_does_not_exist : ChangingTagConstructedContext
-        {
-            protected override bool PreAddAuthor => false;
+    //    public class When_author_does_not_exist : ChangingTagConstructedContext
+    //    {
+    //        protected override bool PreAddAuthor => false;
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception()
-            {
-                await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-            }
+    //        [Fact]
+    //        public async Task Then_should_throw_argument_exception()
+    //        {
+    //            await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+    //        }
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception_containing_author_reference()
-            {
-                var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-                Assert.Contains("author", ex.Message);
-            }
-        }
+    //        [Fact]
+    //        public async Task Then_should_throw_argument_exception_containing_author_reference()
+    //        {
+    //            var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+    //            Assert.Contains("author", ex.Message);
+    //        }
+    //    }
 
-        public class When_expected_version_is_incorrect : ChangingTagConstructedContext
-        {
-            protected override int ExpectedVersion => 2;
+    //    public class When_expected_version_is_incorrect : ChangingTagConstructedContext
+    //    {
+    //        protected override int ExpectedVersion => 2;
 
-            [Fact]
-            public async Task Then_should_throw_concurrency_exception()
-            {
-                await Assert.ThrowsAsync<ConcurrencyException>(() => this.InvokeWhen());
-            }
-        }
+    //        [Fact]
+    //        public async Task Then_should_throw_concurrency_exception()
+    //        {
+    //            await Assert.ThrowsAsync<ConcurrencyException>(() => this.InvokeWhen());
+    //        }
+    //    }
 
-        public abstract class ChangedNeuronTagContext : ChangingTagConstructedContext
-        {
-            protected override bool InvokeWhenOnConstruct => true;
-        }
+    //    public abstract class ChangedNeuronTagContext : ChangingTagConstructedContext
+    //    {
+    //        protected override bool InvokeWhenOnConstruct => true;
+    //    }
 
-        public class When_new_tag : ChangedNeuronTagContext
-        {
-            [Fact]
-            public void Then_should_create_one_event()
-            {
-                Assert.Equal(1, this.PublishedEvents.Count);
-            }
+    //    public class When_new_tag : ChangedNeuronTagContext
+    //    {
+    //        [Fact]
+    //        public void Then_should_create_one_event()
+    //        {
+    //            Assert.Equal(1, this.PublishedEvents.Count);
+    //        }
 
-            [Fact]
-            public void Then_should_create_correct_event()
-            {
-                Assert.IsType<NeuronTagChanged>(this.PublishedEvents.First());
-            }
+    //        [Fact]
+    //        public void Then_should_create_correct_event()
+    //        {
+    //            Assert.IsType<NeuronTagChanged>(this.PublishedEvents.First());
+    //        }
 
-            [Fact]
-            public void Then_should_have_correct_tag()
-            {
-                Assert.Equal(this.NewTag, ((NeuronTagChanged)this.PublishedEvents.First()).Tag);
-            }
-        }
+    //        [Fact]
+    //        public void Then_should_have_correct_tag()
+    //        {
+    //            Assert.Equal(this.NewTag, ((NeuronTagChanged)this.PublishedEvents.First()).Tag);
+    //        }
+    //    }
 
-        public class When_new_tag_is_equal_to_original_tag : ChangedNeuronTagContext
-        {
-            protected override string NewTag => this.Tag;
+    //    public class When_new_tag_is_equal_to_original_tag : ChangedNeuronTagContext
+    //    {
+    //        protected override string NewTag => this.Tag;
 
-            [Fact]
-            public void Then_should_not_create_event()
-            {
-                Assert.Equal(0, this.PublishedEvents.Count);
-            }
-        }
-    }
+    //        [Fact]
+    //        public void Then_should_not_create_event()
+    //        {
+    //            Assert.Equal(0, this.PublishedEvents.Count);
+    //        }
+    //    }
+    //}
 
     public class When_deactivating_neuron
     {
@@ -442,23 +351,24 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             }
         }
 
-        public class When_author_does_not_exist : DeactivatingNeuronConstructedContext
-        {
-            protected override bool PreAddAuthor => false;
+        // TODO: transfer to Sentry
+        //public class When_author_does_not_exist : DeactivatingNeuronConstructedContext
+        //{
+        //    protected override bool PreAddAuthor => false;
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception()
-            {
-                await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-            }
+        //    [Fact]
+        //    public async Task Then_should_throw_argument_exception()
+        //    {
+        //        await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+        //    }
 
-            [Fact]
-            public async Task Then_should_throw_argument_exception_containing_author_reference()
-            {
-                var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
-                Assert.Contains("author", ex.Message);
-            }
-        }
+        //    [Fact]
+        //    public async Task Then_should_throw_argument_exception_containing_author_reference()
+        //    {
+        //        var ex = await Assert.ThrowsAsync<ArgumentException>(() => this.InvokeWhen());
+        //        Assert.Contains("author", ex.Message);
+        //    }
+        //}
 
         public class When_expected_version_is_incorrect : DeactivatingNeuronConstructedContext
         {
@@ -497,7 +407,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             {
                 return base.Given().Concat(new IEvent[]
                 {
-                    new NeuronDeactivated(this.Id, this.AuthorId) { Version = 2 }
+                    new NeuronDeactivated(this.Id) { Version = 2 }
                 });
             }
 

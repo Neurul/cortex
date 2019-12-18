@@ -6,19 +6,8 @@ services:
       - ./var1.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - C:\db:C:\db
     ports:
-      - "5000:80"
-  out.api:
-    env_file: 
-      - ./var1.env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - C:\db:C:\db
-    ports:
-      - "59199:80"
+      - "60010:80"
 networks:
   default:
     external:

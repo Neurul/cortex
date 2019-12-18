@@ -62,8 +62,8 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="org.neurul.Common, Version=0.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Neurul.Common.0.1.8\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
+    <Reference Include="org.neurul.Common, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Neurul.Common.0.1.15\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
     </Reference>
     <Reference Include="org.neurul.Common.Test, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Neurul.Common.Test.0.1.1\lib\netstandard2.0\org.neurul.Common.Test.dll</HintPath>
@@ -99,6 +99,15 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="works.ei8.Cortex.Graph.Common, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.Cortex.Graph.Common.0.1.0\lib\netstandard2.0\works.ei8.Cortex.Graph.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="works.ei8.EventSourcing.Client, Version=0.1.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.EventSourcing.Client.0.1.12\lib\netstandard2.0\works.ei8.EventSourcing.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="works.ei8.EventSourcing.Common, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.EventSourcing.Common.0.1.1\lib\netstandard2.0\works.ei8.EventSourcing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>

@@ -18,13 +18,13 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
             public const string IdEmpty = "Specified Id cannot be empty.";
             public const string NeuronInactive = "Neuron must be active.";
             public const string TerminalInactive = "Terminal must be active.";
-            public const string NonAuthorConstructor = "Cannot create Author Neuron using current constructor. Use Author Neuron constructor overload instead.";
-            public const string InvalidTerminalIdCreation = "Terminal Id cannot be equal to Author Id";
+            public const string InvalidTerminalIdCreation = "Terminal Id cannot be equal to Neuron Id";
             public const string ValidEffect = "Effect must either be Excite or Inhibit";
             public const string StrengthInvalid = "Strength must be greater than 0, and less than or equal to 1.";
             public const string PostCannotBeTheSameAsPre = "Postsynaptic Neuron cannot be the same as Presynaptic Neuron.";
-            public const string UnauthorizedLayerWriteTemplate = "User must be authorized to write to Layer '{0}'.";
-            public const string UnauthorizedNeuronWriteTemplate = "User must be Layer Admin or Neuron Creator to modify Neuron '{0}'.";
+            // TODO: transfer to Sentry
+            //public const string UnauthorizedLayerWriteTemplate = "User must be authorized to write to Layer '{0}'.";
+            //public const string UnauthorizedNeuronWriteTemplate = "User must be Layer Admin or Neuron Creator to modify Neuron '{0}'.";
             public const string InvalidNeuronSpecified = "Specified Neuron with Id '{0}' did not match expected with Id '{1}'.";
         }
     }

@@ -13,21 +13,19 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
         protected Neuron postsynapticNeuron;
         protected NeurotransmitterEffect effect;
         protected float strength;
-        protected Neuron author;
 
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
-        protected virtual Neuron PresynapticNeuron => this.presynapticNeuron = this.presynapticNeuron ?? new Neuron(Guid.NewGuid(), "Presynaptic");
-        protected virtual Neuron PostsynapticNeuron => this.postsynapticNeuron = this.postsynapticNeuron ?? new Neuron(Guid.NewGuid(), "Postsynaptic");
+        protected virtual Neuron PresynapticNeuron => this.presynapticNeuron = this.presynapticNeuron ?? new Neuron(Guid.NewGuid());
+        protected virtual Neuron PostsynapticNeuron => this.postsynapticNeuron = this.postsynapticNeuron ?? new Neuron(Guid.NewGuid());
         protected virtual NeurotransmitterEffect Effect => this.effect = this.effect == NeurotransmitterEffect.NotSet ? NeurotransmitterEffect.Excite : this.effect;
         protected virtual float Strength => this.strength = this.strength == 0 ? 1 : this.strength;
-        protected virtual Neuron Author => this.author = this.author ?? new Neuron(Guid.NewGuid(), "Author");
     }
 
     public abstract class ConstructingTerminalContext : Context
     {
         protected override bool InvokeWhenOnConstruct => false;
 
-        protected override void When() => this.sut = new Terminal(this.Id, this.PresynapticNeuron, this.PostsynapticNeuron, this.Effect, this.Strength, this.Author);
+        protected override void When() => this.sut = new Terminal(this.Id, this.PresynapticNeuron, this.PostsynapticNeuron, this.Effect, this.Strength);
     }
 
     public class When_constructing
@@ -37,9 +35,9 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             protected override Guid Id => Guid.Empty;
 
             [Fact]
-            public void Then_should_throw_invalid_operation_exception()
+            public void Then_should_throw_argument_exception()
             {
-                Assert.Throws<InvalidOperationException>(() => this.When());
+                Assert.Throws<ArgumentException>(() => this.When());
             }
         }
 
@@ -58,7 +56,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
         {
             protected override void When()
             {
-                this.PresynapticNeuron.Deactivate(this.Author);
+                this.PresynapticNeuron.Deactivate();
                 base.When();
             }
 
@@ -71,7 +69,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
 
         public class When_presynapticNeuronId_is_equal_to_terminal_id : ConstructingTerminalContext
         {
-            protected override Neuron PresynapticNeuron => this.presynapticNeuron = this.presynapticNeuron ?? new Neuron(this.Id, "Presynaptic");
+            protected override Neuron PresynapticNeuron => this.presynapticNeuron = this.presynapticNeuron ?? new Neuron(this.Id);
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -95,7 +93,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
         {
             protected override void When()
             {
-                this.PostsynapticNeuron.Deactivate(this.Author);
+                this.PostsynapticNeuron.Deactivate();
                 base.When();
             }
 
@@ -108,7 +106,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
 
         public class When_postsynapticNeuronId_is_equal_to_terminal_id : ConstructingTerminalContext
         {
-            protected override Neuron PostsynapticNeuron => this.postsynapticNeuron = this.postsynapticNeuron ?? new Neuron(this.Id, "Postsynaptic");
+            protected override Neuron PostsynapticNeuron => this.postsynapticNeuron = this.postsynapticNeuron ?? new Neuron(this.Id);
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -161,42 +159,21 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_null_author : ConstructingTerminalContext
-        {
-            protected override Neuron Author => null;
+        // TODO: transfer to cortex.sentry
+        //public class When_inactive_author : ConstructingTerminalContext
+        //{
+        //    protected override void When()
+        //    {
+        //        this.AuthorId.Deactivate(this.AuthorId);
+        //        base.When();
+        //    }
 
-            [Fact]
-            public void Then_should_throw_argument_null_exception()
-            {
-                Assert.Throws<ArgumentNullException>(() => this.When());
-            }
-        }
-
-        public class When_inactive_author : ConstructingTerminalContext
-        {
-            protected override void When()
-            {
-                this.Author.Deactivate(this.Author);
-                base.When();
-            }
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentException>(() => this.When());
-            }
-        }
-
-        public class When_authorId_is_equal_to_terminal_id : ConstructingTerminalContext
-        {
-            protected override Guid Id => this.Author.Id;
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentException>(() => this.When());
-            }
-        }
+        //    [Fact]
+        //    public void Then_should_throw_argument_exception()
+        //    {
+        //        Assert.Throws<ArgumentException>(() => this.When());
+        //    }
+        //}
     }
 
     public abstract class ConstructedTerminalContext : ConstructingTerminalContext
@@ -250,7 +227,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
         protected override void When()
         {
             base.When();
-            this.sut.Deactivate(this.Author);
+            this.sut.Deactivate();
         }
     }
 
@@ -261,7 +238,7 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             protected override void When()
             {
                 base.When();
-                this.sut.Deactivate(this.Author);
+                this.sut.Deactivate();
             }
 
             [Fact]
@@ -273,15 +250,11 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
 
         public abstract class DeactivatingContext : ConstructedTerminalContext
         {
-            protected Neuron authorParameter;
-
-            protected virtual Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? this.Author;
-
             protected override void When()
             {
                 base.When();
 
-                this.sut.Deactivate(this.AuthorParameter);
+                this.sut.Deactivate();
             }
         }
 
@@ -294,37 +267,25 @@ namespace org.neurul.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_author_is_null : DeactivatingContext
-        {
-            protected override Neuron AuthorParameter => null;
+        // TODO: transfer to Sentry
+        // public class When_inactive_author : DeactivatingContext
+        //{
+        //    protected override Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? new Neuron(Guid.NewGuid(), string.Empty);
 
-            protected override bool InvokeWhenOnConstruct => false;
+        //    protected override bool InvokeWhenOnConstruct => false;
 
-            [Fact]
-            public void Then_should_throw_argument_null_exception()
-            {
-                Assert.Throws<ArgumentNullException>(() => this.When());
-            }
-        }
+        //    protected override void When()
+        //    {
+        //        this.AuthorParameter.Deactivate(this.AuthorId);
+        //        base.When();
+        //    }
 
-        public class When_inactive_author : DeactivatingContext
-        {
-            protected override Neuron AuthorParameter => this.authorParameter = this.authorParameter ?? new Neuron(Guid.NewGuid(), string.Empty);
-
-            protected override bool InvokeWhenOnConstruct => false;
-
-            protected override void When()
-            {
-                this.AuthorParameter.Deactivate(this.Author);
-                base.When();
-            }
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentException>(() => this.When());
-            }
-        }
+        //    [Fact]
+        //    public void Then_should_throw_argument_exception()
+        //    {
+        //        Assert.Throws<ArgumentException>(() => this.When());
+        //    }
+        //}
     }
 }
 

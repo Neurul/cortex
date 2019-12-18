@@ -1,16 +1,14 @@
-﻿using Newtonsoft.Json;
-using org.neurul.Common.Events;
+﻿using CQRSlite.Events;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
 {
-    public class TerminalDeactivated : IAuthoredEvent
+    public class TerminalDeactivated : IEvent
     {
-        public TerminalDeactivated(Guid id, Guid authorId)
+        public TerminalDeactivated(Guid id)
         {
             this.Id = id;
-            this.AuthorId = authorId;
         }
 
         public Guid Id { get; set; }
@@ -19,7 +17,5 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
 
         [JsonProperty(PropertyName = "Timestamp")]
         public DateTimeOffset TimeStamp { get; set; }
-
-        public Guid AuthorId { get; set; }
     }
 }

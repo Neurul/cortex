@@ -56,20 +56,21 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.TerminalModuleFixture.given
         }
     }
 
-    public class When_request_is_put
+    public class When_request_is_post
     {
-        public abstract class PutRequestContext : Context
+        public abstract class PostRequestContext : Context
         {
-            protected override string Path => "samplebody/cortex/terminals/ae0df6d0-c5ef-4514-a81d-8950ebf13588";
+            protected override string Path => "samplebody/cortex/terminals/";
 
-            protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Put;
+            protected override Func<string, Action<BrowserContext>, Task<BrowserResponse>> Request => this.sut.Post;
         }
 
-        public class When_body_contains_all_required_fields : PutRequestContext
+        public class When_body_contains_all_required_fields : PostRequestContext
         {
             protected override Action<BrowserContext> BrowserContext => with =>
             {
                 with.Body(@"{
+                              ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
                               ""PresynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""PostsynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""Effect"": ""Excite"",
@@ -93,11 +94,41 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.TerminalModuleFixture.given
             }
         }
 
-        public class When_body_is_missing_presynapticNeuronId : PutRequestContext
+        public class When_body_is_missing_id : PostRequestContext
         {
             protected override Action<BrowserContext> BrowserContext => with =>
             {
                 with.Body(@"{
+                              ""PresynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
+                              ""PostsynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
+                              ""Effect"": ""Excite"",
+                              ""Strength"": ""1"",
+                              ""AuthorId"": ""5e5aa54e-d585-4348-9109-4be0b498b232""
+                            }"
+                );
+            };
+
+            [Fact]
+            public void Then_should_respond_with_bad_request()
+            {
+                // assert
+                Assert.Equal(HttpStatusCode.BadRequest, this.response.StatusCode);
+            }
+
+            [Fact]
+            public void Then_should_respond_with_body_containing_tag()
+            {
+                // assert
+                Assert.Contains("Id", this.response.Body.AsString());
+            }
+        }
+
+        public class When_body_is_missing_presynapticNeuronId : PostRequestContext
+        {
+            protected override Action<BrowserContext> BrowserContext => with =>
+            {
+                with.Body(@"{
+                              ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
                               ""PostsynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""Effect"": ""Excite"",
                               ""Strength"": ""1"",
@@ -121,11 +152,12 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.TerminalModuleFixture.given
             }
         }
 
-        public class When_body_is_missing_postsynapticNeuronId : PutRequestContext
+        public class When_body_is_missing_postsynapticNeuronId : PostRequestContext
         {
             protected override Action<BrowserContext> BrowserContext => with =>
             {
                 with.Body(@"{
+                              ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
                               ""PresynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""Effect"": ""Excite"",
                               ""Strength"": ""1"",
@@ -149,11 +181,12 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.TerminalModuleFixture.given
             }
         }
 
-        public class When_body_is_missing_effect : PutRequestContext
+        public class When_body_is_missing_effect : PostRequestContext
         {
             protected override Action<BrowserContext> BrowserContext => with =>
             {
                 with.Body(@"{
+                              ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
                               ""PostsynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""PresynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""Strength"": ""1"",
@@ -177,11 +210,12 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.TerminalModuleFixture.given
             }
         }
 
-        public class When_body_is_missing_strength : PutRequestContext
+        public class When_body_is_missing_strength : PostRequestContext
         {
             protected override Action<BrowserContext> BrowserContext => with =>
             {
                 with.Body(@"{
+                              ""Id"": ""ae0df6d0-c5ef-4514-a81d-8950ebf13588"",
                               ""PostsynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""PresynapticNeuronId"": ""5e5aa54e-d585-4348-9109-4be0b498b232"",
                               ""Effect"": ""Excite"",

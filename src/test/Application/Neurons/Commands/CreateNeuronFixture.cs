@@ -10,17 +10,15 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
     {
         protected string avatarId;
         protected Guid id;
-        protected string tag;
         protected Guid authorId;
 
         protected override bool InvokeWhenOnConstruct => false;
 
         protected virtual string AvatarId => this.avatarId = this.avatarId ?? "AvatarId";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
-        protected virtual string Tag => this.tag = this.tag ?? "Tag";
         protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
 
-        protected override void When() => this.sut = new CreateNeuron(this.AvatarId, this.Id, this.Tag, this.AuthorId);
+        protected override void When() => this.sut = new CreateNeuron(this.AvatarId, this.Id, this.AuthorId);
     }
 
     public class When_constructing
@@ -51,17 +49,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
             {
                 var ex = Assert.Throws<ArgumentException>(() => this.When());
                 Assert.Contains("id", ex.Message);
-            }
-        }
-
-        public class When_tag_is_null : ConstructingContext
-        {
-            protected override string Tag => null;
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentNullException>(() => this.When());
             }
         }
 
@@ -104,15 +91,9 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
         }
 
         [Fact]
-        public void Then_should_have_correct_tag()
-        {
-            Assert.Equal(this.Tag, this.sut.Tag);
-        }
-
-        [Fact]
         public void Then_should_have_correct_author_id()
         {
-            Assert.Equal(this.AuthorId, this.sut.LayerId);
+            Assert.Equal(this.AuthorId, this.sut.AuthorId);
         }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using CQRSlite.Commands;
-using System;
-using System.Collections.Generic;
-using org.neurul.Cortex.Domain.Model.Neurons;
 using org.neurul.Common.Domain.Model;
+using System;
 
 namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class DeactivateNeuron : ICommand
     {
-        public DeactivateNeuron(string avatarId, Guid id, Guid subjectId, int expectedVersion)
+        public DeactivateNeuron(string avatarId, Guid id, Guid authorId, int expectedVersion)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -19,9 +17,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 );
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
-                subjectId,
+                authorId,
                 Messages.Exception.InvalidId,
-                nameof(subjectId)
+                nameof(authorId)
                 );
             AssertionConcern.AssertArgumentValid(
                 i => i >= 1,
@@ -32,7 +30,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 
             this.AvatarId = avatarId;
             this.Id = id;
-            this.SubjectId = subjectId;            
+            this.AuthorId = authorId;            
             this.ExpectedVersion = expectedVersion;
         }
 
@@ -40,7 +38,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 
         public Guid Id { get; private set; }
 
-        public Guid SubjectId { get; private set; }
+        public Guid AuthorId { get; private set; }
 
         public int ExpectedVersion { get; private set; }
     }

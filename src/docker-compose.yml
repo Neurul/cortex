@@ -2,15 +2,7 @@ version: '3.4'
 
 services:
   in.api:
-    image: neurul/cortex.in.api:0.2.6
+    image: neurul/cortex.in.api:0.2.7
     build:
       context: .
       dockerfile: main\Port.Adapter\In\Api\Dockerfile
-
-
-  out.api:
-    image: neurul/cortex.out.api:0.2.5
-    build:
-      context: .
-      dockerfile: main\Port.Adapter\Out\Api\Dockerfile
-

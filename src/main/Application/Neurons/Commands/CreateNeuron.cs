@@ -1,5 +1,4 @@
 ﻿using CQRSlite.Commands;
-using Newtonsoft.Json;
 using org.neurul.Common.Domain.Model;
 using System;
 
@@ -7,7 +6,7 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class CreateNeuron : ICommand
     {
-        public CreateNeuron(string avatarId, Guid id, string tag, Guid layerId, Guid subjectId)
+        public CreateNeuron(string avatarId, Guid id, Guid authorId)
         {
             AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
@@ -16,30 +15,23 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 Messages.Exception.InvalidId,
                 nameof(id)
                 );
-            AssertionConcern.AssertArgumentNotNull(tag, nameof(tag));
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
-                subjectId,
+                authorId,
                 Messages.Exception.InvalidId,
-                nameof(subjectId)
+                nameof(authorId)
                 );
 
             this.AvatarId = avatarId;
             this.Id = id;            
-            this.Tag = tag;
-            this.LayerId = layerId;
-            this.SubjectId = subjectId;
+            this.AuthorId = authorId;
         }
 
         public string AvatarId { get; private set; }
 
         public Guid Id { get; private set; }
         
-        public string Tag { get; private set; }
-
-        public Guid LayerId { get; private set; }
-
-        public Guid SubjectId { get; private set; }
+        public Guid AuthorId { get; private set; }
 
         public int ExpectedVersion { get; private set; }
     }
