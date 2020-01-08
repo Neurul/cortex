@@ -6,3 +6,8 @@ services:
     build:
       context: .
       dockerfile: main\Port.Adapter\In\Api\Dockerfile
+  out.api:
+    image: neurul/cortex.out.api:0.2.6
+    build:
+      context: .
+      dockerfile: main\Port.Adapter\Out\Api\Dockerfile

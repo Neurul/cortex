@@ -8,6 +8,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "60010:80"
+  out.api:
+    env_file:
+      - ./var1.env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "60011:80"
 networks:
   default:
     external:

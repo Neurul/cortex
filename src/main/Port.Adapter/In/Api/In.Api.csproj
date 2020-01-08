@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <PackageId>org.neurul.Cortex.Port.Adapter.In.Api</PackageId>
     <RootNamespace>org.neurul.Cortex.Port.Adapter.In.Api</RootNamespace>
-    <Copyright>Copyright 2018 (c) Neurul Software Foundation. All rights reserved.</Copyright>
+    <Copyright>Copyright 2020 (c) Neurul Software Foundation. All rights reserved.</Copyright>
     <DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
