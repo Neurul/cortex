@@ -1,5 +1,6 @@
 ﻿using CQRSlite.Commands;
 using org.neurul.Common.Domain.Model;
+using org.neurul.Cortex.Common;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
 

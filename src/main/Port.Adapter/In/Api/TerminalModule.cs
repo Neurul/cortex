@@ -2,6 +2,7 @@
 using Nancy;
 using Nancy.Security;
 using org.neurul.Cortex.Application.Neurons.Commands;
+using org.neurul.Cortex.Common;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using org.neurul.Cortex.Port.Adapter.Common;
 using System;
@@ -12,10 +13,6 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
     {
         public TerminalModule(ICommandSender commandSender) : base("/{avatarId}/cortex/terminals")
         {
-            // TODO: transfer to sentry
-            //if (bool.TryParse(Environment.GetEnvironmentVariable(EnvironmentVariableKeys.RequireAuthentication), out bool value) && value)
-            //    this.RequiresAuthentication();
-
             this.Post(string.Empty, async (parameters) =>
             {
                 return await Helper.ProcessCommandResponse(

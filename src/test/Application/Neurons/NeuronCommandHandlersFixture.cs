@@ -5,6 +5,7 @@ using Moq;
 using org.neurul.Common;
 using org.neurul.Cortex.Application.Neurons;
 using org.neurul.Cortex.Application.Neurons.Commands;
+using org.neurul.Cortex.Common;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
 using System.Collections.Generic;

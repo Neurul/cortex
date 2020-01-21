@@ -1,4 +1,5 @@
 ﻿using org.neurul.Common.Test;
+using org.neurul.Cortex.Common;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
 using System.Linq;

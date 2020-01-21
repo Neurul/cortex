@@ -1,5 +1,6 @@
 ﻿using CQRSlite.Events;
 using Newtonsoft.Json;
+using org.neurul.Cortex.Common;
 using System;
 
 namespace org.neurul.Cortex.Domain.Model.Neurons
