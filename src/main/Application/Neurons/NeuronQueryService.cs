@@ -1,4 +1,5 @@
 ﻿using org.neurul.Common.Domain.Model;
+using org.neurul.Common.Http;
 using org.neurul.Cortex.Common;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System;
@@ -36,8 +37,8 @@ namespace org.neurul.Cortex.Application.Neurons
 
             // Using a random Guid for Author as we won't be saving anyway
             var eventSource = this.eventSourceFactory.Create(
-                Helper.GetAvatarUrl(this.settingsService.EventSourcingInBaseUrl, avatarId),
-                Helper.GetAvatarUrl(this.settingsService.EventSourcingOutBaseUrl, avatarId),
+                Helper.UrlCombine(this.settingsService.EventSourcingInBaseUrl, avatarId) + "/",
+                Helper.UrlCombine(this.settingsService.EventSourcingOutBaseUrl, avatarId) + "/",
                 Guid.NewGuid()
                 );
 

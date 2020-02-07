@@ -1,5 +1,6 @@
 ﻿using CQRSlite.Commands;
 using org.neurul.Common.Domain.Model;
+using org.neurul.Common.Http;
 using org.neurul.Cortex.Application.Neurons.Commands;
 using org.neurul.Cortex.Domain.Model.Neurons;
 using System.Threading;
@@ -30,8 +31,8 @@ namespace org.neurul.Cortex.Application.Neurons
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
             var eventSource = this.eventSourceFactory.Create(
-                Helper.GetAvatarUrl(this.settingsService.EventSourcingInBaseUrl, message.AvatarId),
-                Helper.GetAvatarUrl(this.settingsService.EventSourcingOutBaseUrl, message.AvatarId),
+                Helper.UrlCombine(this.settingsService.EventSourcingInBaseUrl, message.AvatarId) + "/",
+                Helper.UrlCombine(this.settingsService.EventSourcingOutBaseUrl, message.AvatarId) + "/",
                 message.AuthorId
                 );
 
@@ -48,8 +49,8 @@ namespace org.neurul.Cortex.Application.Neurons
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
             var eventSource = this.eventSourceFactory.Create(
-                Helper.GetAvatarUrl(this.settingsService.EventSourcingInBaseUrl, message.AvatarId),
-                Helper.GetAvatarUrl(this.settingsService.EventSourcingOutBaseUrl, message.AvatarId),
+                Helper.UrlCombine(this.settingsService.EventSourcingInBaseUrl, message.AvatarId) + "/",
+                Helper.UrlCombine(this.settingsService.EventSourcingOutBaseUrl, message.AvatarId) + "/",
                 message.AuthorId
                 );
 
