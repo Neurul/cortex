@@ -10,7 +10,6 @@ namespace org.neurul.Cortex.Port.Adapter.Out.Api
         public NeuronModule(INeuronQueryService neuronQueryService) : base("/{avatarId}/cortex/neurons")
         {
             // use this from clients instead of neurongraphclient since latter is eventually consistent
-            // eg. d23, Tag, and Region can use cortex-graph
             // returned version can be used by client to check if change is applicable
             this.Get("/{neuronId}", async (parameters) => new TextResponse(JsonConvert.SerializeObject(
                 await neuronQueryService.GetNeuronById(parameters.avatarId, parameters.neuronId))

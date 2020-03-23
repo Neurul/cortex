@@ -115,11 +115,11 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="works.ei8.Cortex.Graph.Common, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.Cortex.Graph.Common.0.1.0\lib\netstandard2.0\works.ei8.Cortex.Graph.Common.dll</HintPath>
+    <Reference Include="works.ei8.Cortex.Graph.Common, Version=0.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.Cortex.Graph.Common.0.1.3\lib\netstandard2.0\works.ei8.Cortex.Graph.Common.dll</HintPath>
     </Reference>
-    <Reference Include="works.ei8.EventSourcing.Client, Version=0.1.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Client.0.1.12\lib\netstandard2.0\works.ei8.EventSourcing.Client.dll</HintPath>
+    <Reference Include="works.ei8.EventSourcing.Client, Version=0.1.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.EventSourcing.Client.0.1.14\lib\netstandard2.0\works.ei8.EventSourcing.Client.dll</HintPath>
     </Reference>
     <Reference Include="works.ei8.EventSourcing.Common, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ei8.EventSourcing.Common.0.1.1\lib\netstandard2.0\works.ei8.EventSourcing.Common.dll</HintPath>
