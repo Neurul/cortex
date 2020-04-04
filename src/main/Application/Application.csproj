@@ -4,13 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>org.neurul.Cortex.Application</AssemblyName>
     <RootNamespace>org.neurul.Cortex.Application</RootNamespace>
-    <Copyright>Copyright 2018 (c) Neurul Software Foundation. All rights reserved.</Copyright>
+    <Copyright>Copyright 2020 (c) Neurul Software Foundation. All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CqrsLite" Version="0.18.1" />
     <PackageReference Include="ei8.EventSourcing.Client" Version="0.1.14" />
-    <PackageReference Include="Neurul.Common" Version="0.1.15" />
+    <PackageReference Include="Neurul.Common" Version="0.1.17" />
     <PackageReference Include="Neurul.Common.Http" Version="0.1.9" />
     <PackageReference Include="Neurul.Cortex.Common" Version="0.1.2" />
     <PackageReference Update="NETStandard.Library" Version="2.0.1" />

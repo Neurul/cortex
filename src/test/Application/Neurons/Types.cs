@@ -37,7 +37,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons
                     var mockEs = new Mock<IEventSource>();
                     var mockNc = new Mock<INotificationClient>();
 
-                    mockNc.Setup(nc => nc.GetNotificationLog(string.Empty, CancellationToken.None)).Returns(Task.FromResult(new NotificationLog(
+                    mockNc.Setup(nc => nc.GetNotificationLog(string.Empty, string.Empty, CancellationToken.None)).Returns(Task.FromResult(new NotificationLog(
                         new NotificationLogId(21, 40),
                         new NotificationLogId(1, 20),
                         new NotificationLogId(41, 60),

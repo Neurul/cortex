@@ -63,8 +63,8 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="org.neurul.Common, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Neurul.Common.0.1.15\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
+    <Reference Include="org.neurul.Common, Version=0.1.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Neurul.Common.0.1.17\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
     </Reference>
     <Reference Include="org.neurul.Common.Test, Version=0.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Neurul.Common.Test.0.1.5\lib\netstandard2.0\org.neurul.Common.Test.dll</HintPath>

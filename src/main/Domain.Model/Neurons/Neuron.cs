@@ -18,9 +18,6 @@ namespace org.neurul.Cortex.Domain.Model.Neurons
         /// <param name="id"></param>
         public Neuron(Guid id)
         {
-            // TODO: transfer to Sentry
-            // AssertionConcern.AssertArgumentValid(g => g != authorId, id, Messages.Exception.NonAuthorConstructor, nameof(id));
-
             AssertionConcern.AssertArgumentValid(i => i != Guid.Empty, id, Messages.Exception.IdEmpty, nameof(id));
 
             this.Id = id;
