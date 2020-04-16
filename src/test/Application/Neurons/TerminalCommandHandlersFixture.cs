@@ -90,7 +90,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
             return result.ToArray();
         }
 
-        protected string avatarId;
         protected Guid id;
         protected Guid presynapticNeuronId;
         protected Guid postsynapticNeuronId;
@@ -102,7 +101,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
         protected virtual bool PreAddPostsynapticNeuron => true;
         protected virtual bool PreAddTerminal => true;
 
-        protected virtual string AvatarId => this.avatarId = this.avatarId ?? "samplebody";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
         protected virtual Guid PresynapticNeuronId => this.presynapticNeuronId = this.presynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.presynapticNeuronId;
         protected virtual Guid PostsynapticNeuronId => this.postsynapticNeuronId = this.postsynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.postsynapticNeuronId;
@@ -125,7 +123,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
 
         public abstract class CreatingTerminalConstructedContext : CreationPrepareConstructedContext<CreateTerminal>
         {
-            protected override CreateTerminal When() => new CreateTerminal(this.AvatarId, this.Id, this.PresynapticNeuronId,
+            protected override CreateTerminal When() => new CreateTerminal(this.Id, this.PresynapticNeuronId,
                 this.PostsynapticNeuronId, this.Effect, this.Strength, this.AuthorId);
         }
 
@@ -287,7 +285,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
 
         public abstract class DeactivatingTerminalConstructedContext : ModificationPrepareConstructedContext<DeactivateTerminal>
         {
-            protected override DeactivateTerminal When() => new DeactivateTerminal(this.AvatarId, this.Id, this.AuthorId, this.ExpectedVersion);
+            protected override DeactivateTerminal When() => new DeactivateTerminal(this.Id, this.AuthorId, this.ExpectedVersion);
         }
 
         public class When_terminalId_does_not_exist : DeactivatingTerminalConstructedContext
@@ -310,7 +308,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.TerminalCommandHandlersFixt
 
         public class When_terminalId_is_equal_to_preexisting_neuron_id : DeactivatingTerminalConstructedContext
         {
-            protected override DeactivateTerminal When() => new DeactivateTerminal(this.AvatarId, this.PresynapticNeuronId, this.AuthorId, this.ExpectedVersion);
+            protected override DeactivateTerminal When() => new DeactivateTerminal(this.PresynapticNeuronId, this.AuthorId, this.ExpectedVersion);
 
             [Fact]
             public async Task Then_should_throw_argument_exception()

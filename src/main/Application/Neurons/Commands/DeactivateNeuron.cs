@@ -6,9 +6,8 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class DeactivateNeuron : ICommand
     {
-        public DeactivateNeuron(string avatarId, Guid id, Guid authorId, int expectedVersion)
+        public DeactivateNeuron(Guid id, Guid authorId, int expectedVersion)
         {
-            AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
                 id,
@@ -28,13 +27,10 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 nameof(expectedVersion)
                 );
 
-            this.AvatarId = avatarId;
             this.Id = id;
             this.AuthorId = authorId;            
             this.ExpectedVersion = expectedVersion;
         }
-
-        public string AvatarId { get; private set; }
 
         public Guid Id { get; private set; }
 

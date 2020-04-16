@@ -10,7 +10,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
 {
     public abstract class ConstructingContext : TestContext<CreateTerminal>
     {
-        protected string avatarId;
         protected Guid id;
         protected Guid presynapticNeuronId;
         protected Guid postsynapticNeuronId;
@@ -20,7 +19,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
 
         protected override bool InvokeWhenOnConstruct => false;
 
-        protected virtual string AvatarId => this.avatarId = this.avatarId ?? "AvatarId";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
         protected virtual Guid PresynapticNeuronId => this.presynapticNeuronId = this.presynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.presynapticNeuronId;
         protected virtual Guid PostsynapticNeuronId => this.postsynapticNeuronId = this.postsynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.postsynapticNeuronId;
@@ -28,23 +26,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
         protected virtual float Strength => this.strength = this.strength == 0f ? 1f : this.strength;
         protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
 
-        protected override void When() => this.sut = new CreateTerminal(this.AvatarId, this.Id, this.PresynapticNeuronId, 
+        protected override void When() => this.sut = new CreateTerminal(this.Id, this.PresynapticNeuronId, 
             this.PostsynapticNeuronId, this.Effect, this.Strength, this.AuthorId);
     }
 
     public class When_constructing
     {
-        public class When_avatarId_is_null : ConstructingContext
-        {
-            protected override string AvatarId => null;
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentNullException>(() => this.When());
-            }
-        }
-
         public class When_id_is_invalid : ConstructingContext
         {
             protected override Guid Id => Guid.Empty;
@@ -125,12 +112,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateTerminalFixt
 
     public class When_constructed : ConstructedContext
     {
-        [Fact]
-        public void Then_should_have_correct_avatar_id()
-        {
-            Assert.Equal(this.AvatarId, this.sut.AvatarId);
-        }
-
         [Fact]
         public void Then_should_have_correct_id()
         {

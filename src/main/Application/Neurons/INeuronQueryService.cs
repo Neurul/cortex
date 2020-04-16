@@ -10,6 +10,6 @@ namespace org.neurul.Cortex.Application.Neurons
 {
     public interface INeuronQueryService
     {
-        Task<NeuronData> GetNeuronById(string avatarId, Guid id, CancellationToken token = default(CancellationToken));
+        Task<NeuronData> GetNeuronById(Guid id, CancellationToken token = default(CancellationToken));
     }
 }

@@ -31,8 +31,8 @@ namespace org.neurul.Cortex.Application.Neurons
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
             var eventSource = this.eventSourceFactory.Create(
-                Helper.UrlCombine(this.settingsService.EventSourcingInBaseUrl, message.AvatarId) + "/",
-                Helper.UrlCombine(this.settingsService.EventSourcingOutBaseUrl, message.AvatarId) + "/",
+                this.settingsService.EventSourcingInBaseUrl + "/",
+                this.settingsService.EventSourcingOutBaseUrl + "/",
                 message.AuthorId
                 );
 
@@ -47,8 +47,8 @@ namespace org.neurul.Cortex.Application.Neurons
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
             var eventSource = this.eventSourceFactory.Create(
-                Helper.UrlCombine(this.settingsService.EventSourcingInBaseUrl, message.AvatarId) + "/",
-                Helper.UrlCombine(this.settingsService.EventSourcingOutBaseUrl, message.AvatarId) + "/",
+                this.settingsService.EventSourcingInBaseUrl + "/",
+                this.settingsService.EventSourcingOutBaseUrl + "/",
                 message.AuthorId
                 );
             Neuron neuron = await eventSource.Session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token);

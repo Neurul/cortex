@@ -8,32 +8,19 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
 {
     public abstract class ConstructingContext : TestContext<CreateNeuron>
     {
-        protected string avatarId;
         protected Guid id;
         protected Guid authorId;
 
         protected override bool InvokeWhenOnConstruct => false;
 
-        protected virtual string AvatarId => this.avatarId = this.avatarId ?? "AvatarId";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
         protected virtual Guid AuthorId => this.authorId = this.authorId == Guid.Empty ? Guid.NewGuid() : this.authorId;
 
-        protected override void When() => this.sut = new CreateNeuron(this.AvatarId, this.Id, this.AuthorId);
+        protected override void When() => this.sut = new CreateNeuron(this.Id, this.AuthorId);
     }
 
     public class When_constructing
     {
-        public class When_avatarId_is_null : ConstructingContext
-        {
-            protected override string AvatarId => null;
-
-            [Fact]
-            public void Then_should_throw_argument_exception()
-            {
-                Assert.Throws<ArgumentNullException>(() => this.When());
-            }
-        }
-
         public class When_id_is_invalid : ConstructingContext
         {
             protected override Guid Id => Guid.Empty;
@@ -78,12 +65,6 @@ namespace org.neurul.Cortex.Application.Test.Neurons.Commands.CreateNeuronFixtur
 
     public class When_constructed : ConstructedContext
     {
-        [Fact]
-        public void Then_should_have_correct_avatar_id()
-        {
-            Assert.Equal(this.AvatarId, this.sut.AvatarId);
-        }
-
         [Fact]
         public void Then_should_have_correct_id()
         {

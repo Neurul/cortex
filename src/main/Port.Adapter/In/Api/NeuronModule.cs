@@ -7,7 +7,7 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
 {
     public class NeuronModule : NancyModule
     {
-        public NeuronModule(ICommandSender commandSender) : base("/{avatarId}/cortex/neurons")
+        public NeuronModule(ICommandSender commandSender) : base("/cortex/neurons")
         {
             this.Post(string.Empty, async (parameters) =>
             {
@@ -18,7 +18,6 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
                             return new CreateNeuron(
-                                parameters.avatarId,
                                 Guid.Parse(bodyAsObject.Id.ToString()),
                                 Guid.Parse(bodyAsObject.AuthorId.ToString())
                                 );                            
@@ -37,7 +36,6 @@ namespace org.neurul.Cortex.Port.Adapter.In.Api
                         (bodyAsObject, bodyAsDictionary, expectedVersion) =>
                         {
                             return new DeactivateNeuron(
-                                parameters.avatarId,
                                 Guid.Parse(parameters.neuronId),
                                 Guid.Parse(bodyAsObject.AuthorId.ToString()),
                                 expectedVersion

@@ -8,9 +8,8 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class CreateTerminal : ICommand
     {
-        public CreateTerminal(string avatarId, Guid id, Guid presynapticNeuronId, Guid postsynapticNeuronId, NeurotransmitterEffect effect, float strength, Guid authorId)
+        public CreateTerminal(Guid id, Guid presynapticNeuronId, Guid postsynapticNeuronId, NeurotransmitterEffect effect, float strength, Guid authorId)
         {
-            AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
                 id,
@@ -36,7 +35,6 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 nameof(authorId)
                 );
 
-            this.AvatarId = avatarId;
             this.Id = id;
             this.PresynapticNeuronId = presynapticNeuronId;
             this.PostsynapticNeuronId = postsynapticNeuronId;
@@ -44,8 +42,6 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
             this.Strength = strength;
             this.AuthorId = authorId;
         }
-
-        public string AvatarId { get; private set; }
 
         public Guid Id { get; private set; }
 

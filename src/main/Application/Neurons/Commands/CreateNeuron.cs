@@ -6,9 +6,8 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
 {
     public class CreateNeuron : ICommand
     {
-        public CreateNeuron(string avatarId, Guid id, Guid authorId)
+        public CreateNeuron(Guid id, Guid authorId)
         {
-            AssertionConcern.AssertArgumentNotNull(avatarId, nameof(avatarId));
             AssertionConcern.AssertArgumentValid(
                 g => g != Guid.Empty,
                 id,
@@ -22,12 +21,9 @@ namespace org.neurul.Cortex.Application.Neurons.Commands
                 nameof(authorId)
                 );
 
-            this.AvatarId = avatarId;
             this.Id = id;            
             this.AuthorId = authorId;
         }
-
-        public string AvatarId { get; private set; }
 
         public Guid Id { get; private set; }
         

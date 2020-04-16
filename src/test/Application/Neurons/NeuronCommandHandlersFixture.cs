@@ -87,14 +87,12 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
             return result.ToArray();
         }
 
-        protected string avatarId;
         protected Guid id;
         
         // TODO: transfer to Sentry 
         //protected virtual bool PreAddAuthor => true;
         protected virtual bool PreAddNeuron => true;
 
-        protected virtual string AvatarId => this.avatarId = this.avatarId ?? "samplebody";
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
 
         // TODO: transfer to Cortex.Tag
@@ -116,7 +114,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
         public abstract class CreatingNeuronConstructedContext : CreationPrepareConstructedContext<CreateNeuron>
         {
-            protected override CreateNeuron When() => new CreateNeuron(this.AvatarId, this.Id, this.AuthorId);
+            protected override CreateNeuron When() => new CreateNeuron(this.Id, this.AuthorId);
         }
 
         public class When_neuronId_already_exists : CreatingNeuronConstructedContext
@@ -331,7 +329,7 @@ namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixtur
 
         public abstract class DeactivatingNeuronConstructedContext : ModificationPrepareConstructedContext<DeactivateNeuron>
         {
-            protected override DeactivateNeuron When() => new DeactivateNeuron(this.AvatarId, this.Id, this.AuthorId, this.ExpectedVersion);
+            protected override DeactivateNeuron When() => new DeactivateNeuron(this.Id, this.AuthorId, this.ExpectedVersion);
         }
 
         public class When_neuronId_does_not_exist : DeactivatingNeuronConstructedContext
