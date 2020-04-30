@@ -1,9 +1,9 @@
 ﻿using CQRSlite.Domain;
-using org.neurul.Common.Domain.Model;
+using neurUL.Common.Domain.Model;
 using System;
 using System.Linq;
 
-namespace org.neurul.Cortex.Domain.Model.Neurons
+namespace neurUL.Cortex.Domain.Model.Neurons
 {
     /// <summary>
     /// Represents a Neuron.

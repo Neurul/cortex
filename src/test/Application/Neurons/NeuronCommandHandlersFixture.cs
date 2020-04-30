@@ -2,18 +2,18 @@
 using CQRSlite.Domain.Exception;
 using CQRSlite.Events;
 using Moq;
-using org.neurul.Common;
-using org.neurul.Cortex.Application.Neurons;
-using org.neurul.Cortex.Application.Neurons.Commands;
-using org.neurul.Cortex.Common;
-using org.neurul.Cortex.Domain.Model.Neurons;
+using neurUL.Common;
+using neurUL.Cortex.Application.Neurons;
+using neurUL.Cortex.Application.Neurons.Commands;
+using neurUL.Cortex.Common;
+using neurUL.Cortex.Domain.Model.Neurons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace org.neurul.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixture.given
+namespace neurUL.Cortex.Application.Test.Neurons.NeuronCommandHandlersFixture.given
 {
     public abstract class NeuronCommandHandlerConstructingContext<TCommand> : ConstructingContext<Neuron, NeuronCommandHandlers, TCommand> where TCommand : ICommand
     {

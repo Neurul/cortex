@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace org.neurul.Cortex.Port.Adapter.Out.Api
+namespace neurUL.Cortex.Port.Adapter.Out.Api
 {
     public class Program
     {

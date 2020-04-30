@@ -1,8 +1,8 @@
 ﻿using CQRSlite.Commands;
-using org.neurul.Common.Domain.Model;
+using neurUL.Common.Domain.Model;
 using System;
 
-namespace org.neurul.Cortex.Application.Neurons.Commands
+namespace neurUL.Cortex.Application.Neurons.Commands
 {
     public class DeactivateTerminal : ICommand
     {

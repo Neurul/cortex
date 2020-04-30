@@ -1,13 +1,13 @@
 ﻿using CQRSlite.Commands;
 using Nancy;
 using Nancy.Security;
-using org.neurul.Cortex.Application.Neurons.Commands;
-using org.neurul.Cortex.Common;
-using org.neurul.Cortex.Domain.Model.Neurons;
-using org.neurul.Cortex.Port.Adapter.Common;
+using neurUL.Cortex.Application.Neurons.Commands;
+using neurUL.Cortex.Common;
+using neurUL.Cortex.Domain.Model.Neurons;
+using neurUL.Cortex.Port.Adapter.Common;
 using System;
 
-namespace org.neurul.Cortex.Port.Adapter.In.Api
+namespace neurUL.Cortex.Port.Adapter.In.Api
 {
     public class TerminalModule : NancyModule
     {

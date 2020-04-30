@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace org.neurul.Cortex.Domain.Model.Neurons
+namespace neurUL.Cortex.Domain.Model.Neurons
 {
     public class NeuronCreated : IEvent
     {

@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>org.neurul.Cortex.Port.Adapter.Out.Api</AssemblyName>
-    <RootNamespace>org.neurul.Cortex.Port.Adapter.Out.Api</RootNamespace>
-    <Copyright>Copyright 2020 (c) Neurul Software Foundation. All rights reserved.</Copyright>
+    <AssemblyName>neurUL.Cortex.Port.Adapter.Out.Api</AssemblyName>
+    <RootNamespace>neurUL.Cortex.Port.Adapter.Out.Api</RootNamespace>
+    <Copyright>Copyright 2020 (c) neurUL Software Foundation. All rights reserved.</Copyright>
     <DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 

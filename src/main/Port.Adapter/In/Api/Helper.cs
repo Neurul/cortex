@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace org.neurul.Cortex.Port.Adapter.In.Api
+namespace neurUL.Cortex.Port.Adapter.In.Api
 {
     public static class Helper
     {

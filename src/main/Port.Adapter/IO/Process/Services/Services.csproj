@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>org.neurul.Cortex.Port.Adapter.IO.Process.Services</AssemblyName>
-    <RootNamespace>org.neurul.Cortex.Port.Adapter.IO.Process.Services</RootNamespace>
+    <AssemblyName>neurUL.Cortex.Port.Adapter.IO.Process.Services</AssemblyName>
+    <RootNamespace>neurUL.Cortex.Port.Adapter.IO.Process.Services</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

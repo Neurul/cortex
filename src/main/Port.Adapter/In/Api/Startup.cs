@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Nancy.Owin;
-using org.neurul.Cortex.Port.Adapter.Common;
+using neurUL.Cortex.Port.Adapter.Common;
 using System;
 
-namespace org.neurul.Cortex.Port.Adapter.In.Api
+namespace neurUL.Cortex.Port.Adapter.In.Api
 {
     public class Startup
     {

@@ -1,11 +1,11 @@
 ﻿// TODO: transfer to Cortex Tag
-//using org.neurul.Common.Test;
-//using org.neurul.Cortex.Application.Neurons;
-//using org.neurul.Cortex.Application.Neurons.Commands;
+//using neurUL.Common.Test;
+//using neurUL.Cortex.Application.Neurons;
+//using neurUL.Cortex.Application.Neurons.Commands;
 //using System;
 //using Xunit;
 
-//namespace org.neurul.Cortex.Application.Test.Neurons.Commands.ChangeNeuronTagFixture.given
+//namespace neurUL.Cortex.Application.Test.Neurons.Commands.ChangeNeuronTagFixture.given
 //{
 //    public abstract class ConstructingContext : TestContext<ChangeNeuronTag>
 //    {

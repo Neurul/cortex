@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace org.neurul.Cortex.Port.Adapter.Common
+namespace neurUL.Cortex.Port.Adapter.Common
 {
     public struct EnvironmentVariableKeys
     {

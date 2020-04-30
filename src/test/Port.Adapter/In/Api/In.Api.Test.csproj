@@ -5,18 +5,18 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>org.neurul.Cortex.Port.Adapter.In.Api.Test</AssemblyName>
+    <AssemblyName>neurUL.Cortex.Port.Adapter.In.Api.Test</AssemblyName>
 
-    <RootNamespace>org.neurul.Cortex.Port.Adapter.In.Api.Test</RootNamespace>
+    <RootNamespace>neurUL.Cortex.Port.Adapter.In.Api.Test</RootNamespace>
 
-    <Copyright>Copyright 2018 (c) Neurul Software Foundation. All rights reserved.</Copyright>
+    <Copyright>Copyright 2020 (c) neurUL Software Foundation. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="Moq" Version="4.7.145" />
     <PackageReference Include="Nancy.Testing" Version="2.0.0-clinteastwood" />
-    <PackageReference Include="Neurul.Common.Test" Version="0.1.1" />
+    <PackageReference Include="Neurul.Common.Test" Version="0.1.7" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>

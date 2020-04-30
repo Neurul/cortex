@@ -1,9 +1,9 @@
 ﻿using CQRSlite.Commands;
 using Nancy;
-using org.neurul.Cortex.Application.Neurons.Commands;
+using neurUL.Cortex.Application.Neurons.Commands;
 using System;
 
-namespace org.neurul.Cortex.Port.Adapter.In.Api
+namespace neurUL.Cortex.Port.Adapter.In.Api
 {
     public class NeuronModule : NancyModule
     {

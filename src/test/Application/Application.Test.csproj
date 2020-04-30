@@ -9,8 +9,8 @@
     <ProjectGuid>{F2D2AB64-837C-41C7-89B6-745D5C0A74F4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.neurul.Cortex.Application.Test</RootNamespace>
-    <AssemblyName>org.neurul.Cortex.Application.Test</AssemblyName>
+    <RootNamespace>neurUL.Cortex.Application.Test</RootNamespace>
+    <AssemblyName>neurUL.Cortex.Application.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -47,6 +47,12 @@
     <Reference Include="CQRSlite, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CqrsLite.0.18.1\lib\net452\CQRSlite.dll</HintPath>
     </Reference>
+    <Reference Include="ei8.EventSourcing.Client, Version=0.1.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.EventSourcing.Client.0.1.16\lib\netstandard2.0\ei8.EventSourcing.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="ei8.EventSourcing.Common, Version=0.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.EventSourcing.Common.0.1.2\lib\netstandard2.0\ei8.EventSourcing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.3\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
@@ -60,17 +66,17 @@
     <Reference Include="Moq, Version=4.7.145.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moq.4.7.145\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="neurUL.Common, Version=0.1.19.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\neurUL.Common.0.1.19\lib\netstandard2.0\neurUL.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="neurUL.Common.Test, Version=0.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\neurUL.Common.Test.0.1.7\lib\netstandard2.0\neurUL.Common.Test.dll</HintPath>
+    </Reference>
+    <Reference Include="neurUL.Cortex.Common, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\neurUL.Cortex.Common.0.1.4\lib\netstandard2.0\neurUL.Cortex.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="org.neurul.Common, Version=0.1.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Neurul.Common.0.1.17\lib\netstandard2.0\org.neurul.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="org.neurul.Common.Test, Version=0.1.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Neurul.Common.Test.0.1.5\lib\netstandard2.0\org.neurul.Common.Test.dll</HintPath>
-    </Reference>
-    <Reference Include="org.neurul.Cortex.Common, Version=0.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Neurul.Cortex.Common.0.1.2\lib\netstandard2.0\org.neurul.Cortex.Common.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector, Version=4.0.12.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SimpleInjector.4.0.12\lib\net45\SimpleInjector.dll</HintPath>
@@ -115,15 +121,6 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="works.ei8.Cortex.Graph.Common, Version=0.1.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.Cortex.Graph.Common.0.1.3\lib\netstandard2.0\works.ei8.Cortex.Graph.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="works.ei8.EventSourcing.Client, Version=0.1.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Client.0.1.14\lib\netstandard2.0\works.ei8.EventSourcing.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="works.ei8.EventSourcing.Common, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Common.0.1.1\lib\netstandard2.0\works.ei8.EventSourcing.Common.dll</HintPath>
-    </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>

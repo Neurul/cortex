@@ -1,9 +1,9 @@
 ﻿using Nancy;
 using Nancy.Responses;
 using Newtonsoft.Json;
-using org.neurul.Cortex.Application.Neurons;
+using neurUL.Cortex.Application.Neurons;
 
-namespace org.neurul.Cortex.Port.Adapter.Out.Api
+namespace neurUL.Cortex.Port.Adapter.Out.Api
 {
     public class NeuronModule : NancyModule
     {

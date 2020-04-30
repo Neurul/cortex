@@ -1,14 +1,14 @@
 ﻿using CQRSlite.Commands;
-using org.neurul.Common.Domain.Model;
-using org.neurul.Common.Http;
-using org.neurul.Cortex.Application.Neurons.Commands;
-using org.neurul.Cortex.Domain.Model.Neurons;
+using neurUL.Common.Domain.Model;
+using neurUL.Common.Http;
+using neurUL.Cortex.Application.Neurons.Commands;
+using neurUL.Cortex.Domain.Model.Neurons;
 using System.Threading;
 using System.Threading.Tasks;
-using works.ei8.EventSourcing.Client;
-using works.ei8.EventSourcing.Client.In;
+using ei8.EventSourcing.Client;
+using ei8.EventSourcing.Client.In;
 
-namespace org.neurul.Cortex.Application.Neurons
+namespace neurUL.Cortex.Application.Neurons
 {
     public class NeuronCommandHandlers : 
         ICancellableCommandHandler<CreateNeuron>,

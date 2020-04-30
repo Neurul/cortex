@@ -2,15 +2,15 @@
 using Moq;
 using Nancy;
 using Nancy.Testing;
-using org.neurul.Cortex.Application.Neurons.Commands;
-using org.neurul.Common.Test;
+using neurUL.Cortex.Application.Neurons.Commands;
+using neurUL.Common.Test;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace org.neurul.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
+namespace neurUL.Cortex.Port.Adapter.In.Api.Test.NeuronModuleFixture.given
 {
     public abstract class Context : TestContext<Browser>
     {

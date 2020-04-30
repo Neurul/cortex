@@ -1,10 +1,10 @@
 ﻿using CQRSlite.Commands;
-using org.neurul.Common.Domain.Model;
-using org.neurul.Cortex.Common;
-using org.neurul.Cortex.Domain.Model.Neurons;
+using neurUL.Common.Domain.Model;
+using neurUL.Cortex.Common;
+using neurUL.Cortex.Domain.Model.Neurons;
 using System;
 
-namespace org.neurul.Cortex.Application.Neurons.Commands
+namespace neurUL.Cortex.Application.Neurons.Commands
 {
     public class CreateTerminal : ICommand
     {

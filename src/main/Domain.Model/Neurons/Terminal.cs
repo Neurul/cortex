@@ -1,8 +1,8 @@
-﻿using org.neurul.Common.Domain.Model;
-using org.neurul.Cortex.Common;
+﻿using neurUL.Common.Domain.Model;
+using neurUL.Cortex.Common;
 using System;
 
-namespace org.neurul.Cortex.Domain.Model.Neurons
+namespace neurUL.Cortex.Domain.Model.Neurons
 {
     public class Terminal : AssertiveAggregateRoot
     {

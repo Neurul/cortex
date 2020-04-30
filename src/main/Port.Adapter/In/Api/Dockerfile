@@ -20,4 +20,4 @@ RUN dotnet publish -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "org.neurul.Cortex.Port.Adapter.In.Api.dll"]
+ENTRYPOINT ["dotnet", "neurUL.Cortex.Port.Adapter.In.Api.dll"]

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.neurul.Cortex.Application
+namespace neurUL.Cortex.Application
 {
     public interface ISettingsService
     {

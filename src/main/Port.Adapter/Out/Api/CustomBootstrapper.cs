@@ -2,12 +2,12 @@
 using CQRSlite.Routing;
 using Nancy;
 using Nancy.TinyIoc;
-using org.neurul.Cortex.Application;
-using org.neurul.Cortex.Application.Neurons;
-using org.neurul.Cortex.Port.Adapter.IO.Process.Services;
-using works.ei8.EventSourcing.Client;
+using neurUL.Cortex.Application;
+using neurUL.Cortex.Application.Neurons;
+using neurUL.Cortex.Port.Adapter.IO.Process.Services;
+using ei8.EventSourcing.Client;
 
-namespace org.neurul.Cortex.Port.Adapter.Out.Api
+namespace neurUL.Cortex.Port.Adapter.Out.Api
 {
     public class CustomBootstrapper : DefaultNancyBootstrapper
     {

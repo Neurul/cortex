@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.neurul.Cortex.Application.Neurons
+namespace neurUL.Cortex.Application.Neurons
 {
     public struct Messages
     {
