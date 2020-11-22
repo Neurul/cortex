@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ei8.EventSourcing.Client;
 using ei8.EventSourcing.Client.In;
+using System.Linq;
 
 namespace neurUL.Cortex.Application.Neurons
 {
@@ -37,6 +38,9 @@ namespace neurUL.Cortex.Application.Neurons
                 );
 
             var neuron = new Neuron(message.Id);
+
+            // TODO: use to return notifications, specified IEventSerializer in constructor
+            // neuron.FlushUncommitedChanges().Select(t => t.ToNotification(this.eventSerializer, message.AuthorId));
             
             await eventSource.Session.Add(neuron, token);
             await eventSource.Session.Commit(token);
