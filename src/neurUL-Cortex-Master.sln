@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Out", "Out", "{4504D88C-859
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Out.Api", "main\Port.Adapter\Out\Api\Out.Api.csproj", "{E2B26203-E810-4B89-B06D-C077DACF6537}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "In.InProcess", "main\Port.Adapter\In\InProcess\In.InProcess.csproj", "{49C19949-47CE-4D9F-8040-DFB688554F3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{E2B26203-E810-4B89-B06D-C077DACF6537}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2B26203-E810-4B89-B06D-C077DACF6537}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2B26203-E810-4B89-B06D-C077DACF6537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49C19949-47CE-4D9F-8040-DFB688554F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49C19949-47CE-4D9F-8040-DFB688554F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49C19949-47CE-4D9F-8040-DFB688554F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49C19949-47CE-4D9F-8040-DFB688554F3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{607D7739-6698-40AD-99FC-F157FB372CCF} = {C0F26CA4-40C9-4E49-8A23-609883D7563B}
 		{4504D88C-8599-4481-96A5-A66FB3DA5F6A} = {DBB322C0-BC6A-4962-98DC-8DBB176F9C0C}
 		{E2B26203-E810-4B89-B06D-C077DACF6537} = {4504D88C-8599-4481-96A5-A66FB3DA5F6A}
+		{49C19949-47CE-4D9F-8040-DFB688554F3D} = {250B3F59-02D5-436B-91F2-134FAF83B57D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52C9D9EC-9427-4D12-AC67-B848B8A8C45A}

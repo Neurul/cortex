@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Nancy" Version="2.0.0-clinteastwood" />
     <PackageReference Include="Nancy.Serialization.JsonNet" Version="2.0.0-clinteastwood" />
+    <PackageReference Include="neurUL.Common.Api" Version="0.1.1" />
     <PackageReference Include="Neurul.Common.Http" Version="0.1.11" />
     <PackageReference Include="Neurul.Cortex.Common" Version="0.1.4" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.166-beta" />
@@ -26,6 +27,7 @@
     <ProjectReference Include="..\..\..\Application\Application.csproj" />
     <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\..\IO\Process\Services\Services.csproj" />
+    <ProjectReference Include="..\InProcess\In.InProcess.csproj" />
   </ItemGroup>
 
 </Project>

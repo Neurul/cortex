@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using ei8.EventSourcing.Client;
 using ei8.EventSourcing.Client.In;
 using System.Linq;
+using CQRSlite.Events;
+using CQRSlite.Domain;
 
 namespace neurUL.Cortex.Application.Neurons
 {
@@ -15,50 +17,44 @@ namespace neurUL.Cortex.Application.Neurons
         ICancellableCommandHandler<CreateNeuron>,
         ICancellableCommandHandler<DeactivateNeuron>
     {
-        private readonly IEventSourceFactory eventSourceFactory;
-        private readonly ISettingsService settingsService;
+        private readonly IAuthoredEventStore eventStore;
+        private readonly ISession session;
 
-        public NeuronCommandHandlers(IEventSourceFactory eventSourceFactory, ISettingsService settingsService)
+        public NeuronCommandHandlers(IEventStore eventStore, ISession session)
         {
-            AssertionConcern.AssertArgumentNotNull(eventSourceFactory, nameof(eventSourceFactory));
-            AssertionConcern.AssertArgumentNotNull(settingsService, nameof(settingsService));
+            AssertionConcern.AssertArgumentNotNull(eventStore, nameof(eventStore));
+            AssertionConcern.AssertArgumentValid(
+                es => es is IAuthoredEventStore,
+                eventStore,
+                "Specified 'eventStore' must be an IAuthoredEventStore implementation.",
+                nameof(eventStore)
+                );
+            AssertionConcern.AssertArgumentNotNull(session, nameof(session));
 
-            this.eventSourceFactory = eventSourceFactory;
-            this.settingsService = settingsService;
+            this.eventStore = (IAuthoredEventStore)eventStore;
+            this.session = session;
         }
 
         public async Task Handle(CreateNeuron message, CancellationToken token = default(CancellationToken))
         {
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
-            var eventSource = this.eventSourceFactory.Create(
-                this.settingsService.EventSourcingInBaseUrl + "/",
-                this.settingsService.EventSourcingOutBaseUrl + "/",
-                message.AuthorId
-                );
+            this.eventStore.SetAuthor(message.AuthorId);
 
             var neuron = new Neuron(message.Id);
 
-            // TODO: use to return notifications, specified IEventSerializer in constructor
-            // neuron.FlushUncommitedChanges().Select(t => t.ToNotification(this.eventSerializer, message.AuthorId));
-            
-            await eventSource.Session.Add(neuron, token);
-            await eventSource.Session.Commit(token);
+            await this.session.Add(neuron, token);
+            await this.session.Commit(token);
         }
 
         public async Task Handle(DeactivateNeuron message, CancellationToken token = default(CancellationToken))
         {
             AssertionConcern.AssertArgumentNotNull(message, nameof(message));
 
-            var eventSource = this.eventSourceFactory.Create(
-                this.settingsService.EventSourcingInBaseUrl + "/",
-                this.settingsService.EventSourcingOutBaseUrl + "/",
-                message.AuthorId
-                );
-            Neuron neuron = await eventSource.Session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token);
-
+            this.eventStore.SetAuthor(message.AuthorId);
+            Neuron neuron = await this.session.Get<Neuron>(message.Id, nameof(neuron), message.ExpectedVersion, token);
             neuron.Deactivate();
-            await eventSource.Session.Commit(token);
+            await this.session.Commit(token);
         }
     }
 }

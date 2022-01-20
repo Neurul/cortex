@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>neurUL.Cortex.Port.Adapter.In.InProcess</AssemblyName>
+    <RootNamespace>neurUL.Cortex.Port.Adapter.In.InProcess</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Application\Application.csproj" />
+  </ItemGroup>
+
+</Project>
