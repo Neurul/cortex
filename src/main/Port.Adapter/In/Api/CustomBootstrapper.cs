@@ -10,6 +10,8 @@ using neurUL.Cortex.Port.Adapter.IO.Process.Services;
 using System;
 using ei8.EventSourcing.Client;
 using ei8.EventSourcing.Client.In;
+using CQRSlite.Domain;
+using neurUL.Cortex.Port.Adapter.In.InProcess;
 
 namespace neurUL.Cortex.Port.Adapter.In.Api
 {
@@ -26,9 +28,21 @@ namespace neurUL.Cortex.Port.Adapter.In.Api
             var ipb = new Router();
             container.Register<ICommandSender, Router>(ipb);
             container.Register<IHandlerRegistrar, Router>(ipb);
-            container.Register<IEventSerializer, EventSerializer>(new EventSerializer());
-            container.Register<IEventSourceFactory, EventSourceFactory>();
+            container.Register<IEventSerializer, EventSerializer>();
             container.Register<ISettingsService, SettingsService>();
+            container.Register<IEventStoreUrlService>(
+                (tic, npo) => {
+                    var ss = container.Resolve<ISettingsService>();
+                    return new EventStoreUrlService(
+                        ss.EventSourcingInBaseUrl + "/",
+                        ss.EventSourcingOutBaseUrl + "/"
+                        );
+                });
+            container.Register<IEventStore, HttpEventStoreClient>();
+            container.Register<IRepository, Repository>();
+            container.Register<ISession, Session>();
+            container.Register<INeuronAdapter, NeuronAdapter>();
+            container.Register<ITerminalAdapter, TerminalAdapter>();
             container.Register<NeuronCommandHandlers>();
 
             var ticl = new TinyIoCServiceLocator(container);

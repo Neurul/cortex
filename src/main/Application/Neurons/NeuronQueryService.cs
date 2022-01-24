@@ -1,27 +1,24 @@
-﻿using neurUL.Common.Domain.Model;
-using neurUL.Common.Http;
+﻿using CQRSlite.Domain;
+using neurUL.Common.Domain.Model;
 using neurUL.Cortex.Common;
 using neurUL.Cortex.Domain.Model.Neurons;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ei8.EventSourcing.Client;
 
 namespace neurUL.Cortex.Application.Neurons
 {
     public class NeuronQueryService : INeuronQueryService
     {
-        private readonly IEventSourceFactory eventSourceFactory;
+        private readonly ISession session;
         private readonly ISettingsService settingsService;
 
-        public NeuronQueryService(IEventSourceFactory eventSourceFactory, ISettingsService settingsService)
+        public NeuronQueryService(ISession session, ISettingsService settingsService)
         {
-            AssertionConcern.AssertArgumentNotNull(eventSourceFactory, nameof(eventSourceFactory));
+            AssertionConcern.AssertArgumentNotNull(session, nameof(session));
             AssertionConcern.AssertArgumentNotNull(settingsService, nameof(settingsService));
 
-            this.eventSourceFactory = eventSourceFactory;
+            this.session = session;
             this.settingsService = settingsService;
         }
 
@@ -34,14 +31,7 @@ namespace neurUL.Cortex.Application.Neurons
                 nameof(id)
                 );
 
-            // Using a random Guid for Author as we won't be saving anyway
-            var eventSource = this.eventSourceFactory.Create(
-                this.settingsService.EventSourcingInBaseUrl + "/",
-                this.settingsService.EventSourcingOutBaseUrl + "/",
-                Guid.NewGuid()
-                );
-
-            var neuron = await eventSource.Session.Get<Neuron>(id, cancellationToken: token);
+            var neuron = await this.session.Get<Neuron>(id, cancellationToken: token);
 
             return new NeuronData()
             {
