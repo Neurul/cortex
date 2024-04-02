@@ -39,10 +39,7 @@ namespace neurUL.Cortex.Application.Neurons
 
             this.eventStore.SetAuthor(message.AuthorId);
 
-            Neuron presynaptic = await this.session.Get<Neuron>(message.PresynapticNeuronId, nameof(presynaptic), cancellationToken: token),
-                postsynaptic = await this.session.Get<Neuron>(message.PostsynapticNeuronId, nameof(postsynaptic), cancellationToken: token);
-
-            var terminal = new Terminal(message.Id, presynaptic, postsynaptic, message.Effect, message.Strength);
+            var terminal = new Terminal(message.Id, message.PresynapticNeuronId, message.PostsynapticNeuronId, message.Effect, message.Strength);
             await this.session.Add(terminal, token);
             await this.session.Commit(token);
         }

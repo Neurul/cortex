@@ -10,21 +10,19 @@ namespace neurUL.Cortex.Domain.Model.Neurons
 
         public Terminal() { }
 
-        public Terminal(Guid id, Neuron presynapticNeuron, Neuron postsynapticNeuron, NeurotransmitterEffect effect, float strength)
+        public Terminal(Guid id, Guid presynapticNeuronId, Guid postsynapticNeuronId, NeurotransmitterEffect effect, float strength)
         {
             AssertionConcern.AssertArgumentValid(i => i != Guid.Empty, id, Messages.Exception.IdEmpty, nameof(id));
-            AssertionConcern.AssertArgumentNotNull(presynapticNeuron, nameof(presynapticNeuron));
-            AssertionConcern.AssertArgumentValid(n => n.Active, presynapticNeuron, Messages.Exception.NeuronInactive, nameof(presynapticNeuron));
-            AssertionConcern.AssertArgumentNotNull(postsynapticNeuron, nameof(postsynapticNeuron));
-            AssertionConcern.AssertArgumentValid(n => n.Active, postsynapticNeuron, Messages.Exception.NeuronInactive, nameof(postsynapticNeuron));
+            AssertionConcern.AssertArgumentValid(i => i != Guid.Empty, presynapticNeuronId, Messages.Exception.IdEmpty, nameof(presynapticNeuronId));
+            AssertionConcern.AssertArgumentValid(i => i != Guid.Empty, postsynapticNeuronId, Messages.Exception.IdEmpty, nameof(postsynapticNeuronId));
             AssertionConcern.AssertArgumentValid(e => e != NeurotransmitterEffect.NotSet, effect, Messages.Exception.ValidEffect, nameof(effect));
             AssertionConcern.AssertArgumentValid(s => s > 0 && s <= 1, strength, Messages.Exception.StrengthInvalid, nameof(strength));
-            AssertionConcern.AssertArgumentValid(g => g != presynapticNeuron.Id, postsynapticNeuron.Id, Messages.Exception.PostCannotBeTheSameAsPre, nameof(postsynapticNeuron));
-            AssertionConcern.AssertArgumentValid(g => g != presynapticNeuron.Id, id, Messages.Exception.InvalidTerminalIdCreation, nameof(id));
-            AssertionConcern.AssertArgumentValid(g => g != postsynapticNeuron.Id, id, Messages.Exception.InvalidTerminalIdCreation, nameof(id));
+            AssertionConcern.AssertArgumentValid(g => g != presynapticNeuronId, postsynapticNeuronId, Messages.Exception.PostCannotBeTheSameAsPre, nameof(postsynapticNeuronId));
+            AssertionConcern.AssertArgumentValid(g => g != presynapticNeuronId, id, Messages.Exception.InvalidTerminalIdCreation, nameof(id));
+            AssertionConcern.AssertArgumentValid(g => g != postsynapticNeuronId, id, Messages.Exception.InvalidTerminalIdCreation, nameof(id));
 
             this.Id = id;
-            this.ApplyChange(new TerminalCreated(id, presynapticNeuron.Id, postsynapticNeuron.Id, effect, strength));
+            this.ApplyChange(new TerminalCreated(id, presynapticNeuronId, postsynapticNeuronId, effect, strength));
         }
 
         public bool Active { get; private set; }

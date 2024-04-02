@@ -10,14 +10,14 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
     public abstract class Context : TestContext<Terminal>
     {
         protected Guid id;
-        protected Neuron presynapticNeuron;
-        protected Neuron postsynapticNeuron;
+        protected Guid presynapticNeuronId;
+        protected Guid postsynapticNeuronId;
         protected NeurotransmitterEffect effect;
         protected float strength;
 
         protected virtual Guid Id => this.id = this.id == Guid.Empty ? Guid.NewGuid() : this.id;
-        protected virtual Neuron PresynapticNeuron => this.presynapticNeuron = this.presynapticNeuron ?? new Neuron(Guid.NewGuid());
-        protected virtual Neuron PostsynapticNeuron => this.postsynapticNeuron = this.postsynapticNeuron ?? new Neuron(Guid.NewGuid());
+        protected virtual Guid PresynapticNeuronId => this.presynapticNeuronId = this.presynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.presynapticNeuronId;
+        protected virtual Guid PostsynapticNeuronId => this.postsynapticNeuronId = this.postsynapticNeuronId == Guid.Empty ? Guid.NewGuid() : this.postsynapticNeuronId;
         protected virtual NeurotransmitterEffect Effect => this.effect = this.effect == NeurotransmitterEffect.NotSet ? NeurotransmitterEffect.Excite : this.effect;
         protected virtual float Strength => this.strength = this.strength == 0 ? 1 : this.strength;
     }
@@ -26,7 +26,7 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
     {
         protected override bool InvokeWhenOnConstruct => false;
 
-        protected override void When() => this.sut = new Terminal(this.Id, this.PresynapticNeuron, this.PostsynapticNeuron, this.Effect, this.Strength);
+        protected override void When() => this.sut = new Terminal(this.Id, this.PresynapticNeuronId, this.PostsynapticNeuronId, this.Effect, this.Strength);
     }
 
     public class When_constructing
@@ -42,24 +42,9 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_null_presynapticNeuron : ConstructingTerminalContext
+        public class When_empty_presynapticNeuronId : ConstructingTerminalContext
         {
-            protected override Neuron PresynapticNeuron => null;
-
-            [Fact]
-            public void Then_should_throw_argument_null_exception()
-            {
-                Assert.Throws<ArgumentNullException>(() => this.When());
-            }
-        }
-
-        public class When_inactive_presynapticNeuron : ConstructingTerminalContext
-        {
-            protected override void When()
-            {
-                this.PresynapticNeuron.Deactivate();
-                base.When();
-            }
+            protected override Guid PresynapticNeuronId => Guid.Empty;
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -70,7 +55,7 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
 
         public class When_presynapticNeuronId_is_equal_to_terminal_id : ConstructingTerminalContext
         {
-            protected override Neuron PresynapticNeuron => this.presynapticNeuron = this.presynapticNeuron ?? new Neuron(this.Id);
+            protected override Guid PresynapticNeuronId => this.presynapticNeuronId = this.presynapticNeuronId == Guid.Empty ? this.Id : this.presynapticNeuronId;
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -79,24 +64,9 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
             }
         }
 
-        public class When_null_postsynapticNeuron : ConstructingTerminalContext
+        public class When_empty_postsynapticNeuronId : ConstructingTerminalContext
         {
-            protected override Neuron PostsynapticNeuron => null;
-
-            [Fact]
-            public void Then_should_throw_argument_null_exception()
-            {
-                Assert.Throws<ArgumentNullException>(() => this.When());
-            }
-        }
-
-        public class When_inactive_postsynapticNeuron : ConstructingTerminalContext
-        {
-            protected override void When()
-            {
-                this.PostsynapticNeuron.Deactivate();
-                base.When();
-            }
+            protected override Guid PostsynapticNeuronId => Guid.Empty;
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -107,7 +77,7 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
 
         public class When_postsynapticNeuronId_is_equal_to_terminal_id : ConstructingTerminalContext
         {
-            protected override Neuron PostsynapticNeuron => this.postsynapticNeuron = this.postsynapticNeuron ?? new Neuron(this.Id);
+            protected override Guid PostsynapticNeuronId => this.postsynapticNeuronId = this.postsynapticNeuronId == Guid.Empty ? this.Id : this.postsynapticNeuronId;
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -118,7 +88,7 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
 
         public class When_presynaptic_and_postsynaptic_are_equal : ConstructingTerminalContext
         {
-            protected override Neuron PostsynapticNeuron => this.PresynapticNeuron;
+            protected override Guid PostsynapticNeuronId => this.PresynapticNeuronId;
 
             [Fact]
             public void Then_should_throw_argument_exception()
@@ -193,13 +163,13 @@ namespace neurUL.Cortex.Domain.Model.Test.Neurons.TerminalFixture.given
         [Fact]
         public void Then_should_contain_correct_presynapticNeuronId()
         {
-            Assert.Equal(this.PresynapticNeuron.Id, this.sut.PresynapticNeuronId);
+            Assert.Equal(this.PresynapticNeuronId, this.sut.PresynapticNeuronId);
         }
 
         [Fact]
         public void Then_should_contain_correct_postsynapticNeuronId()
         {
-            Assert.Equal(this.PostsynapticNeuron.Id, this.sut.PostsynapticNeuronId);
+            Assert.Equal(this.PostsynapticNeuronId, this.sut.PostsynapticNeuronId);
         }
 
         [Fact]
