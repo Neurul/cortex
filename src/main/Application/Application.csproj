@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="CqrsLite" Version="0.18.1" />
-    <PackageReference Include="ei8.EventSourcing.Client" Version="0.2.5" />
+    <PackageReference Include="ei8.EventSourcing.Client" Version="0.3.7" />
     <PackageReference Include="Neurul.Common" Version="0.1.19" />
     <PackageReference Include="Neurul.Common.Http" Version="0.1.11" />
     <PackageReference Include="Neurul.Cortex.Common" Version="0.1.4" />

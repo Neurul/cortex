@@ -2,5 +2,6 @@
 **/obj
 **/*.lock.json
 **/.vs
+**/*.nupkg
 /*.7z
 /src/packages

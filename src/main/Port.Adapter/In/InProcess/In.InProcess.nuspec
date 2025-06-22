@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>neurUL.Cortex.Port.Adapter.In.InProcess</id>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <title>neurUL.Cortex.Port.Adapter.In.InProcess</title>
     <authors>Elmer Roderick Niem Bool</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
