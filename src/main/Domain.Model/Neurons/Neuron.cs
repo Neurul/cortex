@@ -1,4 +1,5 @@
 ﻿using CQRSlite.Domain;
+using neurUL.Common.CqrsLite;
 using neurUL.Common.Domain.Model;
 using System;
 using System.Linq;

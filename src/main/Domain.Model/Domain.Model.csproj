@@ -9,7 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="CqrsLite" Version="0.18.1" />
-    <PackageReference Include="Neurul.Common" Version="0.1.19" />
+    <PackageReference Include="Neurul.Common" Version="0.2.1" />
+    <PackageReference Include="neurUL.Common.CqrsLite" Version="0.1.0" />
     <PackageReference Include="neurul.Cortex.Common" Version="0.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1-beta1" />
     <PackageReference Update="NETStandard.Library" Version="2.0.1" />

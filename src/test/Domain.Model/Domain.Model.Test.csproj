@@ -48,31 +48,28 @@
       <HintPath>..\..\packages\CqrsLite.0.18.1\lib\net452\CQRSlite.dll</HintPath>
     </Reference>
     <Reference Include="ei8.EventSourcing.Application, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.0.7\lib\netstandard2.0\ei8.EventSourcing.Application.dll</HintPath>
+      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.1.0\lib\netstandard2.0\ei8.EventSourcing.Application.dll</HintPath>
     </Reference>
-    <Reference Include="ei8.EventSourcing.Client, Version=0.3.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Client.0.3.7\lib\netstandard2.0\ei8.EventSourcing.Client.dll</HintPath>
+    <Reference Include="ei8.EventSourcing.Client, Version=0.3.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.EventSourcing.Client.0.3.9\lib\netstandard2.0\ei8.EventSourcing.Client.dll</HintPath>
     </Reference>
-    <Reference Include="ei8.EventSourcing.Common, Version=0.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Common.0.1.2\lib\netstandard2.0\ei8.EventSourcing.Common.dll</HintPath>
+    <Reference Include="ei8.EventSourcing.Common, Version=0.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ei8.EventSourcing.Common.0.1.3\lib\netstandard2.0\ei8.EventSourcing.Common.dll</HintPath>
     </Reference>
     <Reference Include="ei8.EventSourcing.Domain.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.0.7\lib\netstandard2.0\ei8.EventSourcing.Domain.Model.dll</HintPath>
+      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.1.0\lib\netstandard2.0\ei8.EventSourcing.Domain.Model.dll</HintPath>
     </Reference>
     <Reference Include="ei8.EventSourcing.Port.Adapter.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.0.7\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.Common.dll</HintPath>
+      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.1.0\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.Common.dll</HintPath>
     </Reference>
     <Reference Include="ei8.EventSourcing.Port.Adapter.In.InProcess, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.In.InProcess.0.0.7\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.In.InProcess.dll</HintPath>
-    </Reference>
-    <Reference Include="ei8.EventSourcing.Port.Adapter.IO.Persistence.Events.SQLite, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.0.7\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.IO.Persistence.Events.SQLite.dll</HintPath>
+      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.In.InProcess.0.1.0\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.In.InProcess.dll</HintPath>
     </Reference>
     <Reference Include="ei8.EventSourcing.Port.Adapter.IO.Process.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.0.7\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.IO.Process.Services.dll</HintPath>
+      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.1.0\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.IO.Process.Services.dll</HintPath>
     </Reference>
     <Reference Include="ei8.EventSourcing.Port.Adapter.Out.InProcess, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.0.7\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.Out.InProcess.dll</HintPath>
+      <HintPath>..\..\packages\ei8.EventSourcing.Port.Adapter.Out.InProcess.0.1.0\lib\netstandard2.0\ei8.EventSourcing.Port.Adapter.Out.InProcess.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -113,8 +110,11 @@
     <Reference Include="Moq, Version=4.7.145.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moq.4.7.145\lib\net45\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="neurUL.Common, Version=0.1.19.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\neurUL.Common.0.1.19\lib\netstandard2.0\neurUL.Common.dll</HintPath>
+    <Reference Include="neurUL.Common, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\neurUL.Common.0.2.1\lib\netstandard2.0\neurUL.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="neurUL.Common.CqrsLite, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\neurUL.Common.CqrsLite.0.1.0\lib\netstandard2.0\neurUL.Common.CqrsLite.dll</HintPath>
     </Reference>
     <Reference Include="neurUL.Common.Test, Version=0.1.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\neurUL.Common.Test.0.1.7\lib\netstandard2.0\neurUL.Common.Test.dll</HintPath>
