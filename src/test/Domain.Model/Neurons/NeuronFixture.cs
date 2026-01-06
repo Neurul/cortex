@@ -1,9 +1,7 @@
-﻿using CQRSlite.Events;
-using neurUL.Common.Test;
+﻿using neurUL.Common.Test;
 using neurUL.Cortex.Domain.Model.Neurons;
 using System;
 using System.Linq;
-using ei8.EventSourcing.Client.In;
 using Xunit;
 
 namespace neurUL.Cortex.Domain.Model.Test.Neurons.NeuronFixture.given
